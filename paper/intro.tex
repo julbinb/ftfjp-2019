@@ -1,0 +1,33 @@
+Subtyping \ldots (roughly what it is; is used both in static and dynamic
+languages).
+
+Two flavors of subtyping: syntactic and semantic. 
+
+Semantic subtyping enables simple set-theoretic reasoning about types
+in terms of values they represent.
+Because of that, it is especially appealing to the users of a language.
+However, semantic subtyping might be problematic for the language designers:
+defining the interpretation of types and developing a corresponding
+sound and complete subtyping algorithm is usually quite tricky.
+
+Prior work on semantic subtyping was mostly focused on rather complex languages
+with structural types (XML-CDuce or Object-Oriented Ancona).
+For example, \ldots. Often care about typing.
+
+In this work, we explore the applicability of semantic subtyping in the context
+of a dynamic language with nominal types. We draw our inspiration from
+the dynamically typed language Julia, which uses subtyping extensively
+for multiple dynamic dispatch. 
+%The designers of Julia, in turn, were inspired
+%by the work on semantic subtyping~\citemock.
+In Julia, all values have type tags that never change at run-time.
+This allows us to considerably simplify the traditional notion 
+of semantic subtyping.
+%Therefore, tags faithfully characterize sets of values.
+Namely, we interpret a type as a set of type tags, 
+with a tag faithfully characterizing a set of values.
+
+
+
+
+

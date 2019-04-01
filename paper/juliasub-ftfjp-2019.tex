@@ -60,16 +60,21 @@
                         %% http://ctan.org/pkg/subcaption
 
 
+\input{preamble}
+
 \begin{document}
 
 %% Title information
-\title[Short Title]{Full Title}         %% [Short Title] is optional;
+\title[Short Title]{Syntactic Model of Semantic Subtyping \\
+	for a Dynamic Language with Nominal Typing}
+                                        %% [Short Title] is optional;
                                         %% when present, will be used in
                                         %% header instead of Full Title.
 \titlenote{with title note}             %% \titlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
-\subtitle{Subtitle}                     %% \subtitle is optional
+\subtitle{Subtyping of Nominal Types, Pairs, and Unions}
+                                        %% \subtitle is optional
 \subtitlenote{with subtitle note}       %% \subtitlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
@@ -175,7 +180,7 @@ Text of abstract \ldots.
 
 \section{Introduction}
 
-Text of paper \ldots
+\input{intro}
 
 
 %% Acknowledgments
@@ -185,19 +190,19 @@ Text of paper \ldots
   %% \grantnum[<url>]{<sponsorID>}{<number>} should be used to
   %% acknowledge financial support and will be used by metadata
   %% extraction tools.
-  This material is based upon work supported by the
-  \grantsponsor{GS100000001}{National Science
-    Foundation}{http://dx.doi.org/10.13039/100000001} under Grant
-  No.~\grantnum{GS100000001}{nnnnnnn} and Grant
-  No.~\grantnum{GS100000001}{mmmmmmm}.  Any opinions, findings, and
-  conclusions or recommendations expressed in this material are those
-  of the author and do not necessarily reflect the views of the
-  National Science Foundation.
+%  This material is based upon work supported by the
+%  \grantsponsor{GS100000001}{National Science
+%    Foundation}{http://dx.doi.org/10.13039/100000001} under Grant
+%  No.~\grantnum{GS100000001}{nnnnnnn} and Grant
+%  No.~\grantnum{GS100000001}{mmmmmmm}.  Any opinions, findings, and
+%  conclusions or recommendations expressed in this material are those
+%  of the author and do not necessarily reflect the views of the
+%  National Science Foundation.
 \end{acks}
 
 
 %% Bibliography
-%\bibliography{bibfile}
+\bibliography{bibfile}
 
 
 %% Appendix
