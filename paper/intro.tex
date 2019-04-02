@@ -12,20 +12,59 @@ sound and complete subtyping algorithm is usually quite tricky.
 
 Prior work on semantic subtyping was mostly focused on rather complex languages
 with structural types (XML-CDuce or Object-Oriented Ancona).
-For example, \ldots. Often care about typing.
+For example, \ldots. Often care about static typing.
 
 In this work, we explore the applicability of semantic subtyping in the context
-of a dynamic language with nominal types. We draw our inspiration from
-the dynamically typed language Julia, which uses subtyping extensively
-for multiple dynamic dispatch. 
-%The designers of Julia, in turn, were inspired
-%by the work on semantic subtyping~\citemock.
-In Julia, all values have type tags that never change at run-time.
+of a \emph{dynamic language with nominal types} 
+where all \emph{values are type tagged}. 
 This allows us to considerably simplify the traditional notion 
 of semantic subtyping.
-%Therefore, tags faithfully characterize sets of values.
 Namely, we interpret a type as a set of type tags, 
 with a tag faithfully characterizing a set of values.
+
+We draw our inspiration from the dynamically typed language Julia,
+which employs nominal types in a peculiar fashion. For performance reasons, 
+only leaf types in the hierarchy of nominal types
+can be used to construct values.
+As an example, consider two types, \jltype{Int64} and \jltype{Signed}:
+\jltype{Int64} is a leaf type, 
+and \jltype{Signed} is its declared supertype.
+Any 64-bit integer value is tagged with the type \jltype{Int64}
+and considered to be of type \jltype{Int64}.
+Such a value is also considered to be of type \jltype{Signed},
+but \emph{no values are tagged} with \jltype{Signed}.
+Thus, we can give the semantic interpretation of \jltype{Signed}
+solely in terms of its leaf subtypes:
+\[
+\interpty{\tysigned} = \{\tyintsf, \tyinttt, \tyintst, \ldots\}.
+\]
+
+Our contributions are as follows:
+\begin{itemize}
+  \item semantic interpretation of nominal types for a Julia-like 
+    dynamic language (\secref{todo});
+  \item simple syntactic model of semantic subtyping for nominal types,
+    covariant pairs, and untagged unions (\secref{todo});
+  \item decidable reductive subtyping provably equivalent to \ldots (\secref{todo});
+  \item discussion of the applicability of semantic subtyping to Julia (\secref{todo}).
+  \item Coq!
+\end{itemize}
+
+%Besides nominal types, we take covariant pairs and untagged unions.
+
+%That is, any value of type \jltype{Signed} 
+%is tagged with one of its leaf subtypes,
+%and we can characterize the set of values represented by the type 
+%solely in terms of the leaf types.
+%Because of that, the type \jltype{Signed} can be interpreted in terms
+%of its leaf subtypes.
+
+%The designers of Julia, in turn, were inspired
+%by the work on semantic subtyping~\citemock.
+%In Julia, all values have type tags that never change at run-time.
+%Therefore, tags faithfully characterize sets of values.
+%Julia uses subtyping extensively for multiple dynamic dispatch. 
+
 
 
 

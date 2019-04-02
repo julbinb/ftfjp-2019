@@ -1,0 +1,135 @@
+
+We build the presentation around a small type language called \BetaJulia,
+presented in~\figref{fig:bjsem-types}.
+Types of \BetaJulia, denoted by $\ty \in \Type$, include pairs, unions, 
+and nominal types in the spirit of Julia:
+\cname denotes \emph{concrete} nominal types that correspond to type tags,
+and \aname denotes \emph{abstract} nominal types.
+In this terminology, \jltype{Int64} and \jltype{Signed} are
+a concrete and abstract type, respectively.\footnote{Correspondence to Julia.}
+
+\begin{figure}
+  \[
+	\begin{array}{rcl@{\qquad}l}
+	\ty \in \Type & ::= & & \text{\emph{Types}}
+	\\ &\Alt& \typair{\ty_1}{\ty_2}  & \text{covariant pair}
+	\\ &\Alt& \tyunion{\ty_1}{\ty_2} & \text{untagged union}
+	\\ &\Alt& \cname  & \text{concrete nominal type}
+	\\ &\Alt& \aname  & \text{abstract nominal type}
+	\\ \\
+	\cname & \in &
+	  \multicolumn{2}{l}{\{ \tyint, \tyflt, \tycmplx, \tystr \}}
+	\\ 
+	\aname & \in & \multicolumn{2}{l}{\{ \tyreal, \tynum \}}
+	\end{array}
+  \]
+  \begin{tikzpicture}[sibling distance=4em, level distance=2.25em,
+    concrete/.style = {shape=rectangle, draw, align=center}]
+  \node { Num }
+  child { node { Real }
+  	child { node[concrete] { Int} }
+  	child { node[concrete] (NF) { Flt} } }
+  child { node[concrete, right=2em of NF] (NC) {Cmplx} }
+  ;
+  \node[concrete, right=2em of NC] {Str} ;
+  \end{tikzpicture}
+  \caption{\BetaJulia: type grammar and nominal hierarchy}
+  \label{fig:bjsem-types}
+\end{figure}
+
+To simplify the development, we decided to work with particular 
+nominal types and a hierarchy over them
+(presented in~\figref{fig:bjsem-types} as a tree)
+instead of a more abstract class table.
+There are four concrete, leaf types (depicted in rectangles)
+and two abstract types in the hierarchy. 
+Formally, the hierarchy can be represented with a list of declarations
+$\bjdeclsub{n_1}{n_2}$ read as ``$n_1$ is a declared subtype of $n_2$''
+where $n ::= \cname \Alt \aname$.
+In the case of \BetaJulia, the hierarchy is defined as follows:
+\[
+\NomH = [ \bjdeclsub{\tyreal}{\tynum}, 
+\bjdeclsub{\tyint}{\tyreal}, \bjdeclsub{\tyflt}{\tyreal},
+\bjdeclsub{\tycmplx}{\tynum} ].
+\]
+
+\subsection{Value Types}
+%% -----------------------------------------------------------------------------
+
+Not only concrete nominal types can be used as type tags
+but also pair types. For example, \typair{\tyint}{\tyint}
+or \typair{\tystr}{(\typair{\tyint}{\tyint})}.
+Union types, on the other hand, cannot be type tags, 
+as they potentially describe dissimilar values.
+For instance, both integer and floating point values belong
+to a union type \tyunion{\tyint}{\tyflt}.
+Even type \tyunion{\tyint}{\tyint} is not a type tag, 
+though it better be equivalent to a concrete type \tyint.
+
+Types that can be used as type tags will be further referred to
+as \defemph{value types}. 
+The formal definition is given in~\figref{fig:bjsem-value-types}.
+Value type $\vty \in \VType$ is either a concrete nominal type 
+or a pair of value types. 
+Note that $\VType \subset \Type$, i.e. each value type is a type.
+
+\begin{figure}
+	\[
+	\begin{array}{rcl@{\qquad}l}
+	\vty \in \VType & ::= & & \text{\emph{Value Types}}
+	\\ &\Alt& \cname & 
+	\\ &\Alt& \typair{\vty_1}{\vty_2} & 
+	\end{array}
+	\]
+	\caption{Value types in \BetaJulia}
+	\label{fig:bjsem-value-types}
+\end{figure}
+
+
+\subsection{Semantic Interpretation of Types}
+%% -----------------------------------------------------------------------------
+
+As mentioned earlier, we assume that each value is tagged with a value type.
+Therefore, the set of values represented by a value type \vty
+is unambiguously characterized by~\vty.
+As for an arbitrary type, its set of values, in turn, can be characterized
+in terms of value types.
+
+\begin{figure}
+  \[
+	\begin{array}{rcl}
+	\interpty{\cdot}: \Type & \rightarrow & \PVType \\
+	\interpty{\cname} & = & \{\cname\} \\
+	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
+	\interpty{\typair{\ty_1}{\ty_2}} & = & \{\typair{\vty_1}{\vty_2} 
+	\Alt \vty_1 \in \interpty{\ty_1}, \vty_2 \in \interpty{\ty_2}\}\\
+	\interpty{\tyunion{\ty_1}{\ty_2}} & = & 
+	\interpty{\ty_1} \cup \interpty{\ty_2}
+	\\ \\
+	\multicolumn{3}{l}{\text{Note: }}\\
+	\multicolumn{3}{l}{\ \interpty{\tyreal} \equiv \{ \tyint, \tyflt \}}\\
+	\multicolumn{3}{l}{\interpty{\tynum} \equiv \{ \tyint, \tyflt, \tycmplx \}}
+	\end{array}
+  \]
+%  (= \interpty{\tyreal} \cup \{\tycmplx\})
+  \caption{Interpretation of \BetaJulia Types}
+  \label{fig:bjsem-interpretation}
+\end{figure}
+
+Formally, the interpretation of \BetaJulia types is defined
+in~\figref{fig:bjsem-interpretation}.
+The relation $\bjnomsub{\cname}{\aname}$ is a transitive closure of \NomH:
+\begin{mathpar}
+	\inferrule*[right=]
+	{ \bjdeclsub{n_1}{n_2} \in \NomH }
+	{ \bjnomsub{n_1}{n_2} }
+	
+	\inferrule*[right=]
+	{ \bjnomsub{n_1}{n_2} \\ \bjnomsub{n_2}{n_3} }
+	{ \bjnomsub{n_1}{n_3} }
+\end{mathpar}
+
+%and the set of values represented by a type \ty can be characterized
+%with the set of value types~$\vty_i$
+
+

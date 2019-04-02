@@ -7,21 +7,98 @@
 %\usepackage{hyperref}
 \usepackage{xspace}
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Math
+
+\usepackage{mathpartir} % inference rules
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Graphics
+
+\usepackage{tikz}
+\usetikzlibrary{fit,shapes, positioning}
+
+
 %% Commands
 %% =============================================================================
 
 %% Text
 %% *********************************************************
 
+\newcommand{\defemph}[1]{\textbf{#1}}
+
+\newcommand{\jlcode}[1]{\texttt{\small#1}}
+\newcommand{\jltype}[1]{\texttt{\small#1}}
+
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\secref}[1]{Sec.~\ref{#1}}
+
 \newcommand{\citemock}{\cite{bib:mock}\xspace}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BetaJulia
+
+\newcommand{\BetaJulia}{\textsc{MiniJl}\xspace}
+\newcommand{\BetaJuliaSub}{\textsc{JNomSub}\xspace}
+
 
 %% General Math/PL
 %% *********************************************************
 
+%: \Alt                 -> |
+\newcommand{\Alt}{~\vert~}
+
 %% BetaJulia
 %% *********************************************************
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Style
+
+%: type name (like Int)
+\newcommand{\tyname}[1]{\ensuremath{\mathsf{#1}}}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Metavariables
 
 %: \ty                  -> τ
 \newcommand{\ty}{\ensuremath{\tau}\xspace}
+%: \vty                 -> v
+\newcommand{\vty}{\ensuremath{v}\xspace}
+
+\newcommand{\cname}{\ensuremath{\mathit{cname}}\xspace}
+\newcommand{\aname}{\ensuremath{\mathit{aname}}\xspace}
+
+\newcommand{\Type}{\textsc{Type}\xspace}
+\newcommand{\VType}{\textsc{ValType}\xspace}
+\newcommand{\PVType}{\ensuremath{\mathcal{P}(\VType)}}
+
+\newcommand{\NomH}{\textrm{NomHrc}\xspace}
+\newcommand{\NomHClosure}{\textrm{NomHrc*}\xspace}
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type Constructors
+
+%: \typair{t1}{t2}      -> t1 × t2
+\newcommand{\typair}[2]{\ensuremath{#1 \times #2}}
+
+%: \tyunion{t1}{t2}     -> t1 ∪ t2
+\newcommand{\tyunion}[2]{\ensuremath{#1 \cup #2}}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type Examples
+
+\newcommand{\tysigned}{\tyname{Signed}\xspace}
+\newcommand{\tyintsf}{\tyname{Int64}\xspace}
+\newcommand{\tyinttt}{\tyname{Int32}\xspace}
+\newcommand{\tyintst}{\tyname{Int16}\xspace}
+
+\newcommand{\tynum}{\tyname{Num}\xspace}
+\newcommand{\tyreal}{\tyname{Real}\xspace}
+\newcommand{\tyint}{\tyname{Int}\xspace}
+\newcommand{\tyflt}{\tyname{Flt}\xspace}
+\newcommand{\tycmplx}{\tyname{Cmplx}\xspace}
+\newcommand{\tystr}{\tyname{Str}\xspace}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Nominal Hierarchy
+
+\newcommand{\bjdeclsub}[2]{\ensuremath{#1 \rhd #2}}
+\newcommand{\bjnomsub}[2]{\ensuremath{#1\,{\rhd^*} #2}}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Interpretation
+
+\newcommand{\interpty}[1]{\ensuremath{\llbracket #1 \rrbracket}}
+
