@@ -1,0 +1,78 @@
+Let us unroll the definition of subset relation\footnote{
+$X \subseteq Y \quad \defsign \quad \forall x.\ (x \in X \implies x \in Y)$.}
+in the definition of semantic subtyping:
+\begin{equation}
+\bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
+\forall \vty.\ (\vty \in \interpty{\ty_1} \implies \vty \in \interpty{\ty_2}).
+\end{equation}
+Its main ingredient is in-the-interpretation relation $\vty \in \interpty{\ty}$.
+We can define an inductive syntax-directed relation
+equivalent to $\vty \in \interpty{\ty}$.
+We call this relation \defemph{matching relation} 
+and denote by $\bjmtch{\vty}{\ty}$, 
+read ``value type \vty matches \ty''.
+The formal definition is given in~\figref{fig:bjsem-match}.
+The matching and in-the-interpretation relations are equivalent:
+\begin{equation}\label{eq:match-eq-in-the-interpty}
+\forall \vty.\ (\vty \in \interpty{\ty} \quad \iff \quad \bjmtch{\vty}{\ty}).
+\end{equation}
+The proof is done by induction on \ty (\appref{app:match}).
+
+\begin{figure}
+	\begin{mathpar}
+		\inferrule*[right=MT-CName]
+		{ }
+		{ \bjmtch{\cname}{\cname} }		
+		\\
+		
+		\inferrule*[right=\footnotesize{MT-IntReal}]
+		{ }
+		{ \bjmtch{\tyint}{\tyreal} }
+		
+		\inferrule*[right=\footnotesize{MT-FltReal}]
+		{ }
+		{ \bjmtch{\tyflt}{\tyreal} }
+		\\
+		
+		\inferrule*[right=MT-IntNum]
+		{ }
+		{ \bjmtch{\tyint}{\tynum} }
+		
+		\inferrule*[right=MT-FltNum]
+		{ }
+		{ \bjmtch{\tyflt}{\tynum} }
+		
+		\inferrule*[right=MT-CmplxNum]
+		{ }
+		{ \bjmtch{\tycmplx}{\tynum} }
+		\\
+		
+		\inferrule*[right=MT-Pair]
+		{ \bjmtch{\vty_1}{\ty_1} \\ \bjmtch{\vty_2}{\ty_2} }
+		{ \bjmtch{\typair{\vty_1}{\vty_2}}{\typair{\ty_1}{\ty_2}} }
+		\\
+		
+		\inferrule*[right=MT-Union1]
+		{ \bjmtch{\vty}{\ty_1}  }
+		{ \bjmtch{\vty}{\tyunion{\ty_1}{\ty_2}} }
+		
+		\inferrule*[right=MT-Union2]
+		{ \bjmtch{\vty}{\ty_2}  }
+		{ \bjmtch{\vty}{\tyunion{\ty_1}{\ty_2}} }
+	\end{mathpar}
+	\caption{Matching Relation in \BetaJulia}
+	\label{fig:bjsem-match}
+\end{figure}
+
+Using the matching relation, we define a \emph{syntactic model} of
+semantic subtyping as follows:
+\begin{equation}
+\bjsemsub{\ty_1}{\ty_2} \quad \defsign \quad
+\forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies \bjmtch{\vty}{\ty_1}).
+\end{equation}
+By~\ref{eq:match-eq-in-the-interpty}, we have that $\bjsemsub{\ty_1}{\ty_2}$
+is equivalent to our definition of semantic subtyping for \BetaJulia:
+\begin{equation}
+\bjsemsub{\ty_1}{\ty_2} \quad \iff \quad \bjtruesemsub{\ty_1}{\ty_2}.
+\end{equation}
+We will be using

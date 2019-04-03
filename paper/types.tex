@@ -118,7 +118,8 @@ in terms of value types.
 
 Formally, the interpretation of \BetaJulia types is defined
 in~\figref{fig:bjsem-interpretation}.
-The relation $\bjnomsub{\cname}{\aname}$ is a transitive closure of \NomH:
+The relation $\bjnomsub{\cname}{\aname}$ used in the interpretation
+of abstract type is transitive closure of \NomH:
 \begin{mathpar}
 	\inferrule*[right=]
 	{ \bjdeclsub{n_1}{n_2} \in \NomH }
@@ -128,8 +129,19 @@ The relation $\bjnomsub{\cname}{\aname}$ is a transitive closure of \NomH:
 	{ \bjnomsub{n_1}{n_2} \\ \bjnomsub{n_2}{n_3} }
 	{ \bjnomsub{n_1}{n_3} }
 \end{mathpar}
+\TODO{Probably more on the semantic interpretation.}
 
 %and the set of values represented by a type \ty can be characterized
 %with the set of value types~$\vty_i$
 
 
+\subsection{Semantic Subtyping}
+%% -----------------------------------------------------------------------------
+
+Once we have the interpretation of types, we define semantic subtyping
+as the subset relation on interpretations:
+
+\[
+\bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
+\interpty{\ty_1} \subseteq \interpty{\ty_2}.
+\]

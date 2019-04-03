@@ -10,6 +10,7 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Math
 
 \usepackage{mathpartir} % inference rules
+\usepackage{mathtools} % text above symbols
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Graphics
 
@@ -28,10 +29,16 @@
 \newcommand{\jlcode}[1]{\texttt{\small#1}}
 \newcommand{\jltype}[1]{\texttt{\small#1}}
 
+\newcommand{\Lemma}{\textbf{Lemma}\xspace}
+\newcommand{\Proof}{\textbf{\textsl{Proof}}\xspace}
+
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\secref}[1]{Sec.~\ref{#1}}
+\newcommand{\appref}[1]{App.~\ref{#1}}
 
 \newcommand{\citemock}{\cite{bib:mock}\xspace}
+
+\newcommand{\TODO}[1]{\textbf{TODO:} #1}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BetaJulia
 
@@ -44,6 +51,10 @@
 
 %: \Alt                 -> |
 \newcommand{\Alt}{~\vert~}
+
+%: \defsign             -> <=def=>
+\newcommand{\defsign}{
+	\stackrel{\mathclap{\tiny\mbox{def}}}{\iff}}
 
 %% BetaJulia
 %% *********************************************************
@@ -70,6 +81,12 @@
 \newcommand{\NomH}{\textrm{NomHrc}\xspace}
 \newcommand{\NomHClosure}{\textrm{NomHrc*}\xspace}
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Symbols
+
+\newcommand{\semsubsign}{
+	\stackrel{\mathclap{\tiny\mbox{sem}}}{<:}}
+
+\newcommand{\tymtch}{\ensuremath{\prec}}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type Constructors
 
@@ -101,4 +118,13 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Interpretation
 
 \newcommand{\interpty}[1]{\ensuremath{\llbracket #1 \rrbracket}}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Matching Relation
+
+\newcommand{\bjmtch}[2]{\ensuremath{\vdash \, #1 \tymtch #2}}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Subtyping
+
+\newcommand{\bjtruesemsub}[2]{\ensuremath{#1 \, \semsubsign \, #2}}
+\newcommand{\bjsemsub}[2]{\ensuremath{\vDash \, #1 \, \subseteq \, #2}}
 
