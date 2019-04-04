@@ -7,6 +7,9 @@
 %\usepackage{hyperref}
 \usepackage{xspace}
 
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.85}
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Math
 
 \usepackage{mathpartir} % inference rules
@@ -88,6 +91,9 @@
 
 \newcommand{\tymtch}{\ensuremath{\prec}}
 
+%: \tyleq               -> ≤
+\newcommand{\tyleq}{\ensuremath{\leq}}
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type Constructors
 
 %: \typair{t1}{t2}      -> t1 × t2
@@ -128,3 +134,5 @@
 \newcommand{\bjtruesemsub}[2]{\ensuremath{#1 \, \semsubsign \, #2}}
 \newcommand{\bjsemsub}[2]{\ensuremath{\vDash \, #1 \, \subseteq \, #2}}
 
+%: \bjsub{t1}{t2}    -> ⊢ t1 ≤ t2
+\newcommand{\bjsub}[2]{\ensuremath{\vdash \, #1 \, \tyleq \, #2}}

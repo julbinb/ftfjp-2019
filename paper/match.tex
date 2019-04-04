@@ -1,7 +1,7 @@
 Let us unroll the definition of subset relation\footnote{
 $X \subseteq Y \quad \defsign \quad \forall x.\ (x \in X \implies x \in Y)$.}
 in the definition of semantic subtyping:
-\begin{equation}
+\begin{equation}\label{eq:truesemsub-def}
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
 \forall \vty.\ (\vty \in \interpty{\ty_1} \implies \vty \in \interpty{\ty_2}).
 \end{equation}
@@ -14,7 +14,7 @@ read ``value type \vty matches \ty''.
 The formal definition is given in~\figref{fig:bjsem-match}.
 The matching and in-the-interpretation relations are equivalent:
 \begin{equation}\label{eq:match-eq-in-the-interpty}
-\forall \vty.\ (\vty \in \interpty{\ty} \quad \iff \quad \bjmtch{\vty}{\ty}).
+\forall \vty.\ (\vty \in \interpty{\ty} \ \iff \ \ \bjmtch{\vty}{\ty}).
 \end{equation}
 The proof is done by induction on \ty (\appref{app:match}).
 
@@ -66,13 +66,30 @@ The proof is done by induction on \ty (\appref{app:match}).
 
 Using the matching relation, we define a \emph{syntactic model} of
 semantic subtyping as follows:
-\begin{equation}
+\begin{equation}\label{eq:semsub-def}
 \bjsemsub{\ty_1}{\ty_2} \quad \defsign \quad
-\forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies \bjmtch{\vty}{\ty_1}).
+\forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies\ \bjmtch{\vty}{\ty_1}).
 \end{equation}
-By~\ref{eq:match-eq-in-the-interpty}, we have that $\bjsemsub{\ty_1}{\ty_2}$
+By~\eqref{eq:match-eq-in-the-interpty}, we have that $\bjsemsub{\ty_1}{\ty_2}$
 is equivalent to our definition of semantic subtyping for \BetaJulia:
 \begin{equation}
 \bjsemsub{\ty_1}{\ty_2} \quad \iff \quad \bjtruesemsub{\ty_1}{\ty_2}.
 \end{equation}
-We will be using
+We will later use the relation $\bjsemsub{\ty_1}{\ty_2}$
+to prove that an inductive definition of subtyping coincides
+with the semantic interpretation.
+
+While the semantic interpretation does provide a useful intuition for subtyping,
+neither of the definitions~\eqref{eq:truesemsub-def}, \eqref{eq:semsub-def} 
+can be implemented directly because of the quantification $\forall \vty$.
+Therefore, we need to provide another definition of subtyping, which would
+be equivalent to the semantic one, but straightforward to implement.
+
+We do this in two steps. 
+First, we give an inductive definition of subtyping that is 
+handy to reason about and prove equivalent to the semantic definition.
+We call this subtyping \emph{declarative}.
+Second, we provide a \emph{reductive}, syntax-directed inductive definition that is equivalent to the declarative subtyping 
+(and, hence, the semantic one as well)
+and also decidable, that is for any two types $\ty_1$ and $\ty_2$
+we can prove that either $\ty_1$ is a subtype of $\ty_2$ or it is not.

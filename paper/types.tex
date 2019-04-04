@@ -52,6 +52,7 @@ In the case of \BetaJulia, the hierarchy is defined as follows:
 \bjdeclsub{\tyint}{\tyreal}, \bjdeclsub{\tyflt}{\tyreal},
 \bjdeclsub{\tycmplx}{\tynum} ].
 \]
+\TODO{requirements for hierarchy, like single parent, no cycles}
 
 \subsection{Value Types}
 %% -----------------------------------------------------------------------------
@@ -68,8 +69,8 @@ though it better be equivalent to a concrete type \tyint.
 
 Types that can be used as type tags will be further referred to
 as \defemph{value types}. 
-The formal definition is given in~\figref{fig:bjsem-value-types}.
-Value type $\vty \in \VType$ is either a concrete nominal type 
+Their formal definition is given in~\figref{fig:bjsem-value-types}:
+value type $\vty \in \VType$ is either a concrete nominal type 
 or a pair of value types. 
 Note that $\VType \subset \Type$, i.e. each value type is a type.
 
@@ -89,28 +90,38 @@ Note that $\VType \subset \Type$, i.e. each value type is a type.
 \subsection{Semantic Interpretation of Types}
 %% -----------------------------------------------------------------------------
 
-As mentioned earlier, we assume that each value is tagged with a value type.
-Therefore, the set of values represented by a value type \vty
-is unambiguously characterized by~\vty.
-As for an arbitrary type, its set of values, in turn, can be characterized
-in terms of value types.
+As mentioned earlier, the set of values represented by a value type \vty
+is unambiguously characterized by~\vty itself
+as long as each run-time value is tagged with a value type.
+But what about an arbitrary type?
+
+First, let us consider an abstract nominal type, e.g. \tynum. 
+According to the nominal hierarchy, \tynum value 
+is either a concrete complex number, or a real number, which, in turn,
+is either a concrete integer or a floating point number.
+Therefore, the set of values represented by \tynum 
+is described by the set of value types $\{\tycmplx, \tyint, \tyflt\}$.
+
+Next, pairs. Consider type \typair{\tystr}{\tyreal}:
+each of its values is a pair of a string and a number. 
+For example, \jlcode{("bread", 2)} and \jlcode{("milk", 2.75)} are such values, 
+with type tags \typair{\tystr}{\tyint} and 
+\typair{\tystr}{\tyflt}, respectively.
 
 \begin{figure}
   \[
 	\begin{array}{rcl}
 	\interpty{\cdot}: \Type & \rightarrow & \PVType \\
-	\interpty{\cname} & = & \{\cname\} \\
-	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
+	\interpty{\cname}  & = & \{\cname\} \\
+	\interpty{\tyreal} & = & \{ \tyint, \tyflt \} \\
+	\interpty{\tynum} & = & \{ \tyint, \tyflt, \tycmplx \} \\
 	\interpty{\typair{\ty_1}{\ty_2}} & = & \{\typair{\vty_1}{\vty_2} 
 	\Alt \vty_1 \in \interpty{\ty_1}, \vty_2 \in \interpty{\ty_2}\}\\
 	\interpty{\tyunion{\ty_1}{\ty_2}} & = & 
 	\interpty{\ty_1} \cup \interpty{\ty_2}
-	\\ \\
-	\multicolumn{3}{l}{\text{Note: }}\\
-	\multicolumn{3}{l}{\ \interpty{\tyreal} \equiv \{ \tyint, \tyflt \}}\\
-	\multicolumn{3}{l}{\interpty{\tynum} \equiv \{ \tyint, \tyflt, \tycmplx \}}
 	\end{array}
   \]
+%  	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
 %  (= \interpty{\tyreal} \cup \{\tycmplx\})
   \caption{Interpretation of \BetaJulia Types}
   \label{fig:bjsem-interpretation}
@@ -118,8 +129,16 @@ in terms of value types.
 
 Formally, the interpretation of \BetaJulia types is defined
 in~\figref{fig:bjsem-interpretation}.
-The relation $\bjnomsub{\cname}{\aname}$ used in the interpretation
-of abstract type is transitive closure of \NomH:
+Abstract types are interpreted according to the nominal hierarchy:
+values of each abstract type are values of any of it value subtypes.
+More generally, the interpretation of abstract types can be given in
+then following way:
+\[
+\interpty{\aname} = \{\cname\ \Alt \bjnomsub{\cname}{\aname} \},
+\]
+where the relation $\bjnomsub{n_1}{n_2}$,
+read ``$n_1$ is a nominal subtype of~$n_2$'',
+is a transitive closure of $\bjdeclsub{n_1}{n_2}$:
 \begin{mathpar}
 	\inferrule*[right=]
 	{ \bjdeclsub{n_1}{n_2} \in \NomH }
@@ -127,7 +146,7 @@ of abstract type is transitive closure of \NomH:
 	
 	\inferrule*[right=]
 	{ \bjnomsub{n_1}{n_2} \\ \bjnomsub{n_2}{n_3} }
-	{ \bjnomsub{n_1}{n_3} }
+	{ \bjnomsub{n_1}{n_3} }.
 \end{mathpar}
 \TODO{Probably more on the semantic interpretation.}
 

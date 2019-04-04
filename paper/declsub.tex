@@ -1,0 +1,87 @@
+Let us discuss what properties do we want from a definition of subtyping.
+First of all, since it should be equivalent to the subset-based definition,
+it must be \emph{reflexive} and \emph{transitive}.
+
+%Before we define an inductive declarative relation $\bjsub{\ty_1}{\ty_2}$.
+
+
+%Besides, the ability to reason about types directly,
+%without appealing to all their value subtypes.
+%Therefore, we provide  definitions of subtyping
+%in the form of inductive rule
+
+
+\begin{figure}
+	\begin{mathpar}
+		\inferrule*[right=SD-Refl]
+		{ }
+		{ \bjsub{\ty}{\ty} }
+		
+		\inferrule*[right=SD-Trans]
+		{ \bjsub{\ty_1}{\ty_2} \\ \bjsub{\ty_2}{\ty_3} }
+		{ \bjsub{\ty_1}{\ty_3} }		
+		\\
+		
+		\inferrule[SD-IntReal]
+		{ }
+		{ \bjsub{\tyint}{\tyreal} }
+		
+		\inferrule[SD-FltReal]
+		{ }
+		{ \bjsub{\tyflt}{\tyreal} }
+		\\
+		
+		\inferrule[{SD-RealNum}]
+		{ }
+		{ \bjsub{\tyreal}{\tynum} }
+	
+		\inferrule[{SD-CmplxNum}]
+		{ }
+		{ \bjsub{\tycmplx}{\tynum} }
+		\\
+		
+		\colorbox{light-gray}{$
+		\inferrule[SD-RealUnion]
+		{ }
+		{ \bjsub{\tyreal}{\tyunion{\tyint}{\tyflt}} }
+		$}
+		
+		\colorbox{light-gray}{$
+		\inferrule[SD-NumUnion]
+		{ }
+		{ \bjsub{\tynum}{\tyunion{\tyreal}{\tycmplx}} }
+		$}
+		\\
+		
+		\inferrule*[right=SD-Pair]
+		{ \bjsub{\ty_1}{\ty'_1} \\ \bjsub{\ty_2}{\ty'_2} }
+		{ \bjsub{\typair{\ty_1}{\ty_2}}{\typair{\ty'_1}{\ty'_2}} }
+		\\
+		
+		\inferrule*[right=SD-UnionL]
+		{ \bjsub{\ty_1}{\ty'} \\ \bjsub{\ty_2}{\ty'} }
+		{ \bjsub{\tyunion{\ty_1}{\ty_2}}{\ty'} }
+		\\
+		
+		\inferrule[{SD-UnionR1}]
+		{ }
+		{ \bjsub{\ty_1}{\tyunion{\ty_1}{\ty_2}} }
+		
+		\inferrule[{SD-UnionR2}]
+		{ }
+		{ \bjsub{\ty_2}{\tyunion{\ty_1}{\ty_2}} }
+		\\
+		
+		\inferrule*[right=SD-Distr1]
+		{ }
+		{ \bjsub{\typair{(\tyunion{\ty_{11}}{\ty_{12}})}{\ty_2}}
+			{\tyunion{(\typair{\ty_{11}}{\ty_2})}{(\typair{\ty_{12}}{\ty_2})}} }
+		
+		\inferrule*[right=SD-Distr2]
+		{ }
+		{ \bjsub{\typair{\ty_1}{(\tyunion{\ty_{21}}{\ty_{22}})}}
+			{\tyunion{(\typair{\ty_1}{\ty_{21}})}{(\typair{\ty_1}{\ty_{22}})}} }
+	\end{mathpar}
+	\caption{Declarative Inductive Subtyping for \BetaJulia}
+	\label{fig:bjsem-decl-sub}
+\end{figure}
