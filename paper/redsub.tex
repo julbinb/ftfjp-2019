@@ -1,0 +1,58 @@
+
+\begin{figure}
+	\begin{mathpar}
+		\inferrule*[right=SR-BaseRefl]
+		{ }
+		{ \bjsubr{\cname}{\cname} }
+		\\
+		
+		\inferrule[SR-IntReal]
+		{ }
+		{ \bjsubr{\tyint}{\tyreal} }
+		
+		\inferrule[SR-FltReal]
+		{ }
+		{ \bjsubr{\tyflt}{\tyreal} }
+		\\
+	
+		\inferrule[SR-CmplxNum]
+		{ }
+		{ \bjsubr{\tycmplx}{\tynum} }
+		
+		\inferrule[SR-IntNum]
+		{ }
+		{ \bjsubr{\tyint}{\tynum} }
+		
+		\inferrule[SR-FltNum]
+		{ }
+		{ \bjsubr{\tyflt}{\tynum} }
+		\\
+		
+		\inferrule*[right=SR-Pair]
+		{ \bjsubr{\ty_1}{\ty'_1} \\ \bjsubr{\ty_2}{\ty'_2} }
+		{ \bjsubr{\typair{\ty_1}{\ty_2}}{\typair{\ty'_1}{\ty'_2}} }
+		\\
+		
+		\inferrule*[right=SR-UnionL]
+		{ \bjsubr{\ty_1}{\ty'} \\ \bjsubr{\ty_2}{\ty'} }
+		{ \bjsubr{\tyunion{\ty_1}{\ty_2}}{\ty'} }
+		\\
+		
+		\inferrule*[right=SR-UnionR1]
+		{ \bjsubr{\ty}{\ty'_1} }
+		{ \bjsubr{\ty}{\tyunion{\ty'_1}{\ty'_2}} }
+		
+		\inferrule*[right=SR-UnionR2]
+		{ \bjsubr{\ty}{\ty'_2} }
+		{ \bjsubr{\ty}{\tyunion{\ty'_1}{\ty'_2}} }
+		\\
+		
+		\colorbox{light-gray}{$
+		\inferrule*[right=SR-NF]
+		{ \bjsubr{\NF(\ty)}{\ty'} }
+		{ \bjsubr{\ty}{\ty'} }
+		$}
+	\end{mathpar}
+	\caption{Reductive Subtyping for \BetaJulia}
+	\label{fig:bjsem-red-sub}
+\end{figure}

@@ -78,8 +78,8 @@ Note that $\VType \subset \Type$, i.e. each value type is a type.
 	\[
 	\begin{array}{rcl@{\qquad}l}
 	\vty \in \VType & ::= & & \text{\emph{Value Types}}
-	\\ &\Alt& \cname & 
-	\\ &\Alt& \typair{\vty_1}{\vty_2} & 
+	\\ &\Alt& \cname & \text{concrete nominal type}
+	\\ &\Alt& \typair{\vty_1}{\vty_2} & \text{pair of value types}
 	\end{array}
 	\]
 	\caption{Value types in \BetaJulia}
@@ -111,7 +111,7 @@ with type tags \typair{\tystr}{\tyint} and
 \begin{figure}
   \[
 	\begin{array}{rcl}
-	\interpty{\cdot}: \Type & \rightarrow & \PVType \\
+	\interpty{\cdot}: \Type &\rightarrow& \PVType \\
 	\interpty{\cname}  & = & \{\cname\} \\
 	\interpty{\tyreal} & = & \{ \tyint, \tyflt \} \\
 	\interpty{\tynum} & = & \{ \tyint, \tyflt, \tycmplx \} \\
@@ -123,11 +123,11 @@ with type tags \typair{\tystr}{\tyint} and
   \]
 %  	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
 %  (= \interpty{\tyreal} \cup \{\tycmplx\})
-  \caption{Interpretation of \BetaJulia Types}
+  \caption{Semantic Interpretation of \BetaJulia Types}
   \label{fig:bjsem-interpretation}
 \end{figure}
 
-Formally, the interpretation of \BetaJulia types is defined
+Formally, the \emph{interpretation} of \BetaJulia types is defined
 in~\figref{fig:bjsem-interpretation}.
 Abstract types are interpreted according to the nominal hierarchy:
 values of each abstract type are values of any of it value subtypes.
@@ -150,17 +150,12 @@ is a transitive closure of $\bjdeclsub{n_1}{n_2}$:
 \end{mathpar}
 \TODO{Probably more on the semantic interpretation.}
 
-%and the set of values represented by a type \ty can be characterized
-%with the set of value types~$\vty_i$
-
-
-\subsection{Semantic Subtyping}
-%% -----------------------------------------------------------------------------
-
-Once we have the interpretation of types, we define semantic subtyping
-as the subset relation on interpretations:
-
+Once we have the interpretation of types, we define \emph{semantic subtyping}
+as the subset relation:
 \[
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
 \interpty{\ty_1} \subseteq \interpty{\ty_2}.
 \]
+
+%and the set of values represented by a type \ty can be characterized
+%with the set of value types~$\vty_i$

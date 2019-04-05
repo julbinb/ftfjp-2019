@@ -35,6 +35,9 @@
 \newcommand{\Lemma}{\textbf{Lemma}\xspace}
 \newcommand{\Proof}{\textbf{\textsl{Proof}}\xspace}
 
+\newcommand{\R}[1]{\textsc{#1}\xspace}
+\newcommand{\RD}[1]{\R{SD-#1}}
+
 \newcommand{\figref}[1]{Fig.~\ref{#1}}
 \newcommand{\secref}[1]{Sec.~\ref{#1}}
 \newcommand{\appref}[1]{App.~\ref{#1}}
@@ -57,7 +60,7 @@
 
 %: \defsign             -> <=def=>
 \newcommand{\defsign}{
-	\stackrel{\mathclap{\tiny\mbox{def}}}{\iff}}
+	\stackrel{\mathclap{\tiny\mbox{def}}}{\equiv}} % \iff
 
 %% BetaJulia
 %% *********************************************************
@@ -93,6 +96,7 @@
 
 %: \tyleq               -> ≤
 \newcommand{\tyleq}{\ensuremath{\leq}}
+\newcommand{\tyleqR}{\stackrel{\mathclap{\tiny\mbox{R}}}{\tyleq}}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type Constructors
 
@@ -136,3 +140,11 @@
 
 %: \bjsub{t1}{t2}    -> ⊢ t1 ≤ t2
 \newcommand{\bjsub}[2]{\ensuremath{\vdash \, #1 \, \tyleq \, #2}}
+
+\newcommand{\bjsubr}[2]{\ensuremath{\vdash \, #1 \, \tyleqR \, #2}}
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Normal Form
+
+\newcommand{\InNF}{\ensuremath{\mathop{\mathrm{InNF}}}\xspace}
+\newcommand{\NF}{\ensuremath{\mathop{\mathrm{NF}}}\xspace}
+\newcommand{\unprs}{\ensuremath{\mathop{\mathtt{un\_prs}}}\xspace}

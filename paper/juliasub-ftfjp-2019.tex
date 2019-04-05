@@ -182,18 +182,25 @@ Text of abstract \ldots.
 
 \input{intro}
 
+
 \section{Types and Semantic Subtyping}
 
 \input{types}
 
 \subsection{Syntactic Model of Semantic Subtyping}
+\label{sec:syn-model-of-semsub}
 
 \input{match}
+
 
 \section{Declarative Definition of Subtyping}
 
 \input{declsub}
 
+
+\section{Reductive Definition of Subtyping}
+
+\input{redsub}
 
 
 
@@ -214,37 +221,17 @@ Text of abstract \ldots.
 %  National Science Foundation.
 \end{acks}
 
+\newpage
 
 %% Bibliography
 \bibliography{bibfile}
 
 
+\newpage
+
 %% Appendix
 \appendix
 
-\section{Appendix: Matching Relation}\label{app:match}
-
-\Lemma (Equivalence of matching and in-the-interpretation relations).
-\begin{equation}
-\forall \vty.\ (\vty \in \interpty{\ty} \quad \iff \quad \bjmtch{\vty}{\ty}).
-\end{equation}
-\Proof. By induction on \ty.
-\begin{description}
-  \item[Case $\ty = \cname$.] We have $\interpty{\cname} = \{\cname\}$,
-	so we need to check if
-	$\vty \in \{\cname\} \iff\ \bjmtch{\vty}{\cname}$.
-	Both sides are true iff $\vty \equiv \cname$.
-	
-  \item[Case $\ty = \cname$.] In this case we need to go through all possible
-    \aname. \TODO{}
-    
-  \item[Case $\ty = \typair{\ty_1}{\ty_2}$.] We have two induction hypothesis:
-    \TODO{}
-    
-  \item[Case $\ty = \tyunion{\ty_1}{\ty_2}$.] \TODO{}
-\end{description}
-
-\section{Appendix}
-Text of appendix \ldots
+\input{appendix}
 
 \end{document}
