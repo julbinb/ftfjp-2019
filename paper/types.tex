@@ -1,4 +1,3 @@
-
 We build the presentation around a small type language called \BetaJulia,
 presented in~\figref{fig:bjsem-types}.
 Types of \BetaJulia, denoted by $\ty \in \Type$, include pairs, unions, 
@@ -9,7 +8,7 @@ In this terminology, \jltype{Int64} and \jltype{Signed} are
 a concrete and abstract type, respectively.\footnote{Correspondence to Julia.}
 
 \begin{figure}
-  \[
+	\[
 	\begin{array}{rcl@{\qquad}l}
 	\ty \in \Type & ::= & & \text{\emph{Types}}
 	\\ &\Alt& \typair{\ty_1}{\ty_2}  & \text{covariant pair}
@@ -18,23 +17,23 @@ a concrete and abstract type, respectively.\footnote{Correspondence to Julia.}
 	\\ &\Alt& \aname  & \text{abstract nominal type}
 	\\ \\
 	\cname & \in &
-	  \multicolumn{2}{l}{\{ \tyint, \tyflt, \tycmplx, \tystr \}}
+	\multicolumn{2}{l}{\{ \tyint, \tyflt, \tycmplx, \tystr \}}
 	\\ 
 	\aname & \in & \multicolumn{2}{l}{\{ \tyreal, \tynum \}}
 	\end{array}
-  \]
-  \begin{tikzpicture}[sibling distance=4em, level distance=2.25em,
-    concrete/.style = {shape=rectangle, draw, align=center}]
-  \node { Num }
-  child { node { Real }
-  	child { node[concrete] { Int} }
-  	child { node[concrete] (NF) { Flt} } }
-  child { node[concrete, right=2em of NF] (NC) {Cmplx} }
-  ;
-  \node[concrete, right=2em of NC] {Str} ;
-  \end{tikzpicture}
-  \caption{\BetaJulia: type grammar and nominal hierarchy}
-  \label{fig:bjsem-types}
+	\]
+	\begin{tikzpicture}[sibling distance=4em, level distance=2.25em,
+	concrete/.style = {shape=rectangle, draw, align=center}]
+	\node { Num }
+	child { node { Real }
+		child { node[concrete] { Int} }
+		child { node[concrete] (NF) { Flt} } }
+	child { node[concrete, right=2em of NF] (NC) {Cmplx} }
+	;
+	\node[concrete, right=2em of NC] {Str} ;
+	\end{tikzpicture}
+	\caption{\BetaJulia: type grammar and nominal hierarchy}
+	\label{fig:bjsem-types}
 \end{figure}
 
 To simplify the development, we decided to work with particular 

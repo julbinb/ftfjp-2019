@@ -1,0 +1,42 @@
+A programming language is usually called \defemph{dynamically typed}
+if no type checking is performed statically
+but errors related to types \emph{are} raised at run-time.
+For example, consider the simple code below, assuming that
+addition \jlcode{(+)} is defined only on integers, 
+string concatenation \jlcode{(\&\&)}~--- only on strings,
+and no implicit conversion between types is allowed:
+\begin{verbatim}
+(x + 5) && "hello"
+\end{verbatim}
+%We assume that addition \jlcode{(+)} is defined only on integers, 
+%string concatenation \jlcode{(\&\&)}~--- only on strings,
+%and no implicit conversion between types is allowed.
+In a dynamically typed language, two scenarios of running the code are possible,
+depending on the run-time value of \jlcode{x}.
+(1) If \jlcode{x} contains a non-integer value $v$, 
+the program raises a type error "$v$ is not an integer",
+because addition expects integers as both arguments.
+(2) If \jlcode{x} contains an integer,
+evaluation of \jlcode{(x + 5)} succeeds and produces an integer $n$.
+After that, the program raises a (different) type error, "$n$ is not a string", 
+because concatenation works only for strings.
+
+A statically typed language would reject the program above
+because it ``knows'' that the program will definitely fail at run-time.
+To know, the type checker needs to reason about \emph{expressions}
+(such as \jlcode{x + 5}) and approximate types of values they can produce.
+%In this case, it knows that the expression \jlcode{(x + 5)} will produce
+%an integer, and thus, concatenation can never succeed.
+Note that in the case of dynamic typing, we only care about
+types of \emph{values}. %, not arbitrary expressions.
+%First, since the result of addition is always an integer, concatenation
+%of \jlcode{(x + 5)} and string \jlcode{"hello"} cannot succeed.
+%Second, depending on the static type of variable \jlcode{x}, the addition
+%\jlcode{(x + 5)} itself is either well-typed (if \jlcode{x} is known to be
+%an integer) or ill-typed (if \jlcode{}).
+
+%In some dynamically typed languages, e.g. Julia, 
+%In the Julia language, types are used primarily for 
+%\emph{multiple dynamic dispatch}
+
+
