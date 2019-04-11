@@ -2,33 +2,148 @@ A programming language is usually called \defemph{dynamically typed}
 if no type checking is performed statically
 but errors related to types \emph{are} raised at run-time.
 For example, consider the simple code below, assuming that
-addition \jlcode{(+)} is defined only on integers, 
-string concatenation \jlcode{(\&\&)}~--- only on strings,
-and no implicit conversion between types is allowed:
+multiplication \jlcode{(*)} is defined only on integers, 
+string concatenation \jlcode{(++)}~--- only on strings,
+and no implicit conversion between types is allowed.
 \begin{verbatim}
-(x + 5) && "hello"
+    (x * 5) ++ "hello"
 \end{verbatim}
 %We assume that addition \jlcode{(+)} is defined only on integers, 
 %string concatenation \jlcode{(\&\&)}~--- only on strings,
 %and no implicit conversion between types is allowed.
-In a dynamically typed language, two scenarios of running the code are possible,
+In a dynamically typed language, two scenarios of running the code are possible
 depending on the run-time value of \jlcode{x}.
 (1) If \jlcode{x} contains a non-integer value $v$, 
 the program raises a type error "$v$ is not an integer",
-because addition expects integers as both arguments.
+because multiplication expects integers for both arguments.
 (2) If \jlcode{x} contains an integer,
-evaluation of \jlcode{(x + 5)} succeeds and produces an integer $n$.
-After that, the program raises a (different) type error, "$n$ is not a string", 
-because concatenation works only for strings.
+evaluation of \jlcode{(x * 5)} succeeds and produces an integer $n$,
+but then, the program raises a (different) type error, "$n$ is not a string", 
+because concatenation expects string arguments.
+Note that we only care about %in the case of dynamic typing,
+types of \emph{values}. By contrast, in a statically typed language,
+the static checker needs to reason about whole expressions and approximate
+types of values they might produce.
 
-A statically typed language would reject the program above
-because it ``knows'' that the program will definitely fail at run-time.
-To know, the type checker needs to reason about \emph{expressions}
-(such as \jlcode{x + 5}) and approximate types of values they can produce.
-%In this case, it knows that the expression \jlcode{(x + 5)} will produce
-%an integer, and thus, concatenation can never succeed.
-Note that in the case of dynamic typing, we only care about
-types of \emph{values}. %, not arbitrary expressions.
+We can add flexibility to our imaginary dynamically typed language
+by the means of \defemph{multiple dynamic dispatch} (MDD), 
+which we explain in a bit.
+So far, we assumed that multiplication and concatenation have only one 
+definition each. For instance, they might be implemented like this 
+(we use the Julia syntax for function definitions):
+\begin{verbatim}
+     *(x::Int, y::Int) = integer_mult(x, y)
+    ++(a::Str, b::Str) = string_concat(a, b)
+\end{verbatim}
+
+With MDD, we can have more than one definition for the same function, 
+with each definition expecting different argument types.
+
+
+at run-time, each function call will be \emph{dispatched} 
+to ``the best'' definition based on the types of the arguments.
+A single definition is usually called a \defemph{method}. 
+%and the set of all methods
+%with the same name is called a \emph{generic function}.
+Different methods expect values of different types. % as their arguments.
+For instance, let us add a concatenation method\footnote{Function 
+	\jlftcode{string} converts an argument to a string.}:
+% of an integer and a string
+\begin{verbatim}
+    ++(x::Int, s::Str) = string(x) ++ s
+\end{verbatim}
+%Now the generic concatenation function has two methods, 
+Now, scenario (2) of running the example changes:
+evaluation of \jlcode{(x * 5)} produces an integer $n$, 
+and then the method \jlcode{++(::Int, ::Str)} is called on 
+\jlcode{(}$n$\jlcode{, "hello")},
+which succeeds producing a string.
+Note that if we replace \jlcode{"hello"} with an integer, the program will fail
+again because neither of the concatenation methods accepts two integers.
+
+Types used in method signatures can be more complex than 
+just \jlcode{Int} and \jlcode{Str}. 
+In this paper, we work with a subset of Julia types, called \BetaJulia,
+presented in~\figref{fig:bjsem-types}.
+Types denoted by $\ty \in \Type$ include pairs,
+unions, and nominal types in the spirit of Julia:
+\cname denotes \emph{concrete} nominal types that can be used to create values,
+and \aname denotes \emph{abstract} nominal types.\footnote{
+In this terminology, types \jlfttype{Int64} and \jlfttype{Signed} discussed 
+in the introduction are a concrete and abstract type, respectively.}
+
+To determine which method to call (if any), the Julia language relies on
+\defemph{subtyping}.
+Let us define couple more methods:
+\begin{verbatim}
+*(x::Real, y::Real) = 
+    float_mult(float(x), float(y))
+*(s::Str,  y::Union{Int,Flt}) = length(s) * y
+\end{verbatim}
+Now, consider a call:
+\begin{verbatim}
+"hello" * 3.5
+\end{verbatim}
+ 
+
+How does the run-time know which method to call, if any? A solution adopted
+by the Julia language is to use \defemph{subtyping}: 
+between a call and a method signature to find applicable methods,
+and between method signatures to determine the best method. 
+For this, method signatures and function calls are represented as 
+tuple types\footnote{Only argument types are taken into account; 
+	the return type is ignored.}.
+Thus, in our running example, method signatures of \jlcode{**} 
+are represented with types
+\jlcode{(Str, Str)} and \jlcode{(Int, Str)}, and the call to concatenation
+in scenario (2)~--- with \jlcode{(Int, Str)}. 
+Naturally, Julia would \emph{dispatch}
+the call to the \jlcode{(Int, Str)} method.
+
+
+
+%which consists of pairs (instead of n-ary tuples), union types,
+%and a number of nominal types.
+%The grammar of \BetaJulia is presented in~\figref{fig:bjsem-types}. 
+
+
+\begin{figure}
+	\[
+	\begin{array}{rcl@{\qquad}l}
+	\ty \in \Type & ::= & & \text{\emph{Types}}
+	\\ &\Alt& \typair{\ty_1}{\ty_2}  & \text{covariant pair}
+	\\ &\Alt& \tyunion{\ty_1}{\ty_2} & \text{untagged union}
+	\\ &\Alt& \cname  & \text{concrete nominal type}
+	\\ &\Alt& \aname  & \text{abstract nominal type}
+	\\ \\
+	\cname & \in &
+	\multicolumn{2}{l}{\{ \tyint, \tyflt, \tycmplx, \tystr \}}
+	\\ 
+	\aname & \in & \multicolumn{2}{l}{\{ \tyreal, \tynum \}}
+	\end{array}
+	\]
+	\begin{tikzpicture}[sibling distance=4em, level distance=2.25em,
+	concrete/.style = {shape=rectangle, draw, align=center}]
+	\node { Num }
+	child { node { Real }
+		child { node[concrete] { Int} }
+		child { node[concrete] (NF) { Flt} } }
+	child { node[concrete, right=2em of NF] (NC) {Cmplx} }
+	;
+	\node[concrete, right=2em of NC] {Str} ;
+	\end{tikzpicture}
+	\caption{\BetaJulia: type grammar and nominal hierarchy}
+	\label{fig:bjsem-types}
+\end{figure}
+
+%A statically typed language would reject the program above
+%because it ``suspects'' that the program will fail at run-time.
+%Static checking requires reasoning about \emph{expressions}
+%(such as \jlcode{x + 5}) and approximating types of values they can produce.
+%%In this case, it knows that the expression \jlcode{(x + 5)} will produce
+%%an integer, and thus, concatenation can never succeed.
+%Note that in the case of dynamic typing, we only care about
+%types of \emph{values}. %, not arbitrary expressions.
 %First, since the result of addition is always an integer, concatenation
 %of \jlcode{(x + 5)} and string \jlcode{"hello"} cannot succeed.
 %Second, depending on the static type of variable \jlcode{x}, the addition
