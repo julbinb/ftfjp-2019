@@ -28,15 +28,39 @@ types of values they might produce.
 We can add flexibility to our imaginary dynamically typed language
 by the means of \defemph{multiple dynamic dispatch} (MDD), 
 which we explain in a bit.
-So far, we assumed that multiplication and concatenation have only one 
-definition each. For instance, they might be implemented like this 
+So far, we assumed that multiplication and concatenation are defined only
+for integers and strings, respectively
 (we use the Julia syntax for function definitions):
 \begin{verbatim}
      *(x::Int, y::Int) = integer_mult(x, y)
     ++(a::Str, b::Str) = string_concat(a, b)
 \end{verbatim}
+MDD allows to have several \emph{distinct} definitions of the same function
+(those definitions are usually called methods),
+and each function call gets \emph{dispatched} to the best method at run-time.
 
-With MDD, we can have more than one definition for the same function, 
+Informally, methods are considered distinct if they accept different sets 
+of values as their arguments. For instance, the following concatenation method
+is distinct from the one we already have\footnote{Function 
+	\jlftcode{string} converts its argument to a string.}:
+\begin{verbatim}
+++(x::Int, s::Str) = string(x) ++ s
+\end{verbatim}
+The original method expects a pair of strings as input, and the new method
+expects a pair of an integer and a string.
+With the new method, scenario (2) of running the original example changes:
+the call $n$\jlcode{ ++ "hello"} dispatches to the method
+\jlcode{++(::Int, ::Str)}, which succeeds producing a string.
+Note that if we replace \jlcode{"hello"} with an integer, the program will fail
+again because neither of the concatenation methods accepts two integers.
+
+with each definition expecting a different set of arguments.
+A single definition is usually called a \defemph{method}.
+For instance, we can add a second concatenation method\footnote{Function 
+	\jlftcode{string} converts an argument to a string.}:
+% of an integer and a string
+
+
 with each definition expecting different argument types.
 
 
