@@ -2,10 +2,9 @@ We build the presentation around a small type language called \BetaJulia,
 presented in~\figref{fig:bjsem-types}.
 Types of \BetaJulia, denoted by $\ty \in \Type$, include pairs, unions, 
 and nominal types in the spirit of Julia:
-\cname denotes \emph{concrete} nominal types that correspond to type tags,
-and \aname denotes \emph{abstract} nominal types.
-In this terminology, \jltype{Int64} and \jltype{Signed} are
-a concrete and abstract type, respectively.\footnote{Correspondence to Julia.}
+\cname denotes \emph{concrete} nominal types that correspond to type tags
+such as \jltype{Flt},
+and \aname denotes \emph{abstract} nominal types such as \jltype{Real}.
 
 \begin{figure}
 	\[
@@ -33,7 +32,7 @@ a concrete and abstract type, respectively.\footnote{Correspondence to Julia.}
 	\node[concrete, right=2em of NC] {Str} ;
 	\end{tikzpicture}
 	\caption{\BetaJulia: type grammar and nominal hierarchy}
-	\label{fig:bjsem-types1}
+	\label{fig:bjsem-types}
 \end{figure}
 
 To simplify the development, we decided to work with particular 
@@ -51,20 +50,22 @@ In the case of \BetaJulia, the hierarchy is defined as follows:
 \bjdeclsub{\tyint}{\tyreal}, \bjdeclsub{\tyflt}{\tyreal},
 \bjdeclsub{\tycmplx}{\tynum} ].
 \]
-\TODO{requirements for hierarchy, like single parent, no cycles}
+The hierarchy should represent a tree with concrete types in leafs.
+This means, for example, that each type can have only one parent,
+concrete types cannot be used parents, and no cycles are allowed.
 
 \subsection{Value Types}
 %% -----------------------------------------------------------------------------
 
-Not only concrete nominal types can be used as type tags
+Not only concrete nominal types can be type tags, i.e. correspond to values,
 but also pair types. For example, \typair{\tyint}{\tyint}
 or \typair{\tystr}{(\typair{\tyint}{\tyint})}.
-Union types, on the other hand, cannot be type tags, 
-as they potentially describe dissimilar values.
+Union types, on the other hand, are abstract, 
+and they potentially describe dissimilar values.
 For instance, both integer and floating point values belong
 to a union type \tyunion{\tyint}{\tyflt}.
 Even type \tyunion{\tyint}{\tyint} is not a type tag, 
-though it better be equivalent to a concrete type \tyint.
+though it describes the same set of values as the concrete type \tyint.
 
 Types that can be used as type tags will be further referred to
 as \defemph{value types}. 

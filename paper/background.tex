@@ -36,146 +36,65 @@ for integers and strings, respectively
     ++(a::Str, b::Str) = string_concat(a, b)
 \end{verbatim}
 MDD allows to have several \emph{distinct} definitions of the same function
-(those definitions are usually called methods),
-and each function call gets \emph{dispatched} to the best method at run-time.
+(usually called methods), with function calls being \emph{dispatched} 
+to the best method \emph{at run-time}.
 
-Informally, methods are considered distinct if they accept different sets 
-of values as their arguments. For instance, the following concatenation method
-is distinct from the one we already have\footnote{Function 
-	\jlftcode{string} converts its argument to a string.}:
+Methods are considered distinct if they accept different sets 
+of values as their arguments. For instance, the following concatenation 
+method\footnote{Function \jlftcode{string} converts its argument to a string.} 
+is distinct from the one we already have 
+that expects strings for both arguments:
 \begin{verbatim}
 ++(x::Int, s::Str) = string(x) ++ s
 \end{verbatim}
-The original method expects a pair of strings as input, and the new method
-expects a pair of an integer and a string.
-With the new method, scenario (2) of running the original example changes:
+With this method, scenario (2) of running the original example changes:
 the call $n$\jlcode{ ++ "hello"} dispatches to the method
 \jlcode{++(::Int, ::Str)}, which succeeds producing a string.
-Note that if we replace \jlcode{"hello"} with an integer, the program will fail
-again because neither of the concatenation methods accepts two integers.
-
-with each definition expecting a different set of arguments.
-A single definition is usually called a \defemph{method}.
-For instance, we can add a second concatenation method\footnote{Function 
-	\jlftcode{string} converts an argument to a string.}:
-% of an integer and a string
-
-
-with each definition expecting different argument types.
-
-
-at run-time, each function call will be \emph{dispatched} 
-to ``the best'' definition based on the types of the arguments.
-A single definition is usually called a \defemph{method}. 
-%and the set of all methods
-%with the same name is called a \emph{generic function}.
-Different methods expect values of different types. % as their arguments.
-For instance, let us add a concatenation method\footnote{Function 
-	\jlftcode{string} converts an argument to a string.}:
-% of an integer and a string
-\begin{verbatim}
-    ++(x::Int, s::Str) = string(x) ++ s
-\end{verbatim}
-%Now the generic concatenation function has two methods, 
-Now, scenario (2) of running the example changes:
-evaluation of \jlcode{(x * 5)} produces an integer $n$, 
-and then the method \jlcode{++(::Int, ::Str)} is called on 
-\jlcode{(}$n$\jlcode{, "hello")},
-which succeeds producing a string.
-Note that if we replace \jlcode{"hello"} with an integer, the program will fail
-again because neither of the concatenation methods accepts two integers.
+%Note that if we replace \jlcode{"hello"} with an integer, the program will fail
+%again because neither of the concatenation methods accepts two integers.
 
 Types used in method signatures can be more complex than 
-just \jlcode{Int} and \jlcode{Str}. 
-In this paper, we work with a subset of Julia types, called \BetaJulia,
-presented in~\figref{fig:bjsem-types}.
-Types denoted by $\ty \in \Type$ include pairs,
-unions, and nominal types in the spirit of Julia:
-\cname denotes \emph{concrete} nominal types that can be used to create values,
-and \aname denotes \emph{abstract} nominal types.\footnote{
-In this terminology, types \jlfttype{Int64} and \jlfttype{Signed} discussed 
-in the introduction are a concrete and abstract type, respectively.}
-
-To determine which method to call (if any), the Julia language relies on
-\defemph{subtyping}.
-Let us define couple more methods:
+just \jltype{Int} and \jltype{Str}. For example:
 \begin{verbatim}
 *(x::Real, y::Real) = 
     float_mult(float(x), float(y))
 *(s::Str,  y::Union{Int,Flt}) = length(s) * y
 \end{verbatim}
-Now, consider a call:
-\begin{verbatim}
-"hello" * 3.5
-\end{verbatim}
- 
+Here we assume that \jltype{Real} is an abstract nominal type, 
+with both \jltype{Int} and \jltype{Flt} being its declared subtypes.
+The first method above accepts any values that are real numbers
+and converts them to floats. %, and calls float multiplication.
+The second method accepts a string as the first argument, and either an integer
+or a float as the second one (this is what the union type means).
 
-How does the run-time know which method to call, if any? A solution adopted
-by the Julia language is to use \defemph{subtyping}: 
-between a call and a method signature to find applicable methods,
-and between method signatures to determine the best method. 
-For this, method signatures and function calls are represented as 
-tuple types\footnote{Only argument types are taken into account; 
-	the return type is ignored.}.
-Thus, in our running example, method signatures of \jlcode{**} 
-are represented with types
-\jlcode{(Str, Str)} and \jlcode{(Int, Str)}, and the call to concatenation
-in scenario (2)~--- with \jlcode{(Int, Str)}. 
-Naturally, Julia would \emph{dispatch}
-the call to the \jlcode{(Int, Str)} method.
+It is important to note that function calls are resolved at run-time,
+based on the \emph{values} provided as arguments.
+A method is considered to be \emph{applicable} in a particular call
+if value arguments are in the set accepted by the method.
+If no methods are applicable, an error is raised.
+If several methods are applicable and neither of them is better than
+the others, an error is raised.
 
+Method $m_1$ is considered to be ``better'', more specific than method $m_2$,
+if $m_1$ accepts a smaller set of values than $m_2$.
+For instance, in our examples, \jlcode{*(::Int, ::Int)} is more specific than
+\jlcode{*(::Real, ::Real)} because the former accepts integers 
+whereas the latter~--- any real numbers.
+Naturally, this enables dispatching to integer multiplication 
+for \jlcode{3 * 5} and float multiplication for \jlcode{3.14 * 5}, respectively.
 
-
-%which consists of pairs (instead of n-ary tuples), union types,
-%and a number of nominal types.
-%The grammar of \BetaJulia is presented in~\figref{fig:bjsem-types}. 
-
-
-\begin{figure}
-	\[
-	\begin{array}{rcl@{\qquad}l}
-	\ty \in \Type & ::= & & \text{\emph{Types}}
-	\\ &\Alt& \typair{\ty_1}{\ty_2}  & \text{covariant pair}
-	\\ &\Alt& \tyunion{\ty_1}{\ty_2} & \text{untagged union}
-	\\ &\Alt& \cname  & \text{concrete nominal type}
-	\\ &\Alt& \aname  & \text{abstract nominal type}
-	\\ \\
-	\cname & \in &
-	\multicolumn{2}{l}{\{ \tyint, \tyflt, \tycmplx, \tystr \}}
-	\\ 
-	\aname & \in & \multicolumn{2}{l}{\{ \tyreal, \tynum \}}
-	\end{array}
-	\]
-	\begin{tikzpicture}[sibling distance=4em, level distance=2.25em,
-	concrete/.style = {shape=rectangle, draw, align=center}]
-	\node { Num }
-	child { node { Real }
-		child { node[concrete] { Int} }
-		child { node[concrete] (NF) { Flt} } }
-	child { node[concrete, right=2em of NF] (NC) {Cmplx} }
-	;
-	\node[concrete, right=2em of NC] {Str} ;
-	\end{tikzpicture}
-	\caption{\BetaJulia: type grammar and nominal hierarchy}
-	\label{fig:bjsem-types}
-\end{figure}
-
-%A statically typed language would reject the program above
-%because it ``suspects'' that the program will fail at run-time.
-%Static checking requires reasoning about \emph{expressions}
-%(such as \jlcode{x + 5}) and approximating types of values they can produce.
-%%In this case, it knows that the expression \jlcode{(x + 5)} will produce
-%%an integer, and thus, concatenation can never succeed.
-%Note that in the case of dynamic typing, we only care about
-%types of \emph{values}. %, not arbitrary expressions.
-%First, since the result of addition is always an integer, concatenation
-%of \jlcode{(x + 5)} and string \jlcode{"hello"} cannot succeed.
-%Second, depending on the static type of variable \jlcode{x}, the addition
-%\jlcode{(x + 5)} itself is either well-typed (if \jlcode{x} is known to be
-%an integer) or ill-typed (if \jlcode{}).
-
-%In some dynamically typed languages, e.g. Julia, 
-%In the Julia language, types are used primarily for 
-%\emph{multiple dynamic dispatch}
-
-
+Though the above explanation of MDD appeals to the set-theoretic reasoning,
+in reality, languages have to use some syntactic rules to determine
+applicable methods and compare them for specificity.
+For instance, the Julia language uses \defemph{subtyping}.
+For this, Julia looks at method signatures as well as function calls
+as tuple types. For example, methods 
+\jlcode{*(::Int, ::Int)} and \jlcode{*(::Real, ::Real)} are viewed as types
+\jlcode{(Int, Int)} and \jlcode{(Real, Real)}, and calls 
+\jlcode{3 * 5} and \jlcode{3.14 * 5}~--- as types
+\jlcode{(Int, Int)} and \jlcode{(Flt, Int)}.
+Then, the applicable methods are the ones that are supertypes of a call,
+and the most specific method is the subtype of the other applicable methods.
+In this paper, we present semantic and syntactic definitions of subtyping
+for a subset of Julia types, and discuss the implications of the definitions
+for multiple dynamic dispatch. Types of values are type tags.
