@@ -65,7 +65,7 @@
 \begin{document}
 
 %% Title information
-\title[Short Title]{Decidable Semantic Subtyping \\
+\title[Short Title]{Decidable, Tag-Based Semantic Subtyping \\
 %	to a Dynamically Typed Language} %with Nominal Types}
 	for Nominal Types, Tuples, and Unions}
                                         %% [Short Title] is optional;
@@ -182,12 +182,19 @@ Text of abstract \ldots.
 Plan:
 \begin{enumerate}
   \item Subtyping in static type systems. Semantic subtyping has been studied
-    in this context. Usually structural typing.
-  \item Subtyping can also be used for multiple dynamic dispatch in languages
-    with nominal typing. In this case, each value has a type tag, 
-    and types can be naturally interpreted as sets of
-    In this paper, we study semantic subtyping for a language with 
-    nominal types, unions, and tuples.
+    in this context: types are interpreted as sets of values having this type. 
+  \item In languages with nominal typing, subtyping is also used for
+    dynamic dispatch based on type tags of values. Single dispatch is boring,
+    but multiple dispatch is more interesting, and it also appears in
+    dynamic languages that do not have a static type system.
+  \item In this paper, we apply the set-theoretic intuition to subtyping with
+    type tags. If we want a method to be applicable to a value with the tag,
+    the tag is put into an interpretation of th type.
+    We take a language with nominal types, unions, and tuples. 
+    We interpret types in terms of tags, and define syntactic subtyping
+    equivalent to the set inclusion on interpretations.
+  \item Background: type annotations and methods, multiple dispatch.
+  \item Interpretations.
 \end{enumerate} 
 
 
