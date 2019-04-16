@@ -65,16 +65,16 @@
 \begin{document}
 
 %% Title information
-\title[Short Title]{Applicability of Semantic Subtyping \\
+\title[Short Title]{Decidable Semantic Subtyping \\
 %	to a Dynamically Typed Language} %with Nominal Types}
-	in the Context of a Dynamically Typed Language}
+	for Nominal Types, Tuples, and Unions}
                                         %% [Short Title] is optional;
                                         %% when present, will be used in
                                         %% header instead of Full Title.
 %\titlenote{with title note}             %% \titlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
-\subtitle{Subtyping of Nominal Types, Pairs, and Unions}
+%\subtitle{Subtyping of Nominal Types, Pairs, and Unions}
                                         %% \subtitle is optional
 %\subtitlenote{with subtitle note}       %% \subtitlenote is optional;
                                         %% can be repeated if necessary;
@@ -177,6 +177,18 @@ Text of abstract \ldots.
 %% commands, abstract environment, Computing Classification System
 %% environment and commands, and keywords command.
 \maketitle
+
+
+Plan:
+\begin{enumerate}
+  \item Subtyping in static type systems. Semantic subtyping has been studied
+    in this context. Usually structural typing.
+  \item Subtyping can also be used for multiple dynamic dispatch in languages
+    with nominal typing. In this case, each value has a type tag, 
+    and types can be naturally interpreted as sets of
+    In this paper, we study semantic subtyping for a language with 
+    nominal types, unions, and tuples.
+\end{enumerate} 
 
 
 \section{Introduction}
