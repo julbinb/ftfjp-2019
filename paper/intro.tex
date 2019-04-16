@@ -9,7 +9,7 @@ In languages with nominal typing, subtyping can also be used for run-time
 dispatch, in particular, multiple dynamic dispatch (MDD).
 With MDD, one can provide several implementations of the same function,
 and the ``best'' implementation for a particular call will be picked 
-at run-time based on the types of the arguments.
+at run-time based on the \emph{type tags} of the arguments.
 For example, consider two implementations of shape intersection,
 \jlcode{intersect(Rectangle, Rectangle)} and \jlcode{intersect(Shape, Shape)}.
 If we want to intersect two circles (assuming that \jltype{Circle}
@@ -18,19 +18,25 @@ and so it should be called.
 However, if we want to intersect two rectangles, both implementations 
 are applicable, and, intuitively, the former is better, 
 so \jlcode{intersect(Rectangle, Rectangle)} should be called.
-There are various approaches to defining applicable methods and selecting
-the best. One way is to use \emph{subtyping}~\cite{?}.
+There are various approaches to formally 
+defining applicable methods and selecting the best. 
+One way is to use \emph{subtyping}~\cite{?}.
 In this case, method signatures and function calls are looked at 
-as tuple types, applicable methods are defined as supertypes of a call, 
+as tuple types, applicable methods are defined as supertypes of the call type, 
 and the best method must be subtype of other applicable methods. 
 Thus, for the example above, method signatures are 
-\jltype{Rectangle $\times$ Rectangle} and \jltype{Shape $\times$ Shape},
+\jltype{Rectangle $\times$ Rectangle} (RR) 
+and \jltype{Shape $\times$ Shape} (SS),
 and function calls are
 \jltype{Circle $\times$ Circle} and \jltype{Rectangle $\times$ Rectangle}.
-The \jltype{Circle} tuple is not subtype of the \jltype{Rectangle} tuple, 
-but it is subtype of the \jltype{Shape} tuple, so only shape intersection
+The \jltype{Circle} tuple type is not subtype of RR,
+but it is subtype of SS, so only shape intersection
 is applicable in the circle call.
+The \jltype{Rectangle} tuple type is subtype of both RR and SS, 
+so both implementations are applicable.
+Since RR is subtype of SS, the RR implementation is considered the best one.
 
+Multiple dynamic dispatch does not 
 
 \defemph{NO TRESPASSING}
 
@@ -41,16 +47,10 @@ Though this intuition is not always correct, there have been research on
 \emph{semantic subtyping}~\cite{??} that does define subtyping as the subset
 relation.
 
-Though this intuition is not always correct, it might be a useful reasoning tool
-for the users of a programming language.
-Such an intuition is not always correct, but there
-There have been the whole line of work 
 
 
 
 
-Subtyping \ldots (roughly what it is; is used both in static and dynamic
-languages).
 
 Two flavors of subtyping: syntactic and semantic. 
 
