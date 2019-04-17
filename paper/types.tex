@@ -1,10 +1,9 @@
-We build the presentation around a small type language called \BetaJulia,
+We build the presentation around a small type language \BetaJulia,
 presented in~\figref{fig:bjsem-types}.
 Types of \BetaJulia, denoted by $\ty \in \Type$, include pairs, unions, 
-and nominal types in the spirit of Julia:
-\cname denotes \emph{concrete} nominal types that correspond to type tags
-such as \jltype{Flt},
-and \aname denotes \emph{abstract} nominal types such as \jltype{Real}.
+and nominal types: \cname denotes \emph{concrete} nominal types
+that have direct instances, 
+and \aname denotes \emph{abstract} nominal types.
 
 \begin{figure}
 	\[
@@ -35,43 +34,37 @@ and \aname denotes \emph{abstract} nominal types such as \jltype{Real}.
 	\label{fig:bjsem-types}
 \end{figure}
 
-To simplify the development, we decided to work with particular 
-nominal types and a hierarchy over them
-(presented in~\figref{fig:bjsem-types} as a tree)
+To simplify the development, we decided to work with a particular hierarchy
+of nominal types (presented in~\figref{fig:bjsem-types} as a tree)
 instead of a more abstract class table.
 There are four concrete, leaf types (depicted in rectangles)
 and two abstract types in the hierarchy. 
 Formally, the hierarchy can be represented with a list of declarations
 $\bjdeclsub{n_1}{n_2}$ read as ``$n_1$ is a declared subtype of $n_2$''
-where $n ::= \cname \Alt \aname$.
+where $n$ is either $\cname$ or $\aname$.
 In the case of \BetaJulia, the hierarchy is defined as follows:
 \[
 \NomH = [ \bjdeclsub{\tyreal}{\tynum}, 
 \bjdeclsub{\tyint}{\tyreal}, \bjdeclsub{\tyflt}{\tyreal},
 \bjdeclsub{\tycmplx}{\tynum} ].
 \]
-The hierarchy should represent a tree with concrete types in leafs.
-This means, for example, that each type can have only one parent,
-concrete types cannot be used parents, and no cycles are allowed.
+Nominal hierarchy should not have cycles, 
+and each type can have only one parent.
+Following the spirit of the Julia language, we do not allow concrete types
+to have declared subtypes, i.e. concrete types are always leafs.
 
-\subsection{Value Types}
-%% -----------------------------------------------------------------------------
-
-Not only concrete nominal types can be type tags, i.e. correspond to values,
-but also pair types. For example, \typair{\tyint}{\tyint}
-or \typair{\tystr}{(\typair{\tyint}{\tyint})}.
-Union types, on the other hand, are abstract, 
-and they potentially describe dissimilar values.
-For instance, both integer and floating point values belong
-to a union type \tyunion{\tyint}{\tyflt}.
-Even type \tyunion{\tyint}{\tyint} is not a type tag, 
-though it describes the same set of values as the concrete type \tyint.
-
-Types that can be used as type tags will be further referred to
-as \defemph{value types}. 
+\paragraph{Value Types}
+Not all types of \BetaJulia can have direct instances, and, therefore,
+serve as type tags. Types that \emph{can} be used as tags we call 
+\defemph{value types}. 
 Their formal definition is given in~\figref{fig:bjsem-value-types}:
 value type $\vty \in \VType$ is either a concrete nominal type 
 or a pair of value types. 
+For example, \tyflt, \typair{\tyint}{\tyint},
+and \typair{\tystr}{(\typair{\tyint}{\tyint})} are all value types.
+Union types, just as abstract nominal types, are not value types.
+Even the type \tyunion{\tyint}{\tyint} is not a value type, 
+though it describes the same set of values as the value type \tyint.
 Note that $\VType \subset \Type$, i.e. each value type is a type.
 
 \begin{figure}
@@ -90,26 +83,16 @@ Note that $\VType \subset \Type$, i.e. each value type is a type.
 \subsection{Semantic Interpretation of Types}
 %% -----------------------------------------------------------------------------
 
-As mentioned earlier, the set of values represented by a value type \vty
-is unambiguously characterized by~\vty itself
-as long as each run-time value is tagged with a value type.
-But what about an arbitrary type?
-
-First, let us consider an abstract nominal type, e.g. \tynum. 
-According to the nominal hierarchy, \tynum value 
-is either a concrete complex number, or a real number, which, in turn,
-is either a concrete integer or a floating point number.
-Therefore, the set of values represented by \tynum 
-is described by the set of value types $\{\tycmplx, \tyint, \tyflt\}$.
-
-Next, pairs. Consider type \typair{\tystr}{\tyreal}:
-each of its values is a pair of a string and a number. 
-For example, \jlcode{("bread", 2)} and \jlcode{("milk", 2.75)} are such values, 
-with type tags \typair{\tystr}{\tyint} and 
-\typair{\tystr}{\tyflt}, respectively.
+As mentioned in~\secref{sec:intro}, 
+we interpret types in terms of type tags, or value types, instead of values,
+so we call this semantic interpretation \emph{tag-based}.
+Formally, the interpretation is given by the function
+$\interpty{\cdot}$ that maps a type $\ty \in \Type$
+into a set of value types $s \in \PVType$,
+as presented in~\figref{fig:bjsem-interpretation}.
 
 \begin{figure}
-  \[
+	\[
 	\begin{array}{rcl}
 	\interpty{\cdot}: \Type &\rightarrow& \PVType \\
 	\interpty{\cname}  & = & \{\cname\} \\
@@ -120,25 +103,33 @@ with type tags \typair{\tystr}{\tyint} and
 	\interpty{\tyunion{\ty_1}{\ty_2}} & = & 
 	\interpty{\ty_1} \cup \interpty{\ty_2}
 	\end{array}
-  \]
-%  	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
-%  (= \interpty{\tyreal} \cup \{\tycmplx\})
-  \caption{Semantic Interpretation of \BetaJulia Types}
-  \label{fig:bjsem-interpretation}
+	\]
+	%  	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
+	%  (= \interpty{\tyreal} \cup \{\tycmplx\})
+	\caption{Semantic Interpretation of \BetaJulia Types}
+	\label{fig:bjsem-interpretation}
 \end{figure}
 
-Formally, the \emph{interpretation} of \BetaJulia types is defined
-in~\figref{fig:bjsem-interpretation}.
-Abstract types are interpreted according to the nominal hierarchy:
-values of each abstract type are values of any of it value subtypes.
-More generally, the interpretation of abstract types can be given in
-then following way:
+The interpretation of a type states what values constitute the type:
+if $\vty \in \interpty{\ty}$, then all instances of \vty, 
+i.e. values $\nu$ tagged with \vty, belong to $\ty$.
+Thus, a \emph{concrete nominal} type \cname is comprised 
+only of its direct instances.
+\emph{Abstract nominal} types do not have direct instances, 
+but we want their interpretation to reflect the nominal hierarchy.
+For example, a \tynum value 
+is either a concrete complex number or a real number, which, in turn,
+is either a concrete integer or a floating point value.
+Therefore, the set of values of type \tynum 
+is described by the set of value types $\{\tycmplx, \tyint, \tyflt\}$.
+More generally, the interpretation of abstract nominal types \aname
+can be given in then following way:
 \[
 \interpty{\aname} = \{\cname\ \Alt \bjnomsub{\cname}{\aname} \},
 \]
-where the relation $\bjnomsub{n_1}{n_2}$,
-read ``$n_1$ is a nominal subtype of~$n_2$'',
-is a transitive closure of $\bjdeclsub{n_1}{n_2}$:
+where the relation $\bjnomsub{n_1}{n_2}$ means that 
+$n_1$ is transitively a declared subtype of~$n_2$:
+%or, in other words, it is a transitive closure of $\bjdeclsub{n_1}{n_2}$:
 \begin{mathpar}
 	\inferrule*[right=]
 	{ \bjdeclsub{n_1}{n_2} \in \NomH }
@@ -148,10 +139,11 @@ is a transitive closure of $\bjdeclsub{n_1}{n_2}$:
 	{ \bjnomsub{n_1}{n_2} \\ \bjnomsub{n_2}{n_3} }
 	{ \bjnomsub{n_1}{n_3} }.
 \end{mathpar}
-\TODO{Probably more on the semantic interpretation.}
+Finally, \emph{pairs} and \emph{unions} are interpreted
+set-theoretically.
 
-Once we have the interpretation of types, we define \emph{semantic subtyping}
-as the subset relation:
+Once we have the interpretation of types, we define 
+\defemph{tag-based semantic subtyping} as the subset relation:
 \[
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
 \interpty{\ty_1} \subseteq \interpty{\ty_2}.

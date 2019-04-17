@@ -1,7 +1,32 @@
-The declarative subtyping is defined in~\figref{fig:bjsem-decl-sub}.
-A big part of the definition is comprised of
-the rules that are typically used to define syntactic subtyping 
-in languages with base types, unions, and pairs.
+While the semantic approach does provides us with a useful intuition,
+we need to be able to build the subtyping algorithm in order to use subtyping.
+However, neither of the definitions~\eqref{eq:truesemsub-def}, \eqref{eq:semsub-def} 
+can be directly computed because of the quantification $\forall \vty$.
+Therefore, we provide another, \emph{syntactic} 
+definition of subtyping, which is
+equivalent to the semantic one and also straightforward to implement.
+
+We do this in two steps. 
+First, we give an inductive definition that is handy to reason about,
+called \emph{declarative} subtyping. 
+We prove it equivalent to the semantic subtyping using the syntactic model
+discussed above.
+Second, we provide a \emph{reductive}, syntax-directed definition of subtyping
+and prove it equivalent to the declarative definition 
+(and, hence, the semantic one as well).
+We prove that the reductive subtyping is decidable, 
+that is, for any two types $\ty_1$ and $\ty_2$,
+it is possible to prove that $\ty_1$ either is subtype of $\ty_2$ or is not.
+Since the Coq-proof is constructive, it essentially gives an algorithm
+to decide subtyping. However, it is also possible to devise the algorithm
+as a straightforward recursive function.
+
+\subsection{Declarative Subtyping}
+%% -----------------------------------------------------------------------------
+
+Declarative definition of subtyping is provided in~\figref{fig:bjsem-decl-sub}.
+The definition is mostly comprised of the standard rules
+of syntactic subtyping for unions and pairs.
 Namely, reflexivity and transitivity (\RD{Refl} and \RD{Trans}), 
 subtyping of pairs (\RD{Pairs}),
 and subtyping of unions (\RD{UnionL}, \RD{UnionR1}, \RD{UnionR2}).
@@ -11,17 +36,18 @@ $\bjsub{\tyint}{\tyunion{\tystr}{\tyreal}}$ via
 $\bjsub{\tyint}{\tyreal}$ and $\bjsub{\tyreal}{\tyunion{\tystr}{\tyreal}}$.
 Note that we do need the syntactic definition of subtyping
 to be \emph{reflexive} and \emph{transitive}
-because so is the semantic subtyping (due to the subset relation).
+because so is semantic subtyping, which is just the subset relation.
 
 Semantic subtyping also forces us to add rules 
 for distributing pairs over unions, \RD{Distr1} and \RD{Distr2}. 
-The reason is that types such as 
+For example, consider two types,
 \tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}
-and \typair{\tystr}{(\tyunion{\tyint}{\tyflt})} 
-have the same semantic interpretation 
+and \typair{\tystr}{(\tyunion{\tyint}{\tyflt})}.
+They have the same semantic interpretation~---
 $\{\typair{\tystr}{\tyint}, \typair{\tystr}{\tyflt}\}$.
-Therefore, the types need to be equivalent within the declarative definition,
-i.e., subtyping between them should hold in both directions.
+Therefore, we should be able to derive the equivalence of the types 
+using the declarative definition,
+i.e., the declarative subtyping should hold in both directions.
 One direction is trivial:
 \begin{mathpar}{\small
 \inferrule*[right=]
@@ -43,22 +69,21 @@ But the other direction,
 \]
 cannot be derived without \RD{Distr2} rule: 
 \typair{\tystr}{(\tyunion{\tyint}{\tyflt})} is 
-not a subtype of either \typair{\tystr}{\tyint} or \typair{\tystr}{\tyflt},
+not subtype of either \typair{\tystr}{\tyint} or \typair{\tystr}{\tyflt},
 so we cannot apply \RD{UnionR*} rules\footnote{Transitivity
   does not help in this case.}.
 
-Finally, let us look at subtyping of nominal types.
+The most interesting part of the definition hides in subtyping of nominal types.
 There are four obvious rules coming directly 
-from the nominal hierarchy, for instance, \RD{RealNum} mirrors the fact 
+from the nominal hierarchy. For instance, \RD{RealNum} mirrors the fact 
 that $\bjdeclsub{\tyreal}{\tynum} \in \NomH$.
-Using these rules, judgments such as $\bjsub{\tyint}{\tynum}$ 
-can be derived by transitivity.
-The most interesting rules in the system are
-\RD{RealUnion} and \RD{NumUnion} (\colorbox{light-gray}{highlighted}
-in~\figref{fig:bjsem-decl-sub})~--- they are dictated by semantic subtyping
-similarly to the distributivity rules.
-Namely, we need them to achieve equivalence
-between, e.g., types \tyunion{\tyint}{\tyflt} and \tyreal, 
+%Using these rules, judgments such as $\bjsub{\tyint}{\tynum}$ 
+%can be derived by transitivity.
+But there are also new rules, \RD{RealUnion} and \RD{NumUnion},
+(\colorbox{light-gray}{highlighted} in~\figref{fig:bjsem-decl-sub}),
+which are dictated by the semantic subtyping.
+For example, we need \RD{RealUnion} to prove the equivalence
+of types \tyunion{\tyint}{\tyflt} and \tyreal, 
 which have the same interpretation $\{\tyint, \tyflt\}$.
 
 %Before we define an inductive declarative relation $\bjsub{\ty_1}{\ty_2}$.
@@ -147,21 +172,45 @@ which have the same interpretation $\{\tyint, \tyflt\}$.
 \subsection{Correctness of Declarative Subtyping}
 %% -----------------------------------------------------------------------------
 
-In order to show that the declarative syntactic subtyping is correct
-with respect to the semantic subtyping,
+In order to show that the declarative subtyping is equivalent
+to the semantic one,
 we need to prove that the former is sound and complete with respect
 to the latter one, that is:
 \[
 \forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff \bjtruesemsub{\ty_1}{\ty_2}).
 \]
-As discussed in~\secref{sec:syn-model-of-semsub}, there is 
-a sound and complete syntactic model of semantic subtyping,
-$\bjsemsub{\ty_1}{\ty_2}$.
-So for proofs, we will be using the model:
-%, based on the straightforward matching relation.
+As discussed in~\secref{sec:syn-model-of-semsub}, 
+the syntactic model $\bjsemsub{\ty_1}{\ty_2}$ is equivalent 
+to the semantic subtyping.
+So for proofs, we will be using the model.
+
+\noindent
+\Theorem (Correctness of Declarative Subtyping):
 \begin{equation}\label{eq:declsub-eq-semsub}
 \forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff \bjsemsub{\ty_1}{\ty_2}).
 \end{equation}
+
+In order to prove the theorem, we need several auxiliary observations.
+First, recall the definition of $\bjsemsub{\ty_1}{\ty_2}$:
+\[
+\bjsemsub{\ty_1}{\ty_2} \quad \defsign \quad
+\forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies\ \bjmtch{\vty}{\ty_2}).
+\]
+We can show that the matching relation corresponds to subtyping of
+value types:
+\begin{equation}\label{eq:mtch-eq-declsub}
+\forall \vty, \ty.\ (\bjmtch{\vty}{\ty} \iff \bjsub{\vty}{\ty}).
+\end{equation}
+Having that, it is easy to prove 
+the \emph{soundness} direction
+of~\eqref{eq:declsub-eq-semsub}, i.e., 
+$\bjsub{\ty_1}{\ty_2} \implies \bjsemsub{\ty_1}{\ty_2}$.
+Namely, $\bjmtch{\vty}{\ty_1}$ gives $\bjsub{\vty}{\ty_1}$ by~\eqref{eq:mtch-eq-declsub}; 
+from $\bjsub{\ty_1}{\ty_2}$ and $\bjsub{\vty}{\ty_1}$
+we get $\bjsub{\vty}{\ty_2}$ by transitivity, and from it,
+$\bjmtch{\vty}{\ty_2}$ by~\eqref{eq:mtch-eq-declsub}.
+
+The completeness direction is trickier.
 
 \begin{figure}
   \[

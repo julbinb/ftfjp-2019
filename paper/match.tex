@@ -78,23 +78,9 @@ are also equivalent:
 \begin{equation}
 \bjsemsub{\ty_1}{\ty_2} \quad \iff \quad \bjtruesemsub{\ty_1}{\ty_2}.
 \end{equation}
-
-%We will later use the relation $\bjsemsub{\ty_1}{\ty_2}$
+We will later use the syntactic model~\ref{eq:semsub-def}
+to prove that alternative, syntactic definitions of subtyping
+coincides with the semantic interpretation.
 %to prove that an inductive definition of subtyping coincides
 %with the semantic interpretation.
 
-While the semantic approach does provide a useful intuition for subtyping,
-neither of the definitions~\eqref{eq:truesemsub-def}, \eqref{eq:semsub-def} 
-can be directly computed because of the quantification $\forall \vty$.
-Therefore, we need to provide another, \emph{syntactic} 
-definition of subtyping, which would
-be equivalent to the semantic one but also straightforward to implement.
-
-We do this in two steps. 
-First, we give an inductive definition of subtyping, 
-called \emph{declarative}, that is handy to reason about. 
-We prove it equivalent to the semantic subtyping.
-Second, we provide a \emph{reductive}, syntax-directed definition that is equivalent to the declarative subtyping 
-(and, hence, the semantic one as well)
-and also decidable, that is for any two types $\ty_1$ and $\ty_2$
-we can prove that $\ty_1$ either is a subtype of $\ty_2$ or is not.
