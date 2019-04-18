@@ -1,9 +1,19 @@
+The declarative definition is not syntax-directed because it involves
+the \RD{Trans} rule, which requires ``coming up'' with a middle type $\ty_2$.
+For instance, in order to show
+\[\bjsub{\typair{\tystr}{\tyreal}}
+{(\typair{\tystr}{\tyint}) \cup (\typair{\tystr}{\tystr}) 
+	\cup (\typair{\tystr}{\tyflt})},\]
+we need to apply transitivity several times, in particular, 
+with the middle type $\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}$.
 
 \begin{figure}
 	\begin{mathpar}
+		\colorbox{light-gray}{$
 		\inferrule*[right=SR-BaseRefl]
 		{ }
 		{ \bjsubr{\cname}{\cname} }
+		$}
 		\\
 		
 		\inferrule[SR-IntReal]
@@ -19,13 +29,17 @@
 		{ }
 		{ \bjsubr{\tycmplx}{\tynum} }
 		
+		\colorbox{light-gray}{$
 		\inferrule[SR-IntNum]
 		{ }
 		{ \bjsubr{\tyint}{\tynum} }
+		$}
 		
+		\colorbox{light-gray}{$
 		\inferrule[SR-FltNum]
 		{ }
 		{ \bjsubr{\tyflt}{\tynum} }
+		$}
 		\\
 		
 		\inferrule*[right=SR-Pair]
@@ -38,13 +52,17 @@
 		{ \bjsubr{\tyunion{\ty_1}{\ty_2}}{\ty'} }
 		\\
 		
-		\inferrule*[right=SR-UnionR1]
+		\colorbox{light-gray}{$
+		\inferrule[SR-UnionR1]
 		{ \bjsubr{\ty}{\ty'_1} }
 		{ \bjsubr{\ty}{\tyunion{\ty'_1}{\ty'_2}} }
+		$}
 		
-		\inferrule*[right=SR-UnionR2]
+		\colorbox{light-gray}{$
+		\inferrule[SR-UnionR2]
 		{ \bjsubr{\ty}{\ty'_2} }
 		{ \bjsubr{\ty}{\tyunion{\ty'_1}{\ty'_2}} }
+		$}
 		\\
 		
 		\colorbox{light-gray}{$
@@ -53,6 +71,43 @@
 		{ \bjsubr{\ty}{\ty'} }
 		$}
 	\end{mathpar}
-	\caption{Reductive Subtyping for \BetaJulia}
+	\caption{Reductive subtyping for \BetaJulia}
 	\label{fig:bjsem-red-sub}
 \end{figure}
+
+\figref{fig:bjsem-red-sub} presents the syntax-directed reductive 
+definition of subtyping, which can be easily turned into 
+a subtyping algorithm.\footnote{The definition is not deterministic, though.
+For example, there are two ways to derive 
+$\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
+{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}$: either by immediately 
+applying \RR{Pair}, or by first normalizing the left-hand side with \RR{NF}.}
+Some of the inductive rules are similar to the declarative definition,
+e.g. subtyping of pairs (\RR{Pair}) and the left-hand side union (\RR{UnionL}).
+The differing rules are \colorbox{light-gray}{highlighted}.
+Instead of the general reflexivity rule \RD{Refl}, the reductive definition
+has reflexivity only for concrete nominal types (\RR{BaseRefl}).
+General transitivity is also gone; instead, it gets incorporated into
+subtyping of nominal types (\RR{IntNum}, \RR{FltNum})
+and the right-hand side union (\RR{UnionR1}, \RR{UnionR2}),
+as well as the rule for using the normal form (\RR{NF}).
+Note that the last rule also takes care of distributivity.
+
+With the reductive subtyping, the example above can be derived as follows:
+\begin{mathpar}\small
+\inferrule*[right=]
+{ \inferrule*[right=]
+  { \bjsub{\typair{\tystr}{\tyint}}{(\typair{\tystr}{\tyint}) \ldots} \\
+    \bjsub{\typair{\tystr}{\tyflt}}{\ldots (\typair{\tystr}{\tyflt})}  }	
+  { \bjsub{\tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}}
+	{(\typair{\tystr}{\tyint}) \cup \ldots \cup (\typair{\tystr}{\tyflt})} } }
+{ \bjsub{\typair{\tystr}{\tyreal}}
+	{(\typair{\tystr}{\tyint}) \cup (\typair{\tystr}{\tystr}) 
+		\cup (\typair{\tystr}{\tyflt})} }.
+\end{mathpar}
+In the very bottom, we use \RR{NF}, and then \RR{UnionL} in the level above.
+To complete the top of derivation, we would also need to use \RR{UnionR*}, 
+\RR{Pair}, and \RR{BaseRefl}.
+
+\subsection{Correctness of Reductive Subtyping}
+%% -----------------------------------------------------------------------------

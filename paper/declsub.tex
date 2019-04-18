@@ -253,6 +253,10 @@ Note that abstract nominal types are unfolded into unions of all their
 value subtypes. A pairs gets rewritten into a union of value pairs, 
 thus producing a type in the disjunctive normal form.
 
+Using the fact that every type can be normalized,
+and that declarative subtyping is complete for normalized types, 
+we can finally prove \lemref{lem:declsub-complete}.
+
 \begin{lemma}[Properties of the Normal Form]\label{lem:declsub-nf}
 \[
 \forall \ty.\ [\InNF(\NF(\ty))\;\ \land\;
