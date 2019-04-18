@@ -19,7 +19,7 @@ intersect(s1::Shape, s2::Shape) = ...
 \end{verbatim}
 and two function calls, \jlcode{intersect(Circle(..), Circle(..))}
 and \jlcode{intersect(Rectangle(..), Rectangle(..))},
-assuming that \jltype{Circle} is subtype of \jltype{Shape}.
+assuming that \jltype{Circle} is a subtype of \jltype{Shape}.
 The method signatures can be interpreted as tuple types
 \jltype{Rectangle $\times$ Rectangle}~(mRR) 
 and \jltype{Shape $\times$ Shape}~(mSS),
@@ -29,13 +29,13 @@ and \jltype{Rectangle $\times$ Rectangle}~(cRR).
 To resolve the calls, language run-time needs to perform two steps.
 (1) Determine which methods are applicable for the given arguments (if any)
 by checking subtyping between the call and the signatures.
-Since cCC is subtype of mSS but not of mRR, only shape intersection
+Since cCC is a subtype of mSS but not of mRR, only shape intersection
 is applicable to the circle call, so it should be called.
-Since cRR is subtype of mSS and mRR, both intersection methods 
+Since cRR is a subtype of mSS and mRR, both intersection methods 
 are applicable to the rectangle call, so we go to the next step.
 (2) Pick the best of all the applicable methods (if there is one) 
 by checking subtyping between their signatures.
-Since mRR is subtype of mSS but not vice versa, it is considered to be
+Since mRR is a subtype of mSS but not vice versa, it is considered to be
 the most specific method applicable to cRR, 
 and so the rectangle call is dispatched to the rectangle intersection.
 

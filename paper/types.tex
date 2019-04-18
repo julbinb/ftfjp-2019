@@ -36,7 +36,7 @@ and \aname denotes \emph{abstract} nominal types.
 
 To simplify the development, we decided to work with a particular hierarchy
 of nominal types (presented in~\figref{fig:bjsem-types} as a tree)
-instead of a more abstract class table.
+instead of a general class table.
 There are four concrete, leaf types (depicted in rectangles)
 and two abstract types in the hierarchy. 
 Formally, the hierarchy can be represented with a list of declarations
@@ -75,7 +75,7 @@ Note that $\VType \subset \Type$, i.e. each value type is a type.
 	\\ &\Alt& \typair{\vty_1}{\vty_2} & \text{pair of value types}
 	\end{array}
 	\]
-	\caption{Value types in \BetaJulia}
+	\caption{Value types} % in \BetaJulia
 	\label{fig:bjsem-value-types}
 \end{figure}
 
@@ -106,7 +106,7 @@ as presented in~\figref{fig:bjsem-interpretation}.
 	\]
 	%  	\interpty{\aname} & = & \{\cname\ \Alt \bjnomsub{\cname}{\aname} \} \\
 	%  (= \interpty{\tyreal} \cup \{\tycmplx\})
-	\caption{Semantic Interpretation of \BetaJulia Types}
+	\caption{Tag-based semantic interpretation of types} %\BetaJulia 
 	\label{fig:bjsem-interpretation}
 \end{figure}
 
