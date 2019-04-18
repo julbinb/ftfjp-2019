@@ -223,7 +223,7 @@ which is trivially true by~\RD{Trans}.
 \begin{lemma}[Completeness of Declarative Subtyping]\label{lem:declsub-complete}
 \[	
 \forall \ty_1, \ty_2.\ 
-[\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2}]
+(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2})
 \]
 \end{lemma}
 
@@ -259,8 +259,8 @@ we can finally prove \lemref{lem:declsub-complete}.
 
 \begin{lemma}[Properties of the Normal Form]\label{lem:declsub-nf}
 \[
-\forall \ty.\ [\InNF(\NF(\ty))\;\ \land\;
-\bjsub{\ty}{\NF(\ty)}\;\ \land\; \bjsub{\NF(\ty)}{\ty}]
+\forall \ty.\ (\InNF(\NF(\ty))\;\ \land\;
+\bjsub{\ty}{\NF(\ty)}\;\ \land\; \bjsub{\NF(\ty)}{\ty})
 \]
 \end{lemma}
 
@@ -268,14 +268,14 @@ we can finally prove \lemref{lem:declsub-complete}.
 \label{lem:nf-declsub-complete}
 \[
 	\forall \ty_1, \ty_2 \Alt \InNF(\ty_1).\
-	[\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2}]
+	(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2})
 \]
 \end{lemma}
 
 \begin{lemma}\label{lem:nf-semsub}
 $
 \forall \ty_1, \ty_2.\ 
-[\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsemsub{\NF(\ty_1)}{\ty_2}]
+(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsemsub{\NF(\ty_1)}{\ty_2})
 $
 \end{lemma}
 

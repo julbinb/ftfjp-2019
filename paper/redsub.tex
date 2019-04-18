@@ -109,5 +109,57 @@ In the very bottom, we use \RR{NF}, and then \RR{UnionL} in the level above.
 To complete the top of derivation, we would also need to use \RR{UnionR*}, 
 \RR{Pair}, and \RR{BaseRefl}.
 
-\subsection{Correctness of Reductive Subtyping}
 %% -----------------------------------------------------------------------------
+
+\begin{theorem}[Correctness of Reductive Subtyping]\label{thm:redsub-correct}
+\[
+\forall \ty_1, \ty_2.\ (\bjsubr{\ty_1}{\ty_2} \iff\ \bjsub{\ty_1}{\ty_2})
+\]
+\end{theorem}
+
+It is relatively easy to show by induction on a derivation of
+$\bjsubr{\ty_1}{\ty_2}$ that the reductive subtyping is sound:
+for each case we build a corresponding derivation of $\bjsub{\ty_1}{\ty_2}$.
+Most of the reductive rules have direct declarative counterparts.
+In the case of \RR{*Num} and \RR{UnionR*}, 
+we need to additionally use transitivity.
+Finally, in the case of \RR{NF}, the induction hypothesis gives us
+$\bjsub{\NF(\ty_1)}{\ty_2}$, so we can use 
+\lemref{lem:declsub-nf} and \RD{Trans} to derive $\bjsub{\ty_1}{\ty_2}$.
+
+The challenging part of the proof is to show completeness. 
+For this, we need to prove that 
+the reductive definition is \emph{reflexive}, \emph{transitive},
+and \emph{distributive}.
+To prove transitivity and distributivity, 
+we need several auxiliary statements:
+\begin{enumerate}
+  \item $\bjsubr{\ty}{\ty'}\ \implies\ \bjsubr{\NF(\ty)}{\ty'}$,
+  \item $\bjsubr{\NF(\ty_1)}{\NF(\ty_2)}\;\;\ \land\;\; \bjsubr{\NF(\ty_2)}{\ty_3}$\\
+     $\implies \bjsubr{\NF(\ty_1)}{\ty_3}$,
+  \item $\bjsubr{\NF(\ty)}{\NF(\ty')}\ \implies\ \bjsubr{\ty}{\ty'}$.
+\end{enumerate}
+Having all the facts, we can prove completeness by induction
+on a derivation of $\bjsub{\NF(\ty_1)}{\ty_2}$.
+For details, the reader can refer to the full Coq-proof.
+
+\begin{theorem}[Decidability of Reductive Subtyping]\label{thm:redsub-decidable}
+\[
+\forall \ty_1, \ty_2.\ 
+(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot \bjsub{\ty_1}{\ty_2})
+\]
+\end{theorem}
+
+By induction on a derivation of $\InNF(\ty_1)$, we can show
+that the reductive subtyping is decidable for $\ty_1 | \InNF(\ty_1)$.
+In this case, $\ty_1$ is either a value type or a union of normalized types.
+If it is a value type, subtyping is equivalent to matching,
+and matching is decidable.
+If $\ty_1$ is a union $\tyunion{\ty_a}{\ty_b}$, 
+we use induction hypothesis for components and the fact that
+subtyping union on the left-hand side
+$\bjsubr{\tyunion{\ty_a}{\ty_b}}{\ty'}$ implies $\bjsubr{\ty_a}{\ty'}$
+and $\bjsubr{\ty_b}{\ty'}$.
+Since $\InNF(\NF(\ty_1))$, we can use the decidability 
+of $\bjsubr{\NF(\ty_1)}{\ty_2}$ to prove decidability
+of $\bjsubr{\ty_1}{\ty_2}$.

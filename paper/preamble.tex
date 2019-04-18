@@ -106,7 +106,8 @@
 
 %: \tyleq               -> ≤
 \newcommand{\tyleq}{\ensuremath{\leq}}
-\newcommand{\tyleqR}{\stackrel{\mathclap{\tiny\mbox{R}}}{\tyleq}}
+%\newcommand{\tyleqR}{\stackrel{\mathclap{\tiny\mbox{R}}}{\tyleq}}
+\newcommand{\tyleqR}{\tyleq_\mathrm{R}}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type Constructors
 
@@ -150,7 +151,7 @@
 
 %: \bjsub{t1}{t2}    -> ⊢ t1 ≤ t2
 \newcommand{\bjsub}[2]{\ensuremath{\vdash \, #1 \, \tyleq \, #2}}
-
+%: \bjsubr{t1}{t2}    -> ⊢ t1 ≤R t2
 \newcommand{\bjsubr}[2]{\ensuremath{\vdash \, #1 \, \tyleqR \, #2}}
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Normal Form
