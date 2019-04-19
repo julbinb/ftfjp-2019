@@ -20,6 +20,9 @@
 \usepackage{tikz}
 \usetikzlibrary{fit,shapes, positioning}
 
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Listings
+
+\usepackage{listings}
 
 %% Commands
 %% =============================================================================
@@ -28,11 +31,6 @@
 %% *********************************************************
 
 \newcommand{\defemph}[1]{\textbf{#1}}
-
-\newcommand{\jlcode}[1]{\texttt{\small#1}}
-\newcommand{\jlftcode}[1]{\texttt{\footnotesize#1}}
-\newcommand{\jltype}[1]{\texttt{\small#1}}
-\newcommand{\jlfttype}[1]{\texttt{\footnotesize#1}}
 
 \newcommand{\Lemma}{\textbf{Lemma}\xspace}
 \newcommand{\Theorem}{\textbf{Theorem}\xspace}
@@ -59,8 +57,32 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BetaJulia
 
 \newcommand{\BetaJulia}{\textsc{MiniJl}\xspace}
-\newcommand{\BetaJuliaSub}{\textsc{JNomSub}\xspace}
+\newcommand{\BetaJuliaNom}{\textsc{MiniJl}$^{\mathrm{Nom}}$\xspace}
 
+%% Code
+%% *********************************************************
+
+\newcommand{\jlcode}[1]{\texttt{\small#1}}
+\newcommand{\jlftcode}[1]{\texttt{\footnotesize#1}}
+\newcommand{\jltype}[1]{\texttt{\small#1}}
+\newcommand{\jlfttype}[1]{\texttt{\footnotesize#1}}
+
+\lstdefinelanguage[]{MiniJL}[]{Haskell}{
+	morekeywords={Flt,Union},
+	deletekeywords={print},
+	escapeinside={\%*}{*)}, 
+}
+
+\lstnewenvironment{lstminijl}
+{
+	\lstset{
+		language=MiniJl,
+		basicstyle=\small\ttfamily,
+		breaklines=true,
+		columns=fullflexible
+	}
+}
+{}
 
 %% General Math/PL
 %% *********************************************************
@@ -159,3 +181,7 @@
 \newcommand{\InNF}{\ensuremath{\mathop{\mathrm{InNF}}}\xspace}
 \newcommand{\NF}{\ensuremath{\mathop{\mathrm{NF}}}\xspace}
 \newcommand{\unprs}{\ensuremath{\mathop{\mathtt{un\_prs}}}\xspace}
+
+\newcommand{\Atom}{\ensuremath{\mathop{\mathrm{Atom}}}\xspace}
+\newcommand{\InNFAt}{\ensuremath{\mathop{\mathrm{InNF}_{\mathrm{at}}}}\xspace}
+\newcommand{\NFAt}{\ensuremath{\mathop{\mathrm{NF}_{\mathrm{at}}}}\xspace}

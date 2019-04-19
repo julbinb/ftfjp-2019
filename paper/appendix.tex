@@ -37,6 +37,51 @@
 	\label{fig:bjsem-calc-nf-full}
 \end{figure}
 
+\begin{figure}
+	\begin{mathpar}
+		\inferrule[Atom-CName]
+		{ }
+		{ \Atom(\cname) }
+		
+		\inferrule[Atom-AName]
+		{ }
+		{ \Atom(\aname) }
+		\\
+		
+		\inferrule*[right=NFAt-Atom]
+		{ \Atom(\ty) }
+		{ \InNFAt(\ty) }
+		
+		\inferrule*[right=AtNF-Union]
+		{ \InNFAt(\ty_1) \\ \InNFAt(\ty_2) }
+		{ \InNFAt(\tyunion{\ty_1}{\ty_2}) }
+	\end{mathpar}
+	\caption{Atomic normal form of types in \BetaJulia}
+	\label{fig:bjnom-innf}
+\end{figure}
+
+\begin{figure}
+	\[
+	\begin{array}{rcl}
+	\NFAt: \Type &\rightarrow& \Type \\
+	\NFAt(\cname) &=& \cname \\
+	\NFAt(\aname) &=& \aname \\
+	\NFAt(\typair{\ty_1}{\ty_2}) &=& \unprs(\NFAt(\ty_1), \, \NFAt(\ty_2))	\\
+	\NFAt(\tyunion{\ty_1}{\ty_2}) &=& \tyunion{\NFAt(\ty_1)}{\NFAt(\ty_2)} \\
+	\end{array}
+	\]
+	\caption{Computing atomic normal form of \BetaJulia types}
+	\label{fig:bjnom-calc-nf-full}
+\end{figure}
+
+\figref{fig:bjsem-innf} defines the predicate $\InNF(\ty)$, which states
+that type $\ty$ is in normal form.
+\figref{fig:bjsem-calc-nf-full} contains the full definition of $\NF(\ty)$ function,
+which computes the normal form of a type.
+
+\figref{fig:bjnom-innf} and \figref{fig:bjnom-calc-nf-full} present 
+``atomic normal form'', which can be used to define reductive subtyping
+that disables derivations such as $\bjsubr{\tyreal}{\tyunion{\tyint}{\tyflt}}$.
 
 \section{Appendix}
 %% -----------------------------------------------------------------------------
