@@ -1,7 +1,7 @@
 .PHONY: paper
 
 paper: 
-	pdflatex juliasub-ftfjp-2019.tex
+	pdflatex minijl-ftfjp2019.tex
 
 # cleaning
 

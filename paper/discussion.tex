@@ -1,0 +1,33 @@
+%MDD allows to have several implementations of the same function,
+%with the best implementation for a particular call being picked 
+%at run-time based on the types of the arguments.
+%As an example, consider two implementations of shape intersection
+%(implementations are usually called \emph{methods}):
+%\begin{verbatim}
+%intersect(r1::Rectangle, r2::Rectangle) = ...
+%intersect(s1::Shape, s2::Shape) = ...
+%\end{verbatim}
+%and two function calls, \jlcode{intersect(Circle(..), Circle(..))}
+%and \jlcode{intersect(Rectangle(..), Rectangle(..))},
+%assuming that \jltype{Circle} is a subtype of \jltype{Shape}.
+%The method signatures can be interpreted as tuple types
+%\jltype{mRR $\equiv$ Rectangle $\times$ Rectangle} 
+%and \jltype{mSS $\equiv$ Shape $\times$ Shape},
+%and the function calls~--- as tuple types 
+%\jltype{CC $\equiv$ Circle $\times$ Circle} 
+%and \jltype{RR $\equiv$ Rectangle $\times$ Rectangle}.
+%To resolve the calls, language run-time needs to perform two steps.
+%(1) Determine which methods are applicable to the given arguments (if any)
+%by checking subtyping between the call and the signatures.
+%Since \jlcode{CC} is a subtype of \jlcode{mSS} but not of  \jlcode{mRR}, 
+%only shape intersection
+%is applicable to the circle call, so it should be called.
+%Since \jlcode{RR} is a subtype of  \jlcode{mSS} and  \jlcode{mRR}, 
+%both intersection methods 
+%are applicable to the rectangle call, so we go to the next step.
+%(2) Pick the best of all the applicable methods (if there is one) 
+%by checking subtyping between their signatures.
+%Since  \jlcode{mRR} is a subtype of  \jlcode{mSS} but not vice versa, 
+%it is considered to be
+%the most specific method applicable to  \jlcode{RR}, 
+%and so the rectangle call is dispatched to the rectangle intersection.

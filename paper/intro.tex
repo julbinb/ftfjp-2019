@@ -2,69 +2,50 @@ Many static type systems rely on subtyping.
 Informally, subtyping relation \jltype{T $<:$ S} states that
 a value of type~\jltype{T} is safe to use 
 in the context that expects~\jltype{S}.
-For example, if class \jltype{Rectangle} is subtype of \jltype{Shape},
+For example, if class \jltype{Rectangle} is a subtype of \jltype{Shape},
 an instance of \jltype{Rectangle} can be passed to a function
 with an argument of type \jltype{Shape}.
 
 In languages with nominal typing, subtyping can also be used for run-time
 dispatch, in particular, \emph{multiple dynamic dispatch} (MDD).
-MDD allows to have several implementations of the same function,
-with the best implementation for a particular call being picked 
-at run-time based on the types of the arguments.
-As an example, consider two implementations of shape intersection
-(implementations are usually called \emph{methods}):
-\begin{verbatim}
-intersect(r1::Rectangle, r2::Rectangle) = ...
-intersect(s1::Shape, s2::Shape) = ...
-\end{verbatim}
-and two function calls, \jlcode{intersect(Circle(..), Circle(..))}
-and \jlcode{intersect(Rectangle(..), Rectangle(..))},
-assuming that \jltype{Circle} is a subtype of \jltype{Shape}.
-The method signatures can be interpreted as tuple types
-\jltype{Rectangle $\times$ Rectangle}~(mRR) 
-and \jltype{Shape $\times$ Shape}~(mSS),
-and the function calls~--- as tuple types 
-\jltype{Circle $\times$ Circle}~(cCC) 
-and \jltype{Rectangle $\times$ Rectangle}~(cRR).
-To resolve the calls, language run-time needs to perform two steps.
-(1) Determine which methods are applicable for the given arguments (if any)
-by checking subtyping between the call and the signatures.
-Since cCC is a subtype of mSS but not of mRR, only shape intersection
-is applicable to the circle call, so it should be called.
-Since cRR is a subtype of mSS and mRR, both intersection methods 
-are applicable to the rectangle call, so we go to the next step.
-(2) Pick the best of all the applicable methods (if there is one) 
-by checking subtyping between their signatures.
-Since mRR is a subtype of mSS but not vice versa, it is considered to be
-the most specific method applicable to cRR, 
-and so the rectangle call is dispatched to the rectangle intersection.
+It allows a function to have several implementations 
+for different types of arguments,
+and the most suitable implementation for a particular call 
+is picked dynamically, based on the run-time types of all arguments.
+%and their subtyping relation to the function signatures.
+For example, consider two implementations of addition,
+\jlcode{+(Number, Number)} and \jlcode{+(String, String)},
+and the call \jlcode{3+5}.
+In this case, language run-time should pick 
+the implementation for numbers 
+because \jltype{Int $<:$ Number} but \jltype{Int $\not{<:}$ String}.
 
 It is often convenient to think of subtyping \jltype{T $<:$ S}
 in terms of the set inclusion: ``the elements of~\jltype{T} are the subset
 of the elements of~\jltype{S}''~\cite{TAPL}.
 This intuition is not always correct, but there has been research on
 the so-called \emph{semantic subtyping}~\cite{?} where subtyping is defined
-exactly as the subset relation on values.
+exactly as the subset relation. % on values.
 Namely, types are given the set-theoretic interpretation
 $\interpty{\ty} = \{\nu \Alt \vdash \nu : \ty \}$, 
 and subtyping $\ty_1 <: \ty_2$ is defined 
 as $\interpty{\ty_1} \subseteq \interpty{\ty_2}$.
-In this way, the semantic definition of subtyping is intertwined with 
-the static typing relation.
+In this way, a semantic definition of subtyping intertwines with 
+a static typing relation.
 
-However, subtyping does not always go together with static typing:
-it is also useful in the context of \emph{dynamically} typed languages.
-As we have seen, subtyping can be employed for multiple dynamic dispatch,
+However, subtyping does not always go together with static typing~---
+it is also applicable in the context of \emph{dynamically} typed languages.
+As mentioned before, subtyping can be used for multiple dynamic dispatch,
 and MDD is rather widespread among dynamic languages, for instance,
 Common Lisp, Julia, Clojure.
-Instead of static type checking, to detect type errors at run-time,
-dynamic languages rely on checking type tags associated with values.
-The tags are also used for dynamic dispatch: 
-to determine the argument types of a function call, 
-language run-time simply looks at the tags associated with the arguments.
+Such languages do not prevent type errors with static type checking
+but detect them at run-time, by inspecting type tags associated with values.
+Type tags are also used during dynamic dispatch: 
+language run-time looks at the tags attached to the arguments
+to find out their run-time types.
 
-In this paper, we explore the applicability of semantic subtyping in 
-the context of \emph{dynamic} languages with \emph{nominal} typing. 
+In this paper, we attempt to fill the gap between \emph{semantic subtyping} and 
+\emph{dynamically} typed languages with \emph{nominal} typing.
 Instead of directly interpreting types as sets of values,
 we interpret them as sets of \emph{type tags} assuming 
 each value is associated with a tag.
@@ -73,7 +54,8 @@ Our contributions are as follows:
   \item Tag-based semantic interpretation of types for a language
     with nominal types, tuples, and unions.
   \item Two syntactic definitions of subtyping, declarative and reductive,
-    along with the Coq-mechanized proofs that the definitions are equivalent. 	
+    along with the Coq-mechanized proofs that the definitions are equivalent
+    and coincide with the semantic interpretation. 	
   \item Proof of decidability of the reductive subtyping.
   \item Discussion of the implications of using semantic subtyping
     for multiple dynamic dispatch.
