@@ -17,8 +17,9 @@ converts its argument to a float):
 and the function call \jlcode{3 + 5}.
 How exactly does dispatch work?
 
-One approach, adopted by the Julia language~\cite{?}, 
-is to use subtyping on tuples~\cite{?}.
+One approach, adopted, for example, 
+by the Julia language~\cite{Bezanson2015AbstractionIT}, 
+is to use subtyping on tuples~\cite{bib:Leavens:1998:mddtuples}.
 Namely, method signatures and function calls are interpreted as tuple types,
 and then subtyping is used to determine applicable methods 
 as well as pick one of them.
@@ -84,7 +85,7 @@ i.e., \RD{RealUnion} and \RD{NumUnion} in the declarative definition.\footnote{
 To fix the discrepancy between this definition and the semantic interpretation,
 we can change the latter by accounting for ``future nominal types'',
 e.g. $\interpty{\tyreal} = \{\tyint, \tyflt, X\}$.
-It needs to be discussed whether such an interpretation provides us with
+It needs to be understood whether such an interpretation provides us with
 a useful intuition about subtyping.
 
 

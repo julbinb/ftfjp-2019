@@ -7,7 +7,8 @@ an instance of \jltype{Rectangle} can be passed to a function
 with an argument of type \jltype{Shape}.
 
 In languages with nominal typing, subtyping can also be used for run-time
-dispatch, in particular, \emph{multiple dynamic dispatch} (MDD).
+dispatch, in particular, \emph{multiple dynamic dispatch} 
+(MDD)~\cite{bib:Chambers:1992:Cecil,bib:Clifton:2000:MultiJava}.
 It allows a function to have several implementations 
 for different types of arguments,
 and the most suitable implementation for a particular call 
@@ -22,10 +23,11 @@ because \jltype{Int $<:$ Number} but \jltype{Int $\not{<:}$ String}.
 
 It is often convenient to think of subtyping \jltype{T $<:$ S}
 in terms of the set inclusion: ``the elements of~\jltype{T} are the subset
-of the elements of~\jltype{S}''~\cite{TAPL}.
+of the elements of~\jltype{S}''~\cite{bib:Pierce:2002:TAPL}.
 This intuition is not always correct, but there has been research on
-the so-called \emph{semantic subtyping}~\cite{?} where subtyping is defined
-exactly as the subset relation. % on values.
+the so-called \emph{semantic subtyping}~\cite{bib:Frisch:2008:sem-sub,
+	bib:Castagna:2011:sem-sub, bib:Ancona:2016:sem-sub-oo} 
+where subtyping is defined exactly as the subset relation. % on values.
 Namely, types are given the set-theoretic interpretation
 $\interpty{\ty} = \{\nu \Alt \vdash \nu : \ty \}$, 
 and subtyping $\ty_1 <: \ty_2$ is defined 
