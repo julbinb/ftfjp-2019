@@ -25,8 +25,8 @@ It is often convenient to think of subtyping \jltype{T $<:$ S}
 in terms of the set inclusion: ``the elements of~\jltype{T} are the subset
 of the elements of~\jltype{S}''~\cite{bib:Pierce:2002:TAPL}.
 This intuition is not always correct, but there has been research on
-the so-called \emph{semantic subtyping}~\cite{bib:Frisch:2008:sem-sub,
-	bib:Castagna:2011:sem-sub, bib:Ancona:2016:sem-sub-oo} 
+the so-called \emph{semantic subtyping}~\cite{bib:Hosoya:2003:XDuce,
+  bib:Frisch:2008:sem-sub, bib:Ancona:2016:sem-sub-oo} 
 where subtyping is defined exactly as the subset relation. % on values.
 Namely, types are given the set-theoretic interpretation
 $\interpty{\ty} = \{\nu \Alt \vdash \nu : \ty \}$, 
@@ -47,20 +47,20 @@ language run-time looks at the tags attached to the arguments
 to find out their run-time types.
 
 In this paper, we attempt to fill the gap between \emph{semantic subtyping} and 
-\emph{dynamically} typed languages with \emph{nominal} typing.
+\emph{dynamically} typed languages with \emph{nominal} types.
 Instead of directly interpreting types as sets of values,
 we interpret them as sets of \emph{type tags} assuming 
 each value is associated with a tag.
 Our contributions are as follows:
 \begin{enumerate}
   \item Tag-based semantic interpretation of types for a language
-    with nominal types, tuples, and unions.
+    with nominal types, tuples, and unions (\secref{sec:semsub}).
   \item Two syntactic definitions of subtyping, declarative and reductive,
     along with the Coq-mechanized proofs that the definitions are equivalent
-    and coincide with the semantic interpretation. 	
+    and coincide with the semantic interpretation (\secref{sec:synsub}). 	
   \item Proof of decidability of the reductive subtyping.
   \item Discussion of the implications of using semantic subtyping
-    for multiple dynamic dispatch.
+    for multiple dynamic dispatch (\secref{sec:discussion}).
 \end{enumerate}
 
 

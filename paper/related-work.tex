@@ -1,0 +1,43 @@
+Semantic subtyping has been studied a lot in the context of \emph{statically
+typed} languages with \emph{structural} typing. 
+For example, \citet{bib:Hosoya:2003:XDuce} defined 
+a semantic type system for XML that incorporated unions, products,
+and recursive types, with a subtyping algorithm based on tree 
+automata~\cite{bib:Hosoya:2005:XML}.
+\citet{bib:Frisch:2008:sem-sub} presented decidable semantic subtyping
+for a language with functions, products, and boolean combinators 
+(union, intersection, negation). Here, the decision procedure 
+for $\ty_1 <: \ty_2$ is based on checking
+the emptiness of $\ty_1 \setminus \ty_2$. 
+\citet{bib:Dardha:2013:semsub-oo} adopted semantic subtyping
+to objects with structural types, and \citet{bib:Ancona:2016:sem-sub-oo} 
+proposed decidable semantic subtyping for mutable records.
+Unlike these works, we were interested in applying semantic reasoning
+to a \emph{dynamic} language with \emph{nominal} types.
+%In particular, we found that semantic subtyping of abstract types (ubiquitous
+%in languages with nominal typing) and union types (ubiquitous in type systems
+%with semantic subtyping).
+
+Though \emph{multiple dispatch} is more often found in dynamic languages,
+there have been research on safe integration of dynamic dispatch into
+statically typed languages~\cite{bib:Chambers:1992:Cecil, 
+Castagna:1992:COF:141471.141537, bib:Clifton:2000:MultiJava,
+Park:2019:PSM:3302515.3290324}. There, subtyping is used for both
+static type checking and dynamic method resolution.
+In the realm of dynamic languages, \citet{Bezanson2015AbstractionIT} 
+employed subtyping for multiple dynamic dispatch in the Julia language.
+Julia has a rich language of type annotations, 
+including nominal types, tuples, and unions, 
+and a complex subtyping relation~\cite{ZappaNardelli:2018:JSR:3288538.3276483}. 
+However, it is not clear whether the subtyping relation is decidable 
+or even transitive, and transitivity of subtyping is important
+for correct implementation of method resolution.
+In this paper, we work with only a subset of Julia types, 
+but subtyping on the subset is transitive and decidable.
+
+Recently, a framework for building transitive, distributive,
+and decidable subtyping of union and intersection types was proposed 
+by~\citet{Muehlboeck:2018:EUI:3288538.3276482}.
+Our language of types does not have intersection types but features
+pair types that distribute over unions in a similar fashion.
+
