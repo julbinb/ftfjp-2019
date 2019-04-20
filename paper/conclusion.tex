@@ -1,7 +1,46 @@
-We presented a simple, tag-based semantic interpretation 
-for nominal types, tuples, and unions, 
-and provided a decidable syntactic definition of subtyping 
-equivalent to the semantic subtyping on tags.
+We presented decidable subtyping of nominal types, tuples, and unions, 
+which enjoys the advantages of semantic subtyping, such as transitivity,
+yet can be used in the context of dynamically typed languages.
+Namely, we interpret types in terms of type tags, 
+which are typical for dynamic languages,
+and provide a decidable syntactic subtyping relation that is
+equivalent to the subset relation on the interpretations
+(aka tag-based semantic subtyping).
+
+We found that the proposed subtyping relation, 
+if used for multiple dynamic dispatch, 
+would make the semantics of dynamically typed programs unstable
+due to an interaction of abstract nominal types and unions.
+We expect that a different semantic interpretation of nominal types 
+can fix the issue, and would like to further explore the alternative.
+
+In future work, we plan to extend tag-based semantic subtyping 
+to invariant type constructors, e.g. \jltype{Ref}:
+\[
+\begin{array}{rcl}
+\ty \in \Type   &::=& \ldots \Alt \tyref[\ty]\\
+\vty \in \VType &::=& \ldots \Alt \tyref[\ty]
+\end{array}
+\]
+As usual for invariant constructors, 
+we would like to consider types such as $\tyref[\tyint]$
+and $\tyref[\tyunion{\tyint}{\tyint}]$ to be equivalent
+because $\tyint$ and $\tyunion{\tyint}{\tyint}$ are equivalent.
+However, a naive interpretation of invariant types is not well defined:
+\[
+\interpty{\tyref[\ty]} = 
+\{ \tyref[\ty'] \Alt \vty \in \interpty{\ty} \iff \vty \in \interpty{\ty'} \}.
+\]
+Our plan is to introduce an indexed interpretation,
+\[
+\interpty{\tyref[\ty]}_{k+1} = \{ \tyref[\ty'] 
+    \Alt \vty \in \interpty{\ty}_k \iff \vty \in \interpty{\ty'}_k \},
+\]
+and define semantic subtyping as:
+\[
+\bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
+\forall k.\ (\interpty{\ty_1}_k \subseteq \interpty{\ty_2}_k).
+\]
 
 %where abstract nominal types are interpreted via type tags corresponding 
 %to their declared concrete subtypes.
