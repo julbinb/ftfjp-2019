@@ -1,0 +1,34 @@
+## %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+##  This is a source file for coq_makefile util
+## 
+##  Run 
+##      coq_makefile -f _CoqProject -o Makefile 
+##  to generate Makefile.
+## %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+-R . "MiniJl"
+
+./Aux/BasicTactics.v
+./Aux/Identifier.v
+
+./MiniJl/BaseDefs.v
+./MiniJl/BaseProps.v
+./MiniJl/MatchProps.v
+./MiniJl/DeclSubProps.v
+./MiniJl/RedSubProps.v
+./MiniJl/Props.v
+
+
+# VS := *.v
+
+# .PHONY: coq clean
+
+# coq: Makefile.coq
+#         $(MAKE) -f Makefile.coq
+        
+# Makefile.coq: Makefile $(VS)
+#             coq_makefile -R . Lib $(VS) -o Makefile.coq
+            
+# clean:: Makefile.coq
+#         $(MAKE) -f Makefile.coq clean
+# rm -f Makefile.coq
