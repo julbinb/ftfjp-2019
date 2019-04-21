@@ -1,10 +1,10 @@
-While the semantic approach does provides us with a useful intuition,
-we need to be able to build the subtyping algorithm in order to use subtyping.
+While the semantic approach does provide us with a useful intuition,
+we need to be able to build the subtyping algorithm 
+in order to compute subtypes.
 However, neither of the definitions~\eqref{eq:truesemsub-def}, \eqref{eq:semsub-def} 
 can be directly computed because of the quantification $\forall \vty$.
-Therefore, we provide another, \emph{syntactic} 
-definition of subtyping, which is
-equivalent to the semantic one and also straightforward to implement.
+Therefore, we provide a \emph{syntactic} definition of subtyping, 
+equivalent to the semantic one, which is straightforward to implement.
 
 We do this in two steps. 
 First, we give an inductive definition that is handy to reason about,
@@ -24,7 +24,7 @@ as a straightforward recursive function.
 \subsection{Declarative Subtyping}
 %% -----------------------------------------------------------------------------
 
-Declarative definition of subtyping is provided in~\figref{fig:bjsem-decl-sub}.
+The declarative definition of subtyping is provided in~\figref{fig:bjsem-decl-sub}.
 The definition is mostly comprised of the standard rules
 of syntactic subtyping for unions and pairs.
 Namely, reflexivity and transitivity (\RD{Refl} and \RD{Trans}), 
@@ -47,7 +47,7 @@ They have the same semantic interpretation~---
 $\{\typair{\tystr}{\tyint}, \typair{\tystr}{\tyflt}\}$.
 Therefore, we should be able to derive the equivalence of the types 
 using the declarative definition,
-i.e., the declarative subtyping should hold in both directions.
+i.e., declarative subtyping should hold in both directions.
 One direction is trivial:
 \begin{mathpar}{\small
 \inferrule*[right=]
@@ -81,10 +81,10 @@ that $\bjdeclsub{\tyreal}{\tynum} \in \NomH$.
 %can be derived by transitivity.
 But there are also new rules, \RD{RealUnion} and \RD{NumUnion},
 (\colorbox{light-gray}{highlighted} in~\figref{fig:bjsem-decl-sub}),
-which are dictated by the semantic subtyping.
+which are dictated by semantic subtyping.
 For example, we need \RD{RealUnion} to prove the equivalence
 of types \tyunion{\tyint}{\tyflt} and \tyreal, 
-which have the same interpretation $\{\tyint, \tyflt\}$.
+which have the same interpretation~--- $\{\tyint, \tyflt\}$.
 
 %Before we define an inductive declarative relation $\bjsub{\ty_1}{\ty_2}$.
 
@@ -169,20 +169,20 @@ which have the same interpretation $\{\tyint, \tyflt\}$.
 \end{figure}
 
 
-\subsection{Correctness of Declarative Subtyping}
+\subsection{Correctness of Declarative Subtyping}\label{sec:declsub-correct}
 %% -----------------------------------------------------------------------------
 
 In order to show that the declarative subtyping is equivalent
 to the semantic one,
 we need to prove that the former is sound and complete with respect
-to the latter one, that is:
+to the latter, that is:
 \[
 \forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff \bjtruesemsub{\ty_1}{\ty_2}).
 \]
 As discussed in~\secref{sec:syn-model-of-semsub}, 
 the syntactic model $\bjsemsub{\ty_1}{\ty_2}$ is equivalent 
-to the semantic subtyping.
-So for proofs, we will be using the model.
+to the semantic definition of subtyping $\bjtruesemsub{\ty_1}{\ty_2}$.
+We will use the model in our proofs.
 
 \begin{theorem}[Correctness of Declarative Subtyping]\label{thm:declsub-correct}
 \[

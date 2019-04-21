@@ -1,6 +1,6 @@
 In this section, we describe in more details how subtyping
 can be used to implement multiple dynamic dispatch,
-and also discuss why using the semantic subtyping for this
+and also discuss why using semantic subtyping for this
 might not be a good idea.
 
 As an example, consider the following methods\footnote{In the context of MDD, 
@@ -17,8 +17,8 @@ converts its argument to a float):
 and the function call \jlcode{3 + 5}.
 How exactly does dispatch work?
 
-One approach, adopted, for example, 
-by the Julia language~\cite{Bezanson2015AbstractionIT}, 
+One approach, adopted by some languages
+such as Julia~\cite{Bezanson2015AbstractionIT}, 
 is to use subtyping on tuples~\cite{bib:Leavens:1998:mddtuples}.
 Namely, method signatures and function calls are interpreted as tuple types,
 and then subtyping is used to determine applicable methods 
@@ -28,8 +28,8 @@ as the following types (from top to bottom):\\
 \jlcode{mII $\equiv$ Int $\times$ Int}\\
 \jlcode{mFF $\equiv$ Flt $\times$ Flt}\\
 \jlcode{mUU $\equiv$ (Int$\cup$Flt) $\times$ (Int$\cup$Flt)}\\
-and the call~--- as type \jlcode{cII $\equiv$ Int $\times$ Int}.
-To resolve the call, language run-time ought to perform two steps.
+and the call as having type \jlcode{cII $\equiv$ Int $\times$ Int}.
+To resolve the call, the language run-time ought to perform two steps.
 \begin{enumerate}
   \item Find applicable methods (if any). For this, we check subtyping between
     the type of the call, \jlcode{cII}, and the method signatures.
@@ -44,14 +44,14 @@ To resolve the call, language run-time ought to perform two steps.
     the integer addition is considered the most specific.
 \end{enumerate}
 Let us also consider the call \jlcode{3.14 + 5}. Its type is
-\jlcode{Int $\times$ Flt}, and there is only one applicable method that is
+\jlcode{Flt $\times$ Int}, and there is only one applicable method that is
 a supertype of the call type~--- \jlcode{mUU}, so it should be called.
 
-Is is important to understand what happens if the programmer defines
+It is important to understand what happens if the programmer defines
 several implementations with the same argument types. 
 In the case of a static language, an error can be reported.
 In the case of a dynamic language, however, the second implementation
-simply replaces the earlier one, in the same way as an assignment
+simply replaces the earlier one, in the same way as reassignment
 to a variable replaces its previous value.
 
 For instance, consider a program 
@@ -61,7 +61,7 @@ and also the following:
 +(x::Real, y::Real) = ...   # mRR
 print(3.14 + 5)	 
 \end{lstminijl}
-According to the semantic subtyping, type \jltype{Real} is equivalent
+According to the semantic subtyping relation, type \jltype{Real} is equivalent
 to \jltype{Int$\cup$Flt} in \BetaJulia. 
 Therefore, implementation of \jlcode{mRR} will replace \jlcode{mUU}, 
 and the call \jlcode{3.14 + 5} will be dispatched to \jlcode{mRR}.

@@ -1,8 +1,8 @@
 Many static type systems rely on subtyping.
-Informally, subtyping relation \jltype{T $<:$ S} states that
+Informally, a subtyping relation \jltype{T $<:$ S} states that
 a value of type~\jltype{T} is safe to use 
-in the context that expects~\jltype{S}.
-For example, if class \jltype{Rectangle} is a subtype of \jltype{Shape},
+in the context that expects a value of type~\jltype{S}.
+For example, if class \jltype{Rectangle} is a subtype of class \jltype{Shape},
 an instance of \jltype{Rectangle} can be passed to a function
 with an argument of type \jltype{Shape}.
 
@@ -17,15 +17,15 @@ is picked dynamically, based on the run-time types of all arguments.
 For example, consider two implementations of addition,
 \jlcode{+(Number, Number)} and \jlcode{+(String, String)},
 and the call \jlcode{3+5}.
-In this case, language run-time should pick 
+In this case, a language run-time should pick 
 the implementation for numbers 
 because \jltype{Int $<:$ Number} but \jltype{Int $\not{<:}$ String}.
 
 It is often convenient to think of subtyping \jltype{T $<:$ S}
-in terms of the set inclusion: ``the elements of~\jltype{T} are the subset
+in terms of the set inclusion: ``the elements of~\jltype{T} are a subset
 of the elements of~\jltype{S}''~\cite{bib:Pierce:2002:TAPL}.
 This intuition is not always correct, but there has been research on
-the so-called \emph{semantic subtyping}~\cite{bib:Hosoya:2003:XDuce,
+so-called \emph{semantic subtyping}~\cite{bib:Hosoya:2003:XDuce,
   bib:Frisch:2008:sem-sub, bib:Ancona:2016:sem-sub-oo} 
 where subtyping is defined exactly as the subset relation. % on values.
 Namely, types are given the set-theoretic interpretation
@@ -35,18 +35,18 @@ as $\interpty{\ty_1} \subseteq \interpty{\ty_2}$.
 In this way, a semantic definition of subtyping intertwines with 
 a static typing relation.
 
-However, subtyping does not always go together with static typing~---
-it is also applicable in the context of \emph{dynamically} typed languages.
+However, subtyping is not limited to statically typed languages~---
+it is also applicable in the context of \emph{dynamically} typed ones.
 As mentioned before, subtyping can be used for multiple dynamic dispatch,
 and MDD is rather widespread among dynamic languages, for instance,
 Common Lisp, Julia, Clojure.
 Such languages do not prevent type errors with static type checking
 but detect them at run-time, by inspecting type tags associated with values.
 Type tags are also used during dynamic dispatch: 
-language run-time looks at the tags attached to the arguments
-to find out their run-time types.
+the language run-time looks at the tags attached to the arguments
+to find out their types.
 
-In this paper, we attempt to fill the gap between \emph{semantic subtyping} and 
+In this paper, we are bridging the gap between \emph{semantic subtyping} and 
 \emph{dynamically} typed languages with \emph{nominal} types.
 Instead of directly interpreting types as sets of values,
 we interpret them as sets of \emph{type tags} assuming 

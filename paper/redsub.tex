@@ -146,20 +146,21 @@ For details, the reader can refer to the full Coq-proof.
 \begin{theorem}[Decidability of Reductive Subtyping]\label{thm:redsub-decidable}
 \[
 \forall \ty_1, \ty_2.\ 
-(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot \bjsub{\ty_1}{\ty_2})
+(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot \bjsubr{\ty_1}{\ty_2})
 \]
 \end{theorem}
-
-By induction on a derivation of $\InNF(\ty_1)$, we can show
-that the reductive subtyping is decidable for $\ty_1 | \InNF(\ty_1)$.
-In this case, $\ty_1$ is either a value type or a union of normalized types.
-If it is a value type, subtyping is equivalent to matching,
-and matching is decidable.
-If $\ty_1$ is a union $\tyunion{\ty_a}{\ty_b}$, 
-we use induction hypothesis for components and the fact that
-subtyping union on the left-hand side
-$\bjsubr{\tyunion{\ty_a}{\ty_b}}{\ty'}$ implies $\bjsubr{\ty_a}{\ty'}$
-and $\bjsubr{\ty_b}{\ty'}$.
-Since $\InNF(\NF(\ty_1))$, we can use the decidability 
-of $\bjsubr{\NF(\ty_1)}{\ty_2}$ to prove decidability
-of $\bjsubr{\ty_1}{\ty_2}$.
+\noindent
+The Coq-proof is available.
+% By induction on a derivation of $\InNF(\ty_1)$, we can show
+% that the reductive subtyping is decidable for $\ty_1 | \InNF(\ty_1)$.
+% In this case, $\ty_1$ is either a value type or a union of normalized types.
+% If it is a value type, subtyping is equivalent to matching,
+% and matching is decidable.
+% If $\ty_1$ is a union $\tyunion{\ty_a}{\ty_b}$, 
+% we use induction hypothesis for components and the fact that
+% subtyping union on the left-hand side
+% $\bjsubr{\tyunion{\ty_a}{\ty_b}}{\ty'}$ implies $\bjsubr{\ty_a}{\ty'}$
+% and $\bjsubr{\ty_b}{\ty'}$.
+% Since $\InNF(\NF(\ty_1))$, we can use the decidability 
+% of $\bjsubr{\NF(\ty_1)}{\ty_2}$ to prove decidability
+% of $\bjsubr{\ty_1}{\ty_2}$.

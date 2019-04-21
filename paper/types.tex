@@ -1,6 +1,6 @@
-We build the presentation around a small type language \BetaJulia,
+We base this work on a small type language \BetaJulia,
 presented in~\figref{fig:bjsem-types}.
-Types of \BetaJulia, denoted by $\ty \in \Type$, include pairs, unions, 
+Types, denoted by $\ty \in \Type$, include pairs, unions, 
 and nominal types: \cname denotes \emph{concrete} nominal types
 that have direct instances, 
 and \aname denotes \emph{abstract} nominal types.
@@ -48,15 +48,14 @@ In the case of \BetaJulia, the hierarchy is defined as follows:
 \bjdeclsub{\tyint}{\tyreal}, \bjdeclsub{\tyflt}{\tyreal},
 \bjdeclsub{\tycmplx}{\tynum} ].
 \]
-Nominal hierarchy should not have cycles, 
+Nominal hierarchies should not have cycles, 
 and each type can have only one parent.
-Following the spirit of the Julia language, we do not allow concrete types
-to have declared subtypes, i.e. concrete types are always leafs.
+In the spirit of the Julia language, we do not allow concrete types
+to have declared subtypes, i.e. concrete types are always leaves.
 
 \paragraph{Value Types}
-Not all types of \BetaJulia can have direct instances, and, therefore,
-serve as type tags. Types that \emph{can} be used as tags we call 
-\defemph{value types}. 
+Only types that can be instantiated can serve as type tags,
+and we call these types \defemph{value types}. 
 Their formal definition is given in~\figref{fig:bjsem-value-types}:
 value type $\vty \in \VType$ is either a concrete nominal type 
 or a pair of value types. 
@@ -84,7 +83,7 @@ Note that $\VType \subset \Type$, i.e. each value type is a type.
 %% -----------------------------------------------------------------------------
 
 As mentioned in~\secref{sec:intro}, 
-we interpret types in terms of type tags, or value types, instead of values,
+we interpret types as sets of type tags (i.e. value types) instead of values,
 so we call this semantic interpretation \emph{tag-based}.
 Formally, the interpretation is given by the function
 $\interpty{\cdot}$ that maps a type $\ty \in \Type$
@@ -110,20 +109,20 @@ as presented in~\figref{fig:bjsem-interpretation}.
 	\label{fig:bjsem-interpretation}
 \end{figure}
 
-The interpretation of a type states what values constitute the type:
-if $\vty \in \interpty{\ty}$, then all instances of \vty, 
-i.e. values $\nu$ tagged with \vty, belong to $\ty$.
+The interpretation of a type states what values have that type:
+if $\vty \in \interpty{\ty}$, then values $\nu$ tagged with \vty
+(i.e. instances of \vty) belong to $\ty$.
 Thus, a \emph{concrete nominal} type \cname is comprised 
 only of its direct instances.
 \emph{Abstract nominal} types do not have direct instances, 
-but we want their interpretation to reflect the nominal hierarchy.
-For example, a \tynum value 
-is either a concrete complex number or a real number, which, in turn,
+but we want their interpretation to reflect the nominal hierarchy:
+for example, a \tynum value 
+is either a concrete complex or a real number, which, in turn,
 is either a concrete integer or a floating point value.
 Therefore, the set of values of type \tynum 
 is described by the set of value types $\{\tycmplx, \tyint, \tyflt\}$.
 More generally, the interpretation of abstract nominal types \aname
-can be given in then following way:
+can be given as follows: %in the following way:
 \[
 \interpty{\aname} = \{\cname\ \Alt \bjnomsub{\cname}{\aname} \},
 \]
