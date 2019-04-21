@@ -65,7 +65,7 @@
 \begin{document}
 
 %% Title information
-\title[Short Title]{Decidable, Tag-Based Semantic Subtyping \\
+\title[Tag-Based Semantic Subtyping]{Decidable, Tag-Based Semantic Subtyping \\
 %	to a Dynamically Typed Language} %with Nominal Types}
 	for Nominal Types, Tuples, and Unions}
                                         %% [Short Title] is optional;
@@ -141,7 +141,22 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-Text of abstract \ldots.
+Subtyping is employed by many programming languages, 
+either for static type checking or for dynamic dispatch.
+In the context of statically typed languages with structural typing, 
+there has been research on \emph{semantic} subtyping, 
+% which interprets a type
+% as a set of values of the type,
+% and defines subtyping as the subset relation on the interpratations.
+which enables simple set-theoretical reasoning 
+and gives for free some useful properties of subtyping such as transitivity.
+In this paper, we are bridging the gap between semantic subtyping
+and \emph{dynamic} languages,
+by proposing tag-based semantic subtyping 
+for nominal types, tuples, and unions,
+in which types are interpreted as sets of type tags instead of values.
+The proposed subtyping relation is shown to be decidable, as witnessed by 
+an equivalent syntactic definition.
 \end{abstract}
 
 
@@ -169,7 +184,7 @@ Text of abstract \ldots.
 
 %% Keywords
 %% comma separated list
-\keywords{keyword1, keyword2, keyword3}  %% \keywords are mandatory in final camera-ready submission
+\keywords{semantic subtyping, type tags, nominal types, pair-union distributivity}  %% \keywords are mandatory in final camera-ready submission
 
 
 %% \maketitle
