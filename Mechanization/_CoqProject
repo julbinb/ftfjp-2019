@@ -6,7 +6,7 @@
 ##  to generate Makefile.
 ## %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
--R . "MiniJl"
+-R . "Mechanization"
 
 ./Aux/BasicTactics.v
 ./Aux/Identifier.v
@@ -18,6 +18,12 @@
 ./MiniJl/RedSubProps.v
 ./MiniJl/Props.v
 
+./AtomicJl/BaseDefs.v
+./AtomicJl/BaseProps.v
+./AtomicJl/MatchProps.v
+./AtomicJl/DeclSubProps.v
+./AtomicJl/RedSubProps.v
+./AtomicJl/Props.v
 
 # VS := *.v
 

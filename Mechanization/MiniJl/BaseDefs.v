@@ -8,7 +8,7 @@
 
 Add LoadPath "../..". (* root directory of the repo *)
 
-Require Import MiniJl.Aux.Identifier.
+Require Import Mechanization.Aux.Identifier.
 
 Require Import Coq.Lists.List.
 Import ListNotations.
