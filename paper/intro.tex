@@ -39,23 +39,30 @@ a static typing relation.
 However, subtyping is not limited to statically typed languages~---
 it is also applicable in the context of \emph{dynamically} typed ones.
 As mentioned before, subtyping can be used for multiple dynamic dispatch,
-and MDD is rather widespread among dynamic languages, for instance,
-CLOS, Julia, Clojure.
+and MDD is rather widespread among dynamic languages
+such as CLOS, Julia, Clojure.
 Unlike statically typed languages, 
 which conservatively prevent type errors with static checking,
 dynamic languages detect type errors at run-time.
 Namely, whenever an operator is restricted to certain kinds of values,
-the language run-time inspects the arguments of the operator
-to check whether it is legal to execute it.
+the language run-time checks the arguments of the operator before running it;
+often, such a check amounts to checking the \emph{type tag} associated 
+with the value argument.
 
-In many dynamic languages, inspecting a value 
-amounts to checking the \emph{type tag} associated with it, 
-and, often, a tag is just a user-defined nominal type such as class name.
-%Type tags can also be used to inform dynamic dispatch a function call,
-%as they indicate the run-time types of the arguments.
+A large number of dynamic languages provide support 
+for object-oriented programming with classes, 
+thus enabling user-defined hierarchies of nominal types,
+which can be then used for dynamic dispatch.
+Nominal types are the main source of type tags.
+Often, there is a distinction between concrete 
+and abstract classes/interfaces.
+A concrete class can be instantiated, 
+and its instances are tagged with the class name.
+Abstract classes, on the other hand, do not have direct instances,
+so they do not induce type tags.
 
-In this paper, we are bridging the gap between \emph{semantic subtyping} and 
-\emph{dynamically} typed languages with \emph{nominal} types.
+In this paper, we are bridging the gap between \emph{semantic} subtyping 
+and \emph{dynamically} typed languages with \emph{nominal} types.
 Instead of directly interpreting types as sets of values,
 we interpret them as sets of \emph{type tags} assuming 
 each value is associated with a tag.
