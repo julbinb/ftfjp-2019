@@ -36,7 +36,7 @@ To resolve the call, the language run-time ought to perform two steps.
     Since \jlcode{cII $<:$ mII} and \jlcode{cII $<:$ mUU} but
     \jlcode{cII $\not{<:}$ mFF}, only two methods are applicable,
     \jlcode{mII} for integers and \jlcode{mUU} for mixed-type numbers.
-  \item Pick the best, most specific of the applicable methods
+  \item Pick the most specific of the applicable methods
     (if there is one).
     For this, we check subtyping relation between all applicable methods.
     In this example, naturally, we would like \jlcode{mII} to be called

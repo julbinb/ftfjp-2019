@@ -1,0 +1,194 @@
+\subsection{Declarative Subtyping}\label{sec:declsub-correct}
+%% -----------------------------------------------------------------------------
+
+In order to show that the declarative subtyping is equivalent
+to the semantic one,
+we need to prove that the former is sound and complete with respect
+to the latter, that is:
+\[
+\forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff \bjtruesemsub{\ty_1}{\ty_2}).
+\]
+As discussed in~\secref{sec:syn-model-of-semsub}, 
+the syntactic model $\bjsemsub{\ty_1}{\ty_2}$ is equivalent 
+to the semantic definition of subtyping $\bjtruesemsub{\ty_1}{\ty_2}$.
+We will use the model in our proofs.
+
+\begin{theorem}[Correctness of Declarative Subtyping]\label{thm:declsub-correct}
+\[
+\forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff\ \bjsemsub{\ty_1}{\ty_2})
+\]
+\end{theorem}
+
+In order to prove the theorem, we need several auxiliary observations.
+Let us recall the definition of $\bjsemsub{\ty_1}{\ty_2}$:
+\[
+\bjsemsub{\ty_1}{\ty_2} \quad \defsign \quad
+\forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies\ \bjmtch{\vty}{\ty_2}).
+\]
+The first thing to note is that
+subtyping a value type coincides with matching:
+\begin{equation}\label{eq:mtch-eq-declsub}
+\forall \vty, \ty.\ (\bjsub{\vty}{\ty} \iff\ \bjmtch{\vty}{\ty}).
+\end{equation}
+Having that, it is easy to prove the \emph{soundness} direction
+of~\thmref{thm:declsub-correct}.
+\begin{lemma}[Soundness of Declarative Subtyping]
+\[
+\forall \ty_1, \ty_2.\ 
+[\bjsub{\ty_1}{\ty_2} \implies\ 
+\forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies\ \bjmtch{\vty}{\ty_2})]
+\]
+\end{lemma}
+\noindent
+\Proof. We know $\bjmtch{\vty}{\ty_1}$ and $\bjsub{\ty_1}{\ty_2}$.
+We need to show that $\bjmtch{\vty}{\ty_2}$.
+First, we apply~\eqref{eq:mtch-eq-declsub} to $\bjmtch{\vty}{\ty_1}$
+and $\bjmtch{\vty}{\ty_2}$. 
+Now it suffices to show that $\bjsub{\vty}{\ty_2}$ follows from
+$\bjsub{\vty}{\ty_1}$ and $\bjsub{\ty_1}{\ty_2}$, 
+which is trivially true by~\RD{Trans}.
+\qed
+
+\begin{lemma}[Completeness of Declarative Subtyping]\label{lem:declsub-complete}
+\[	
+\forall \ty_1, \ty_2.\ 
+(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2})
+\]
+\end{lemma}
+
+This direction of~\thmref{thm:declsub-correct} is more challenging. 
+The key observation here is that \lemref{lem:declsub-complete} can be shown for 
+$\ty_1$ of the form $\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$
+(we omit parenthesis because union is associative).
+In this case, in the definition of $\bjsemsub{\ty_1}{\ty_2}$ the only
+$\vty$s that match $\ty_1$ and $\ty_2$ are $\vty_i$. 
+By~\eqref{eq:mtch-eq-declsub} we know that matching implies subtyping,
+so we also have $\bjsub{\vty_i}{\ty_2}$.
+From the latter, it is easy to show that $\bjsub{\ty_1}{\ty_2}$ because
+$\ty_1$ is just a union of value types, 
+and subtyping of the left-hand side union amounts to subtyping its components,
+according to the \RD{UnionL} rule.
+
+\paragraph{Normal Form}
+We say that a type $\ty \equiv \vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$
+is in \defemph{normal form} and denote this fact by $\InNF(\ty)$ 
+(formal definition of $\InNF$ is given 
+in~\figref{fig:bjsem-innf}, \appref{app:nf}).
+For each type \ty, there is an equivalent normalized type 
+that can be computed with the function $\NF$
+defined in~\figref{fig:bjsem-calc-nf} (the auxiliary function $\unprs$ 
+can be found in~\figref{fig:bjsem-calc-nf-full}, \appref{app:nf}).
+Note that abstract nominal types are unfolded into unions of all their
+value subtypes. A pairs gets rewritten into a union of value pairs, 
+thus producing a type in the disjunctive normal form.
+
+Using the fact that every type can be normalized,
+and that declarative subtyping is complete for normalized types, 
+we can finally prove \lemref{lem:declsub-complete}.
+
+\begin{lemma}[Properties of the Normal Form]\label{lem:declsub-nf}
+\[
+\forall \ty.\ (\InNF(\NF(\ty))\;\ \land\;
+\bjsub{\ty}{\NF(\ty)}\;\ \land\; \bjsub{\NF(\ty)}{\ty})
+\]
+\end{lemma}
+
+\begin{lemma}[Completeness for Normalized Types]
+\label{lem:nf-declsub-complete}
+\[
+	\forall \ty_1, \ty_2 \Alt \InNF(\ty_1).\
+	(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2})
+\]
+\end{lemma}
+
+\begin{lemma}\label{lem:nf-semsub}
+$
+\forall \ty_1, \ty_2.\ 
+(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsemsub{\NF(\ty_1)}{\ty_2})
+$
+\end{lemma}
+
+\begin{figure}
+  \[
+	\begin{array}{rcl}
+	\NF: \Type &\rightarrow& \Type \\
+	\NF(\cname) &=& \cname \\
+	\colorbox{light-gray}{\NF(\tyreal)} &=&
+	\colorbox{light-gray}{\tyunion{\tyint}{\tyflt}} \\
+	\colorbox{light-gray}{\NF(\tynum)} &=&
+	\colorbox{light-gray}{\tyunion{\tyunion{\tyint}{\tyflt}}{\tycmplx}} \\
+	\NF(\typair{\ty_1}{\ty_2}) &=& \unprs(\NF(\ty_1), \, \NF(\ty_2))	\\
+	\NF(\tyunion{\ty_1}{\ty_2}) &=& \tyunion{\NF(\ty_1)}{\NF(\ty_2)} \\
+	\end{array}
+  \]
+	\caption{Computing normal form of \BetaJulia types}
+	\label{fig:bjsem-calc-nf}
+\end{figure}
+
+\noindent
+\Proof (Lemma~\ref{lem:declsub-complete}).
+We know $\bjsemsub{\ty_1}{\ty_2}$, and we need to show $\bjsub{\ty_1}{\ty_2}$.
+First, we apply \lemref{lem:nf-semsub} to $\bjsemsub{\ty_1}{\ty_2}$,
+and then \lemref{lem:nf-declsub-complete},
+this gives us $\bjsub{\NF(\ty_1)}{\ty_2}$.
+Using \lemref{lem:declsub-nf} and \RD{Trans}, we can show
+$\bjsub{\ty_1}{\ty_2}$.
+\qed
+
+\subsection{Reductive Subtyping}\label{sec:declsub-correct}
+%% -----------------------------------------------------------------------------
+
+\begin{theorem}[Correctness of Reductive Subtyping]\label{thm:redsub-correct}
+\[
+\forall \ty_1, \ty_2.\ (\bjsubr{\ty_1}{\ty_2} \iff\ \bjsub{\ty_1}{\ty_2})
+\]
+\end{theorem}
+
+It is relatively easy to show by induction on a derivation of
+$\bjsubr{\ty_1}{\ty_2}$ that the reductive subtyping is sound:
+for each case we build a corresponding derivation of $\bjsub{\ty_1}{\ty_2}$.
+Most of the reductive rules have direct declarative counterparts.
+In the case of \RR{*Num} and \RR{UnionR*}, 
+we need to additionally use transitivity.
+Finally, in the case of \RR{NF}, the induction hypothesis gives us
+$\bjsub{\NF(\ty_1)}{\ty_2}$, so we can use 
+\lemref{lem:declsub-nf} and \RD{Trans} to derive $\bjsub{\ty_1}{\ty_2}$.
+
+The challenging part of the proof is to show completeness. 
+For this, we need to prove that 
+the reductive definition is \emph{reflexive}, \emph{transitive},
+and \emph{distributive}.
+To prove transitivity and distributivity, 
+we need several auxiliary statements:
+\begin{enumerate}
+  \item $\bjsubr{\ty}{\ty'}\ \implies\ \bjsubr{\NF(\ty)}{\ty'}$,
+  \item $\bjsubr{\NF(\ty_1)}{\NF(\ty_2)}\;\;\ \land\;\; \bjsubr{\NF(\ty_2)}{\ty_3}$\\
+     $\implies \bjsubr{\NF(\ty_1)}{\ty_3}$,
+  \item $\bjsubr{\NF(\ty)}{\NF(\ty')}\ \implies\ \bjsubr{\ty}{\ty'}$.
+\end{enumerate}
+Having all the facts, we can prove completeness by induction
+on a derivation of $\bjsub{\NF(\ty_1)}{\ty_2}$.
+For details, the reader can refer to the full Coq-proof.
+
+\begin{theorem}[Decidability of Reductive Subtyping]\label{thm:redsub-decidable}
+\[
+\forall \ty_1, \ty_2.\ 
+(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot \bjsubr{\ty_1}{\ty_2})
+\]
+\end{theorem}
+\noindent
+The Coq-proof is available.
+
+% By induction on a derivation of $\InNF(\ty_1)$, we can show
+% that the reductive subtyping is decidable for $\ty_1 | \InNF(\ty_1)$.
+% In this case, $\ty_1$ is either a value type or a union of normalized types.
+% If it is a value type, subtyping is equivalent to matching,
+% and matching is decidable.
+% If $\ty_1$ is a union $\tyunion{\ty_a}{\ty_b}$, 
+% we use induction hypothesis for components and the fact that
+% subtyping union on the left-hand side
+% $\bjsubr{\tyunion{\ty_a}{\ty_b}}{\ty'}$ implies $\bjsubr{\ty_a}{\ty'}$
+% and $\bjsubr{\ty_b}{\ty'}$.
+% Since $\InNF(\NF(\ty_1))$, we can use the decidability 
+% of $\bjsubr{\NF(\ty_1)}{\ty_2}$ to prove decidability
+% of $\bjsubr{\ty_1}{\ty_2}$.

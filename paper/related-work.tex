@@ -6,7 +6,7 @@ and recursive types, with a subtyping algorithm based on tree
 automata~\cite{bib:Hosoya:2005:XML}.
 \citet{bib:Frisch:2008:sem-sub} presented decidable semantic subtyping
 for a language with functions, products, and boolean combinators 
-(union, intersection, negation). Here, the decision procedure 
+(union, intersection, negation); the decision procedure 
 for $\ty_1 <: \ty_2$ is based on checking
 the emptiness of $\ty_1 \setminus \ty_2$. 
 \citet{bib:Dardha:2013:semsub-oo} adopted semantic subtyping
@@ -26,8 +26,8 @@ Park:2019:PSM:3302515.3290324}. There, subtyping is used for both
 static type checking and dynamic method resolution.
 In the realm of dynamic languages, \citet{Bezanson2015AbstractionIT} 
 employed subtyping for multiple dynamic dispatch in the Julia language.
-Julia has a rich language of type annotations, 
-including nominal types, tuples, and unions, 
+Julia has a rich language of type annotations 
+(including, but not limited to nominal types, tuples, and unions) 
 and a complex subtyping relation~\cite{ZappaNardelli:2018:JSR:3288538.3276483}. 
 However, it is not clear whether the subtyping relation is decidable 
 or even transitive, and transitivity of subtyping is important

@@ -55,7 +55,7 @@ and each type can have only one parent.
 %(i.e. concrete types are leaves).
 
 \paragraph{Value Types}
-Only types that can be instantiated serve as type tags,
+Only types that can be instantiated induce type tags,
 and we call these types \defemph{value types}. 
 Their formal definition is given in~\figref{fig:bjsem-value-types}:
 value type $\vty \in \VType$ is either a concrete nominal type 
@@ -110,12 +110,13 @@ as presented in~\figref{fig:bjsem-interpretation}.
 	\label{fig:bjsem-interpretation}
 \end{figure}
 
-The interpretation of a type states what values have that type:
-if $\vty \in \interpty{\ty}$, then values $\nu$ tagged with \vty
+The interpretation of a type states what values constitute the type:
+$\vty \in \interpty{\ty}$ means that values $\nu$ tagged with \vty
 (i.e. instances of \vty) belong to $\ty$.
-Thus, a \emph{concrete nominal} type \cname is comprised 
-only of its direct instances.
-\emph{Abstract nominal} types do not have direct instances, 
+Thus, in \BetaJulia, a \emph{concrete nominal} type \cname is comprised 
+only of its direct instances.\footnote{In the general case, the interpretation
+of a concrete nominal type would include itself and all its concrete subtypes.}
+\emph{Abstract nominal} types cannot be instantiated, 
 but we want their interpretation to reflect the nominal hierarchy:
 for example, a \tynum value 
 is either a concrete complex or a real number, which, in turn,
@@ -142,12 +143,13 @@ $n_1$ is transitively a declared subtype of~$n_2$:
 Finally, \emph{pairs} and \emph{unions} are interpreted
 set-theoretically.
 
-Once we have the interpretation of types, we define 
-\defemph{tag-based semantic subtyping} as the subset relation:
-\[
+Once we have the tag interpretation of types, we define 
+\defemph{tag-based semantic subtyping} in a usual manner, 
+as the subset relation:
+\begin{equation}\label{eq:truesemsub-def}
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
 \interpty{\ty_1} \subseteq \interpty{\ty_2}.
-\]
+\end{equation}
 
 %and the set of values represented by a type \ty can be characterized
 %with the set of value types~$\vty_i$
