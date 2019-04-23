@@ -1,5 +1,5 @@
-We presented decidable subtyping of nominal types, tuples, and unions, 
-which enjoys the advantages of semantic subtyping, 
+We have presented decidable subtyping of nominal types, tuples, and unions, 
+that has the advantages of semantic subtyping, 
 such as simple set-theoretic reasoning, 
 yet can be used in the context of dynamically typed languages.
 Namely, we interpret types in terms of type tags, 
@@ -27,7 +27,8 @@ As usual for invariant constructors,
 we would like to consider types such as $\tyref[\tyint]$
 and $\tyref[\tyunion{\tyint}{\tyint}]$ to be equivalent
 because $\tyint$ and $\tyunion{\tyint}{\tyint}$ are equivalent.
-However, a naive interpretation of invariant types is not well defined:
+However, a naive interpretation of invariant types below
+is not well defined:
 \[
 \interpty{\tyref[\ty]} = 
 \{ \tyref[\ty'] \Alt \vty \in \interpty{\ty} \iff \vty \in \interpty{\ty'} \}.

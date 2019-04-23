@@ -1,6 +1,7 @@
-While the semantic approach does provide us with a useful intuition,
-we need to be able to build the subtyping algorithm 
-in order to compute subtypes.
+While the semantic approach does enable intuitive %set-theo\-re\-tic 
+reasoning about subtyping,
+we also need to be able to build the subtyping algorithm 
+to compute subtypes.
 However, the semantic definition of subtyping~\eqref{eq:truesemsub-def}
 %,\eqref{eq:semsub-def} 
 cannot be directly computed because of the quantification $\forall \vty$.
@@ -15,7 +16,7 @@ Second, we provide a \emph{reductive}, syntax-directed definition of subtyping
 and prove it equivalent to the declarative one 
 (and, hence, the semantic definition as well).
 We prove that the reductive subtyping is decidable, 
-that is, for any two types $\ty_1$ and $\ty_2$,
+i.e. for any two types $\ty_1$ and $\ty_2$,
 it is possible to prove that either $\ty_1$ is a subtype of $\ty_2$, 
 or it is not.
 The proofs are mechanized in Coq, and since Coq logic is constructive,
@@ -28,8 +29,8 @@ as a straightforward recursive function.
 
 The declarative definition of subtyping is provided in~\figref{fig:bjsem-decl-sub}.
 The definition is mostly comprised of the standard rules
-of syntactic subtyping for unions and pairs.
-Namely, reflexivity and transitivity (\RD{Refl} and \RD{Trans}), 
+of syntactic subtyping for unions and pairs:
+namely, reflexivity and transitivity (\RD{Refl} and \RD{Trans}), 
 subtyping of pairs (\RD{Pairs}),
 and subtyping of unions (\RD{UnionL}, \RD{UnionR1}, \RD{UnionR2}).
 Though \RD{UnionR*} rules are seemingly very strict 
@@ -78,7 +79,7 @@ cannot be derived without \RD{Distr2} rule.
 %so we cannot apply \RD{UnionR*} rules\footnote{Transitivity
 %  does not help in this case.}.
 
-The novel part of the definition hides in subtyping of nominal types.
+The novel part of the definition resides in subtyping of nominal types.
 There are four obvious rules coming directly 
 from the nominal hierarchy, for instance, \RD{RealNum} mirrors the fact 
 that $\bjdeclsub{\tyreal}{\tynum} \in \NomH$.

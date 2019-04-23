@@ -1,7 +1,6 @@
-In this section, we describe in more details how subtyping
+In this section, we describe in more detail how subtyping
 can be used to implement multiple dynamic dispatch,
-and also discuss why using semantic subtyping for this
-might not be a good idea.
+and also discuss implications of using \emph{semantic} subtyping.
 
 As an example, consider the following methods\footnote{In the context of MDD, 
 	different implementations of 
@@ -38,14 +37,14 @@ To resolve the call, the language run-time ought to perform two steps.
     \jlcode{mII} for integers and \jlcode{mUU} for mixed-type numbers.
   \item Pick the most specific of the applicable methods
     (if there is one).
-    For this, we check subtyping relation between all applicable methods.
+    For this, we check subtyping relations between all applicable methods.
     In this example, naturally, we would like \jlcode{mII} to be called
-    for addition of integers. And indeed, since \jlcode{mII $<:$ mUU},
+    for the addition of integers. And indeed, since \jlcode{mII $<:$ mUU},
     the integer addition is considered the most specific.
 \end{enumerate}
 Let us also consider the call \jlcode{3.14 + 5}. Its type is
-\jlcode{Flt $\times$ Int}, and there is only one applicable method that is
-a supertype of the call type~--- \jlcode{mUU}, so it should be called.
+\jlcode{Flt $\times$ Int}, and there is only one applicable method \jlcode{mUU}
+that is a supertype of the call type, so it should be called.
 
 It is important to understand what happens if the programmer defines
 several implementations with the same argument types. 
@@ -66,11 +65,12 @@ to \jltype{Int$\cup$Flt} in \BetaJulia.
 Therefore, implementation of \jlcode{mRR} will replace \jlcode{mUU}, 
 and the call \jlcode{3.14 + 5} will be dispatched to \jlcode{mRR}.
 
-Unfortunately, the semantics of the program above is not stable.
+There is a problem with using semantic subtyping for MDD:
+the semantics of the program above is not stable.
 If the programmer adds a new type into the nominal hierarchy,
 e.g. \jlcode{Int8 $<:$ Real}, type \jlcode{Real} is not
 equivalent to \jltype{Int$\cup$Flt} anymore.
-Therefore, if we run the program again, types of \jlcode{mUU} and \jlcode{mRR}
+Therefore, if the program is run again, types of \jlcode{mUU} and \jlcode{mRR}
 will be different, and so the implementation of \jlcode{mRR} 
 will not replace \jlcode{mUU}. 
 Since \jlcode{mUU $<:$ mRR}, the call \jlcode{3.14 + 5} 
@@ -78,7 +78,7 @@ will be dispatched to \jlcode{mUU}, not \jlcode{mRR} as before.
 
 We can gain stability by removing the rules that 
 equate abstract nominal types with the union of their subtypes,
-i.e., \RD{RealUnion} and \RD{NumUnion} in the declarative definition.\footnote{
+i.e. \RD{RealUnion} and \RD{NumUnion} in the declarative definition.\footnote{
     To get an equivalent reductive subtyping, we need to change 
     the \RR{NF} rule: replace normalization function $\NF$ with $\NFAt$ 
     (\figref{fig:bjnom-calc-nf-full}, \appref{app:nf}).}

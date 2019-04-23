@@ -76,15 +76,15 @@ with the middle type $\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}$.
 	\label{fig:bjsem-red-sub}
 \end{figure}
 
-The syntax-directed reductive definition of subtyping
-is presented in~\figref{fig:bjsem-red-sub}.\footnote{The definition
-%the rules can be easily turned 
-%into a subtyping algorithm.
-	 is not deterministic.	For example, there are two ways to derive 
+The syntax-directed reductive definition\footnote{The definition
+	%the rules can be easily turned 
+	%into a subtyping algorithm.
+	is not deterministic, though.	For example, there are two ways to derive 
 	$\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
 	{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}$: 
 	either by immediately applying \RR{Pair}, 
-	or by first normalizing the left-hand side with \RR{NF}.}
+	or by first normalizing the left-hand side with \RR{NF}.} of subtyping
+is presented in~\figref{fig:bjsem-red-sub}.
 Some of the inductive rules are similar to their declarative counterparts,
 e.g. subtyping of pairs (\RR{Pair}) and a union on the left (\RR{UnionL}).
 The differing rules are \colorbox{light-gray}{highlighted}.
@@ -104,9 +104,9 @@ The normalization function is presented in~\figref{fig:bjsem-calc-nf}
 can be found in~\figref{fig:bjsem-calc-nf-full}, \appref{app:nf}).
 It produces a type of the form
 $\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$ (note that union is associative)
-be replacing an abstract nominal type 
+by replacing an abstract nominal type 
 with the union of all its concrete subtypes, 
-and a pair of unions~--- with the union of pairs of value types,
+and a pair of unions with the union of pairs of value types,
 for instance:
 \[
 \NF(\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}) =
@@ -114,7 +114,7 @@ for instance:
 \]
 As we show in~\secref{}, a type and its normal form are
 equivalent in the declarative definition, which is essential
-for reductive subtyping being equivalent to declarative one.
+for reductive subtyping being equivalent to declarative subtyping.
 
 \begin{figure}
   \[
