@@ -150,13 +150,15 @@ for static type checking and dynamic dispatch.
 by interpreting a type as a set of its values.
 Previously, semantic subtyping has been studied primarily
 in the context of statically typed languages with structural typing.
-In this paper, we are bridging the gap between semantic subtyping
-and \emph{dynamic} languages with \emph{nominal} types, which rely on
-run-time checks of type tags instead of preventive static type checking.
-We propose \emph{tag-based semantic} subtyping 
-for nominal types, tuples, and unions;
+In this paper, we explore the applicability of semantic subtyping
+in the context of \emph{dynamic} languages with \emph{nominal} types.
+Instead of static type checking, such languages
+rely on run-time checking of type tags associated with values,
+so we propose using the tags for semantic interpretation.
+Namely, we present \emph{tag-based semantic} subtyping 
+for nominal types, tuples, and unions,
 %Like in the existing work, subtyping is defined set-theoretically,
-types are interpreted set-theoretically,
+where types are interpreted set-theoretically,
 as sets of type tags (instead of values).
 The proposed subtyping relation is shown to be decidable, 
 and a corresponding syntax-directed definition is provided.
@@ -189,7 +191,9 @@ for multiple dispatch in a dynamic language are also discussed.
 
 %% Keywords
 %% comma separated list
-\keywords{semantic subtyping, type tags, nominal typing, pair-union distributivity, decidability}  %% \keywords are mandatory in final camera-ready submission
+\keywords{semantic subtyping, type tags, multiple dynamic dispatch,
+	nominal typing, distributivity, decidability}  
+%% \keywords are mandatory in final camera-ready submission
 
 
 %% \maketitle

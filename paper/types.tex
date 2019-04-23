@@ -1,8 +1,8 @@
-We base this work on a small type language \BetaJulia,
+We base this work on a small language of types \BetaJulia,
 presented in~\figref{fig:bjsem-types}.
 Types, denoted by $\ty \in \Type$, include pairs, unions, 
 and nominal types: \cname denotes \emph{concrete} nominal types
-that have direct instances, 
+that can be instantiated,
 and \aname denotes \emph{abstract} nominal types.
 
 \begin{figure}
@@ -34,9 +34,9 @@ and \aname denotes \emph{abstract} nominal types.
 	\label{fig:bjsem-types}
 \end{figure}
 
-To simplify the development, we decided to work with a particular hierarchy
+To simplify the development, we work with a particular hierarchy
 of nominal types (presented in~\figref{fig:bjsem-types} as a tree)
-instead of a general class table.
+instead of a generic class table.
 There are four concrete, leaf types (depicted in rectangles)
 and two abstract types in the hierarchy. 
 Formally, the hierarchy can be represented with a list of declarations
@@ -50,11 +50,12 @@ In the case of \BetaJulia, the hierarchy is defined as follows:
 \]
 Nominal hierarchies should not have cycles, 
 and each type can have only one parent.
-In the spirit of the Julia language, we do not allow concrete types
-to have declared subtypes, i.e. concrete types are always leaves.
+%In the spirit of the Julia language, 
+%concrete types do not have declared subtypes 
+%(i.e. concrete types are leaves).
 
 \paragraph{Value Types}
-Only types that can be instantiated can serve as type tags,
+Only types that can be instantiated serve as type tags,
 and we call these types \defemph{value types}. 
 Their formal definition is given in~\figref{fig:bjsem-value-types}:
 value type $\vty \in \VType$ is either a concrete nominal type 
@@ -64,7 +65,7 @@ and \typair{\tystr}{(\typair{\tyint}{\tyint})} are all value types.
 Union types, just as abstract nominal types, are not value types.
 Even the type \tyunion{\tyint}{\tyint} is not a value type, 
 though it describes the same set of values as the value type \tyint.
-Note that $\VType \subset \Type$, i.e. each value type is a type.
+Note that each value type is a type. %$\VType \subset \Type$, i.e. 
 
 \begin{figure}
 	\[

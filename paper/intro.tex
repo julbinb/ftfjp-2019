@@ -24,20 +24,20 @@ because \jltype{Int $<:$ Number} but \jltype{Int $\not{<:}$ String}.
 It is often convenient to think of subtyping \jltype{T $<:$ S}
 in terms of the set inclusion: ``the elements of~\jltype{T} are a subset
 of the elements of~\jltype{S}''~\cite{bib:Pierce:2002:TAPL}.
-This intuition is not always correct, but in the case of
+This intuition is not always correct, but, in the case of
 \emph{semantic subtyping}~\cite{bib:Hosoya:2003:XDuce,
   bib:Frisch:2008:sem-sub, bib:Ancona:2016:sem-sub-oo}, 
 subtyping is defined exactly as the subset relation. % on values.
-Namely, types are given the set-theoretic interpretation
+Namely, types are interpreted as sets
 $\interpty{\ty} = \{\nu \Alt \vdash \nu : \ty \}$, 
 and subtyping $\ty_1 <: \ty_2$ is defined as inclusion 
 of the interpretations
 $\interpty{\ty_1} \subseteq \interpty{\ty_2}$.
-In this way, the semantic definition of subtyping intertwines with 
-a static typing relation.
 
-However, subtyping is not limited to statically typed languages~---
-it is also applicable in the context of \emph{dynamically} typed ones.
+While the semantic definition of subtyping intertwines with 
+a static typing relation,
+subtyping is applicable in the context of 
+\emph{dynamically} typed languages.
 As mentioned before, subtyping can be used for multiple dynamic dispatch,
 and MDD is rather widespread among dynamic languages
 such as CLOS, Julia, Clojure.
@@ -51,15 +51,13 @@ with the value argument.
 
 A large number of dynamic languages provide support 
 for object-oriented programming with classes, 
-thus enabling user-defined hierarchies of nominal types,
-which can be then used for dynamic dispatch.
-Nominal types are the main source of type tags.
-Often, there is a distinction between concrete 
-and abstract classes/interfaces.
-A concrete class can be instantiated, 
-and its instances are tagged with the class name.
-Abstract classes, on the other hand, do not have direct instances,
-so they do not induce type tags.
+thus enabling user-defined hierarchies of nominal types.
+%that can be used for dynamic dispatch.
+Nominal types are the main source of type tags: 
+any class that can be instantiated induces a tag (the name of the class) 
+that is used to tag all the instances.
+Abstract classes and interfaces, on the other hand, 
+do not have instances, so do not induce tags.
 
 In this paper, we are bridging the gap between \emph{semantic} subtyping 
 and \emph{dynamically} typed languages with \emph{nominal} types.
