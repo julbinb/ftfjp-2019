@@ -231,3 +231,126 @@ transitivity of the matching relation~\eqref{eq:mtch-trans}.
 The completeness part~\eqref{eq:declsub-complete} is proven as explained
 at the end of \secref{sec:declsub-correct}.
 
+\subsection{Correctness of Reductive Subtyping}
+%% -----------------------------------------------------------------------------
+
+As discussed in~\secref{sec:redsub-correct}, the soundness part
+of \thmref{thm:redsub-correct} 
+(lemma \coqcode{sub\_r\_\_sound} in \fn{MiniJl/Props.v}),
+\[
+\forall \ty_1, \ty_2.\ (\bjsubr{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2}),
+\]
+is proven by induction on $\bjsubr{\ty_1}{\ty_2}$.
+The only interesting case is the rule \RR{NF} where we have
+the induction hypothesis $\bjsub{\NF(\ty_1)}{\ty_2}$ 
+and need to show $\bjsub{\ty_1}{\ty_2}$.
+Since $\bjsub{\ty_1}{\NF(\ty_1)}$, we can use transitivity (rule \RD{Trans}).
+
+The completeness part of \thmref{thm:redsub-correct}
+(lemma \coqcode{sub\_r\_\_complete} in \fn{MiniJl/Props.v}),
+\[
+\forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \implies\ \bjsubr{\ty_1}{\ty_2}),
+\]
+is ultimately proven by induction on $\bjsub{\ty_1}{\ty_2}$.
+However, the proof requires showing that reductive subtyping
+satisfies the following properties (defined in \fn{MiniJl/RedSubProps.v}):
+\begin{itemize}
+  \item \emph{Reflexivity}, \coqcode{sub\_r\_\_reflexive} 
+    (by induction on \ty):
+    \[\forall \ty.\ \bjsubr{\ty}{\ty}. \]
+  \item \emph{Transitivity}, \coqcode{sub\_r\_\_transitive}:
+    \[
+    \forall \ty_1, \ty_2, \ty_3.\ 
+    (\bjsubr{\ty_1}{\ty_2}\ \land\ \bjsubr{\ty_2}{\ty_3} \; \implies \;
+    \bjsubr{\ty_1}{\ty_3}).
+    \]
+  \item \emph{Distributivity} of pairs over unions:
+    \[
+    \bjsubr{\typair{(\tyunion{\ty_{11}}{\ty_{12}})}{\ty_2}}
+    {\tyunion{(\typair{\ty_{11}}{\ty_2})}{(\typair{\ty_{12}}{\ty_2})}}
+    \]
+    and
+    \[
+    \bjsubr{\typair{\ty_1}{(\tyunion{\ty_{21}}{\ty_{22}})}}
+    {\tyunion{(\typair{\ty_1}{\ty_{21}})}{(\typair{\ty_1}{\ty_{22}})}}.
+    \]
+\end{itemize}
+
+The transitivity proof is done by induction on $\bjsubr{\ty_1}{\ty_2}$.
+In some cases it relies on the fact that subtyping a type is the same
+as subtyping its normal form,
+\begin{equation}\label{eq:redsub-imp-nfredsub1}
+\forall \ty.\ (\bjsubr{\ty_1}{\ty_2} \; \iff \; \bjsubr{\NF(\ty_1)}{\ty_2}).
+\end{equation}
+The right-to-left part follows from \RR{NF}, 
+and the left-to-right is shown by induction on $\bjsubr{\ty_1}{\ty_2}$ 
+(\coqcode{sub\_r\_\_mk\_nf\_sub\_r1}).
+In the \RR{Pair} case of the transitivity proof,
+we also need to perform induction on $\bjsubr{\ty_2}{\ty_3}$.
+The last case, \RR{NF}, uses the two auxiliary facts:
+\[
+\forall \ty_1, \ty_2.\ 
+(\bjsubr{\ty_1}{\ty_2}\; \implies\; \bjsubr{\NF(\ty_1)}{\NF(\ty_2)}),
+\]
+proven in \coqcode{sub\_r\_\_mk\_nf\_sub\_r} 
+by induction on $\bjsubr{\ty_1}{\ty_2}$
+(uses the idempotence of $\NF$),
+and $\forall \ty_1, \ty_2, \ty_3.$
+\[
+\InNF(\ty_1) \land \InNF(\ty_2) \land
+(\bjsubr{\ty_1}{\ty_2}) \land (\bjsubr{\ty_2}{\ty_3}) \ \implies \
+\bjsubr{\ty_1}{\ty_3},
+\]
+proven in \coqcode{sub\_r\_nf\_\_transitive} 
+by induction on $\bjsubr{\ty_1}{\ty_2}$.
+
+The distributivity proofs use the fact that
+\[
+\forall \ty_1, \ty_2.\ 
+(\bjsubr{\NF(\ty_1)}{\NF(\ty_2)}\; \implies\; \bjsubr{\ty_1}{\ty_2}),
+\]
+proven in \coqcode{mk\_nf\_sub\_r\_\_sub\_r},
+and that normal forms of both types in \RD{Distr*} rules
+are in the subtyping relation:
+\[
+\bjsubr{\NF(\typair{(\tyunion{\ty_{11}}{\ty_{12}})}{\ty_2})}
+{\NF(\tyunion{(\typair{\ty_{11}}{\ty_2})}{(\typair{\ty_{12}}{\ty_2})})}
+\]
+(\coqcode{mk\_nf\_\_distr11}) and
+\[
+\bjsubr{\NF(\typair{\ty_1}{(\tyunion{\ty_{21}}{\ty_{22}})})}
+{\NF(\tyunion{(\typair{\ty_1}{\ty_{21}})}{(\typair{\ty_1}{\ty_{22}})})}
+\]
+(\coqcode{mk\_nf\_\_distr21}).
+
+\subsection{Decidability of Reductive Subtyping}
+%% -----------------------------------------------------------------------------
+
+The proof of \thmref{thm:redsub-decidable},
+\[
+\forall \ty_1, \ty_2.\ 
+(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot [\bjsubr{\ty_1}{\ty_2}]),
+\]
+is given by \coqcode{sub\_r\_\_decidable} in \fn{MiniJl/Props.v}.
+It relies on the fact (discussed below) 
+that reductive subtyping is decidable for $\ty_1$ s.t. $\InNF(\ty_1)$.
+\begin{itemize}
+  \item Namely, if $\bjsubr{\NF(\ty_1)}{\ty_2}$, 
+	then $\bjsubr{\ty_1}{\ty_2}$ by \RR{NF}.
+  \item Otherwise, if $\lnot[\bjsubr{\NF(\ty_1)}{\ty_2}]$, 
+    which in Coq means
+    $\bjsubr{\NF(\ty_1)}{\ty_2} \implies \False$, 
+    we can show $\lnot [\bjsubr{\ty_1}{\ty_2}]$ 
+    by assuming that $\bjsubr{\ty_1}{\ty_2}$,
+    applying~\eqref{eq:redsub-imp-nfredsub1} to it, 
+    and thus getting contradiction.
+\end{itemize}
+Decidability of subtyping of a normalized type,
+\[
+\forall \ty_1, \ty_2 \Alt \InNF(\ty_1).\ 
+(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot [\bjsubr{\ty_1}{\ty_2}]),
+\]
+(lemma \coqcode{nf\_sub\_r\_\_decidable} in \fn{MiniJl/RedSubProps.v})
+is pro\-ven by induction on $\InNF(\ty_1)$ 
+and uses the decidability of the matching relation,
+which coincides with reductive subtyping on a value type.
