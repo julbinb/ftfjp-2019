@@ -115,11 +115,11 @@ $\bjsub{\ty_1}{\ty_2} \implies \bjsemsub{\ty_1}{\ty_2}$,
 i.e. the soundness direction of~\thmref{thm:declsub-correct}
 (below, we embed the definition~\eqref{eq:semsub-def} of 
 matching-based semantic subtyping):
-\[
+\begin{equation}\label{eq:declsub-imp-semsub}
 \forall \ty_1, \ty_2.\ 
 (\bjsub{\ty_1}{\ty_2} \implies\ 
 \forall \vty.\ [\bjmtch{\vty}{\ty_1} \implies\ \bjmtch{\vty}{\ty_2}]).
-\]
+\end{equation}
 Knowing $\bjsub{\ty_1}{\ty_2}$ and $\bjmtch{\vty}{\ty_1}$,
 we need to show that $\bjmtch{\vty}{\ty_2}$.
 First, by applying~\eqref{eq:mtch-eq-declsub} to $\bjmtch{\vty}{\ty_1}$,
@@ -160,7 +160,7 @@ In addition to~\eqref{eq:nf-declsub-complete}, we need several more facts.
 	\end{equation}
   \item Normalized type is equivalent to the source type:
     \begin{equation}\label{eq:nf-declsub-eq}
-    \forall \ty.\;\ \bjsub{\ty}{\NF(\ty)}\ \land\ \bjsub{\NF(\ty)}{\ty}.
+    \forall \ty.\;\ \bjsub{\NF(\ty)}{\ty}\ \land\ \bjsub{\ty}{\NF(\ty)}.
     \end{equation}
   \item Normalization preserves subtyping relation:
     \begin{equation}\label{eq:nf-semsub}
@@ -225,7 +225,7 @@ is \emph{reflexive}, \emph{transitive}, and \emph{distributive}
 \begin{theorem}[Decidability of Reductive Subtyping]\label{thm:redsub-decidable}
 \[
 \forall \ty_1, \ty_2.\ 
-(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot \bjsubr{\ty_1}{\ty_2})
+(\bjsubr{\ty_1}{\ty_2}\quad \lor\quad \lnot [\bjsubr{\ty_1}{\ty_2}])
 \]
 \end{theorem}
 

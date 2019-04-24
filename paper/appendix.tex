@@ -83,6 +83,151 @@ function, which computes the normal form of a type.
 ``atomic normal form'', which can be used to define reductive subtyping
 that disables derivations such as $\bjsub{\tyreal}{\tyunion{\tyint}{\tyflt}}$.
 
+
 \section{Appendix: Overview of Coq Proofs}\label{app:proofs}
 %% -----------------------------------------------------------------------------
+
+In this section we give a brief overview of 
+the Coq-mecha\-ni\-za\-tion~\cite{bib:MiniJlCoq} of the paper.
+When referring to a file \fn{fname}, 
+we mean the file \fn{Mechanization/fname} in~\cite{bib:MiniJlCoq}.
+
+\subsection{Definitions}
+%% -----------------------------------------------------------------------------
+
+Most of the relevant definitions are in \fn{MiniJl/BaseDefs.v}.
+In the table below, 
+we show the correspondence between paper definitions (left column)
+and Coq definitions (middle column),
+possibly with syntactic sugar (right column).
+
+\begin{center}
+\begin{tabular}{r|l|l}
+\hline
+\multicolumn{3}{l}{Types} \\
+\hline
+\ty  & \coqcode{ty} & \\
+\vty & \coqcode{value\_type v} & \\
+
+\hline
+\multicolumn{3}{l}{Relations} \\
+\hline
+$\bjmtch{\vty}{\ty}$ & 
+	\coqcode{match\_ty v t} & \coqcode{|- v <\$ t} \\
+$\bjsemsub{\ty_1}{\ty_2}$ &
+	\coqcode{sem\_sub t1 t2} & \coqcode{||- [t1] <= [t2]} \\
+$\bjsub{\ty_1}{\ty_2}$ &
+	\coqcode{sub\_d t1 t2} & \coqcode{|- t1 << t2} \\
+$\bjsubr{\ty_1}{\ty_2}$ &
+	\coqcode{sub\_r t1 t2} & \coqcode{|- t1 << t2} \\
+	
+\hline
+\multicolumn{3}{l}{Auxiliary definitions} \\
+\hline
+$\InNF(\ty)$ & \coqcode{in\_nf t} & \coqcode{InNF(t)} \\
+$\NF(\ty)$   & \coqcode{mk\_nf t} & \coqcode{MkNF(t)} \\
+$\unprs(\ty_1, \ty_2)$ &
+	\coqcode{unite\_pairs t1 t2} & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Basic Properties of Normalization Function}
+%% -----------------------------------------------------------------------------
+
+File \fn{MiniJl/BaseProps.v} contains several simple properties 
+that are needed for proving the major theorems discussed in the paper,
+in particular, the following properties of the normalization function $\NF$:
+
+\begin{center}
+\begin{tabular}{r|c|l}
+\hline
+Statement & Ref in text & Name in Coq \\
+\hline
+$\InNF(\NF(\ty))$ & \eqref{eq:nf-innf} & \coqcode{mk\_nf\_\_in\_nf} \\
+$\InNF(\ty) \implies (\NF(\ty) \equiv \ty)$ &
+	& \coqcode{mk\_nf\_nf\_\_equal} \\
+$\NF(\NF(\ty)) \equiv \NF(\ty)$ &
+    & \coqcode{mk\_nf\_\_idempotent} \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Basic Properties of Matching Relation}
+%% -----------------------------------------------------------------------------
+
+The following properties are proven in \fn{MiniJl/PropsMatch.v}.
+
+\begin{itemize}
+  \item Matching relation is \emph{reflexive}, \coqcode{match\_valty\_\_rflxv}
+    (by induction on \vty):
+    \[\forall \vty.\ \bjmtch{\vty}{\vty}.\]
+  \item The only value type that a value type matches is the value type itself,
+    \coqcode{valty\_match\_valty\_\_equal} 
+    (by induction on $\bjmtch{\vty_1}{\vty_2}$):
+    \[\forall \vty_1, \vty_2.\ (\bjmtch{\vty_1}{\vty_2} \implies 
+    \vty_1 \equiv \vty_2).\]
+  \item The matching relation is \emph{decidable}, 
+    \coqcode{match\_ty\_\_dcdbl}
+    (by induction on \vty, then by induction on \ty):
+    \[\forall \vty, \ty.\ 
+    (\bjmtch{\vty}{\ty}\; \lor\; \lnot [\bjmtch{\vty}{\ty}]).\]
+\end{itemize}
+
+\subsection{Correctness of Declarative Subtyping}
+%% -----------------------------------------------------------------------------
+
+First, we discuss some auxiliary statements 
+that are needed for proving~\thmref{thm:declsub-correct}
+(located in \fn{MiniJl/DeclSubProp.v}).
+
+One direction of~\eqref{eq:mtch-eq-declsub},
+\begin{equation}\label{eq:mtch-imp-declsub}
+\forall \vty, \ty.\ (\bjmtch{\vty}{\ty} \implies\ \bjsub{\vty}{\ty}),
+\end{equation}
+is proven in \coqcode{match\_ty\_\_sub\_d\_sound} 
+by induction on $\bjmtch{\vty}{\ty}$.
+The other direction,
+\[
+\forall \vty, \ty.\ (\bjsub{\vty}{\ty} \implies\ \bjmtch{\vty}{\ty}),
+\]
+is proven in \coqcode{match\_valty\_\_sub\_d\_complete}
+by induction on $\bjsub{\vty}{\ty}$.
+The transitivity case, \RD{Trans}, requires a helper statement,
+\coqcode{match\_valty\_\_transitive\_on\_sub\_d}:
+\begin{equation}\label{eq:mtch-trans}
+\forall \ty_1, \ty_2, \vty.\ 
+(\bjsub{\ty_1}{\ty_2}\; \land\; \bjmtch{\vty}{\ty_1} \quad \implies \quad
+\bjmtch{\vty}{\ty_2}),
+\end{equation}
+which is proven by induction on $\bjsub{\ty_1}{\ty_2}$.
+
+The equivalence of a type and its normal form~\eqref{eq:nf-declsub-eq}
+is shown by induction on \ty
+in lemmas \coqcode{mk\_nf\_\_sub\_d1} ($\bjsub{\NF(\ty)}{\ty}$)
+and \coqcode{mk\_nf\_\_sub\_d2} ($\bjsub{\ty}{\NF(\ty)}$).
+
+Semantic completeness of declarative subtyping 
+for a normalized type~\eqref{eq:nf-declsub-complete},
+\[
+\forall \ty_1, \ty_2 \Alt \InNF(\ty_1).\
+(\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsub{\ty_1}{\ty_2}),
+\]
+is shown in \coqcode{nf\_sem\_sub\_\_sub\_d} by induction on $\InNF(\ty_1)$.
+When $\ty_1 \equiv \vty$, we use~\eqref{eq:mtch-imp-declsub}.
+By definition of $\bjsemsub{\vty}{\ty_2}$, we know that 
+$\bjmtch{\vty}{\ty_2}$ follows from $\bjmtch{\vty}{\vty}$.\\
+When $\ty_1 \equiv \tyunion{\ty_a}{\ty_b}$, 
+we use induction hypothesis $\bjsub{\ty_a}{\ty_2}$ and $\bjsub{\ty_b}{\ty_2}$,
+\RD{UnionL} rule, and the fact that
+\[\forall \vty, \ty_1, \ty_2.\ 
+(\bjmtch{\vty}{\ty_i} \implies \bjmtch{\vty}{\tyunion{\ty_1}{\ty_2}}). \]
+
+Finally, soundness and completeness parts of~\thmref{thm:declsub-correct}
+(\coqcode{sub\_d\_\_semantic\_sound} and \coqcode{sub\_d\_\_semantic\_complete})
+are proven in \fn{MiniJl/Props.v}.
+Note that soundness~\eqref{eq:declsub-imp-semsub} is the same as
+transitivity of the matching relation~\eqref{eq:mtch-trans}.
+The completeness part~\eqref{eq:declsub-complete} is proven as explained
+at the end of \secref{sec:declsub-correct}.
 
