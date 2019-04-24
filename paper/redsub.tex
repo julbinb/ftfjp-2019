@@ -1,3 +1,6 @@
+\subsection{Reductive Subtyping}\label{sec:redsub}
+%% -----------------------------------------------------------------------------
+
 The declarative definition is not syntax-directed.
 For one, it involves the \RD{Trans} rule, 
 which requires ``coming up'' with a middle type $\ty_2$.
@@ -95,24 +98,27 @@ subtyping of nominal types (\RR{IntNum}, \RR{FltNum})
 and a union on the right (\RR{UnionR1}, \RR{UnionR2}).
 
 The last rule of the definition, \RR{NF}, is the most important.
-It rewrites type \ty into \emph{disjunctive normal form} $\NF(\ty)$
-before using other subtyping rules.
+It rewrites type \ty into its \defemph{normal form} $\NF(\ty)$
+before applying other subtyping rules.
 This covers all useful applications of transitivity and distributivity 
 that are possible in the declarative definition.
-The normalization function is presented in~\figref{fig:bjsem-calc-nf}
+The normalized type has the form $\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$,
+i.e. a union of value types
+(we omit parenthesis because union is associative).
+The normalization function $\NF$ is presented in~\figref{fig:bjsem-calc-nf}
 (the auxiliary function $\unprs$ 
 can be found in~\figref{fig:bjsem-calc-nf-full}, \appref{app:nf}).
-It produces a type of the form
-$\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$ (note that union is associative)
+It essentially produces a type in \emph{disjunctive normal form}
 by replacing an abstract nominal type 
 with the union of all its concrete subtypes, 
-and a pair of unions with the union of pairs of value types,
+and a pair of unions with the union of pairs of value types
+(each of this pairs is a value type),
 for instance:
 \[
 \NF(\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}) =
 \tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}.
 \]
-As we show in~\secref{}, a type and its normal form are
+As we show in~\secref{sec:declsub-correct}, a type and its normal form are
 equivalent in the declarative definition, which is essential
 for reductive subtyping being equivalent to declarative subtyping.
 
