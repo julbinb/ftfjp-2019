@@ -142,29 +142,28 @@
 %% Note: \begin{abstract}...\end{abstract} environment must come
 %% before \maketitle command
 \begin{abstract}
-Subtyping is utilized by many programming languages 
-for static type checking and dynamic dispatch.
-%It is important to have a clear definition of subtyping relation
-%to make language users better understand the semantics of programs.
-%One approach is to use \emph{semantic} subtyping.
-\emph{Semantic} subtyping enables simple, set-theoretical reasoning about types
-by interpreting a type as a set of its values.
+%Subtyping is utilized by many programming languages 
+%for static type checking and dynamic dispatch.
+Semantic subtyping enables simple, set-theoretical reasoning about types
+by interpreting a type as the set of its values.
 Previously, semantic subtyping has been studied primarily
 in the context of statically typed languages with structural typing.
 In this paper, we explore the applicability of semantic subtyping
-in the context of \emph{dynamic} languages with \emph{nominal} types.
-Instead of static type checking, such languages
-rely on run-time checking of type tags associated with values,
+in the context of a \emph{dynamic language with nominal} types.
+Instead of static type checking, a dynamic language
+relies on run-time checking of type tags associated with values,
 so we propose using the tags for semantic interpretation.
-Namely, we present \emph{tag-based semantic} subtyping 
+We base our work on a fragment of the Julia language
+and present \emph{tag-based semantic} subtyping 
 for nominal types, tuples, and unions,
 %Like in the existing work, subtyping is defined set-theoretically,
 where types are interpreted set-theoretically,
-as sets of type tags (instead of values).
+as sets of type tags. % (instead of values).
 The proposed subtyping relation is shown to be decidable, 
 and a corresponding syntax-directed definition is provided.
 The implications of using semantic subtyping
-for multiple dispatch in a dynamic language are also discussed.
+for multiple dispatch %in a dynamic language 
+are also discussed.
 \end{abstract}
 
 
