@@ -1,45 +1,47 @@
-Subtyping is utilized by many static type systems.
-Informally, a subtyping relation \jltype{T $<:$ S} states that
-a value of type~\jltype{T} can be safely used
-in the context that expects a value of type~\jltype{S}.
-For example, if class \jltype{Rectangle} is a subtype of class \jltype{Shape},
-then a function with an argument of type \jltype{Shape}
-can be called with an instance of \jltype{Rectangle}. 
+%Subtyping is utilized by many static type systems.
+%Informally, a subtyping relation \jltype{T $<:$ S} states that
+%a value of type~\jltype{T} can be safely used
+%in the context that expects a value of type~\jltype{S}.
+%For example, if class \jltype{Rectangle} is a subtype of class \jltype{Shape},
+%then a function with an argument of type \jltype{Shape}
+%can be called with an instance of \jltype{Rectangle}. 
 
-Subtyping can also be used for run-time dispatch of function calls, 
-in particular, \emph{multiple dynamic dispatch} 
-(MDD)~\cite{bib:Chambers:1992:Cecil,bib:Clifton:2000:MultiJava}.
-It allows a function to have several implementations 
-for different types of arguments,
-and the most suitable implementation for a particular call 
-is picked dynamically, based on the run-time types of all arguments.
+In static type systems, subtyping is used to determine
+when a value of one type can be safely used at another type.
+It is often convenient to think of subtyping \jltype{T $<:$ S}
+in terms of the set inclusion: ``the elements of~\jltype{T} are a subset
+of the elements of~\jltype{S}''~\cite{bib:Pierce:2002:TAPL}.
+This intuition is not always correct, but, in the case of
+\emph{semantic subtyping}~\cite{bib:Hosoya:2003:XDuce,
+	bib:Frisch:2008:sem-sub, bib:Ancona:2016:sem-sub-oo}, 
+subtyping is defined exactly as the subset relation. % on values.
+Under semantic subtyping, types are interpreted as sets
+$\interpty{\ty} = \{\nu \Alt \vdash \nu : \ty \}$, 
+and subtyping $\ty_1 <: \ty_2$ is defined as inclusion 
+of the interpretations
+$\interpty{\ty_1} \subseteq \interpty{\ty_2}$.
+
+Subtyping can also be used for run-time dispatch of function calls.
+Thus, object-oriented languages
+usually support single dispatch~--- the ability to dispatch method calls 
+based on the run-time type of an object
+according to the user-defined hierarchy of nominal types.
+Some languages support \emph{multiple dispatch} 
+(MD)~\cite{bib:Chambers:1992:Cecil,bib:Clifton:2000:MultiJava},
+which allows for picking the most suitable implementation of a function
+for a particular call
+based on the run-time types of \emph{all} arguments.
 %and their subtyping relation to the function signatures.
-For example, consider two implementations of addition,
+For example, consider the two implementations of addition,
 \jlcode{+(Number, Number)} and \jlcode{+(String, String)},
 and the call \jlcode{3+5}.
 In this case, a language run-time should pick 
 the implementation for numbers 
 because \jltype{Int $<:$ Number} but \jltype{Int $\not{<:}$ String}.
 
-It is often convenient to think of subtyping \jltype{T $<:$ S}
-in terms of the set inclusion: ``the elements of~\jltype{T} are a subset
-of the elements of~\jltype{S}''~\cite{bib:Pierce:2002:TAPL}.
-This intuition is not always correct, but, in the case of
-\emph{semantic subtyping}~\cite{bib:Hosoya:2003:XDuce,
-  bib:Frisch:2008:sem-sub, bib:Ancona:2016:sem-sub-oo}, 
-subtyping is defined exactly as the subset relation. % on values.
-Namely, types are interpreted as sets
-$\interpty{\ty} = \{\nu \Alt \vdash \nu : \ty \}$, 
-and subtyping $\ty_1 <: \ty_2$ is defined as inclusion 
-of the interpretations
-$\interpty{\ty_1} \subseteq \interpty{\ty_2}$.
-
-While the semantic definition of subtyping intertwines with 
-a static typing relation,
-subtyping is applicable in the context of 
-\emph{dynamically} typed languages.
-As mentioned before, subtyping can be used for multiple dynamic dispatch,
-and MDD is rather widespread among dynamic languages
+Dynamic dispatch is not limited to statically typed languages,
+with multiple dispatch being more widespread among 
+\emph{dynamically} typed ones
 such as CLOS, Julia, Clojure.
 Unlike statically typed languages, 
 which conservatively prevent type errors with static checking,
@@ -48,22 +50,36 @@ Namely, whenever an operator is restricted to certain kinds of values,
 the language run-time checks the arguments of the operator before running it;
 often, such a check amounts to checking the \emph{type tag} associated 
 with the value argument.
-
-A large number of dynamic languages provide support 
-for object-oriented programming with classes, 
-thus enabling user-defined hierarchies of nominal types.
-%that can be used for dynamic dispatch.
-Nominal types are the main source of type tags: 
-any class that can be instantiated induces a tag (the name of the class) 
-that is used to tag all the instances.
-Abstract classes and interfaces, on the other hand, 
+The main source of type tags are nominal types:
+any class that can be instantiated induces a tag~--- the name of the class; 
+%that is used to tag all the instances.
+abstract classes and interfaces, on the other hand, 
 do not have instances, so do not induce tags.
+Structural types such as tuples or sum types (tagged unions) also induce tags,
+whereas untagged unions do not.
 
-In this paper, we are bridging the gap between \emph{semantic} subtyping 
-and \emph{dynamically} typed languages with \emph{nominal} types.
-Instead of directly interpreting types as sets of values,
-we interpret them as sets of \emph{type tags} assuming 
-each value is associated with a tag.
+While subtyping is utilized for dispatch by dynamically typed languages,
+semantic subtyping is not applicable in this context
+because the semantic definition refers to a static typing relation.
+In the paper, we are bridging this gap 
+by proposing \emph{tag-based semantic} subtyping.
+Under this definition, a type is interpreted as a set of type tags 
+(instead of values)
+assuming that each value is associated with a tag.
+
+We base our work on a fragment of Julia that includes
+nominal types, tuples, and unions;
+nominal types are essential for systems with dynamic dispatch,
+tuples can be used to implement symmetric multiple 
+dispatch~\cite{bib:Leavens:1998:mddtuples},
+and union types are an integral part of traditional semantic subtyping systems.
+We find this fragment expressive enough but not overwhelming.
+%it allows us to explore the viability of the approach 
+%and also demonstrate challenges.
+To the best of our knowledge, 
+the interaction of nominal types and unions 
+has not been studied before in the context of semantic subtyping.
+
 Our contributions are as follows:
 \begin{enumerate}
   \item Tag-based semantic interpretation of types for a language
