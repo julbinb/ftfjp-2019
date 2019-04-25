@@ -22,63 +22,57 @@ of the interpretations
 $\interpty{\ty_1} \subseteq \interpty{\ty_2}$.
 
 Subtyping can also be used for run-time dispatch of function calls.
-Thus, object-oriented languages
-usually support single dispatch~--- the ability to dispatch method calls 
-based on the run-time type of an object
-according to the user-defined hierarchy of nominal types.
-Some languages support \emph{multiple dispatch} 
+For example, object-oriented languages
+usually support single dispatch~--- the ability to dispatch a method call 
+based on the run-time type of the receiver object.
+A more complex form of dispatch is \emph{multiple dispatch}
 (MD)~\cite{bib:Chambers:1992:Cecil,bib:Clifton:2000:MultiJava},
-which allows for picking the most suitable implementation of a function
-for a particular call
-based on the run-time types of \emph{all} arguments.
-%and their subtyping relation to the function signatures.
-For example, consider the two implementations of addition,
-\jlcode{+(Number, Number)} and \jlcode{+(String, String)},
-and the call \jlcode{3+5}.
-In this case, a language run-time should pick 
-the implementation for numbers 
-because \jltype{Int $<:$ Number} but \jltype{Int $\not{<:}$ String}.
+which takes into account run-time types of \emph{all} arguments
+when dispatching a function call.
+One way to implement MD is to interpret both function signatures
+and function calls
+as tuple types~\cite{bib:Leavens:1998:mddtuples}
+and then use subtyping on these types.
 
 Dynamic dispatch is not limited to statically typed languages,
-with multiple dispatch being more widespread among 
-\emph{dynamically} typed ones
-such as CLOS, Julia, Clojure.
+with multiple dispatch being even more widespread among 
+\emph{dynamically} typed ones, e.g., CLOS, Julia, Clojure.
 Unlike statically typed languages, 
-which conservatively prevent type errors with static checking,
-dynamic languages detect type errors at run-time.
-Namely, whenever an operator is restricted to certain kinds of values,
-the language run-time checks the arguments of the operator before running it;
-often, such a check amounts to checking the \emph{type tag} associated 
-with the value argument.
-The main source of type tags are nominal types:
-any class that can be instantiated induces a tag~--- the name of the class; 
-%that is used to tag all the instances.
-abstract classes and interfaces, on the other hand, 
-do not have instances, so do not induce tags.
-Structural types such as tuples or sum types (tagged unions) also induce tags,
-whereas untagged unions do not.
+which conservatively prevent type errors at compile-time, %with static checking,
+dynamic languages detect type errors at run-time:
+whenever an operator is restricted to certain kinds of values,
+the run-time system checks \emph{type tags} associated 
+with the operator's arguments
+to determine whether it can be safely executed.
+A type tag indicates the run-time type of a value.
+Thus, any class that can be instantiated induces a tag~--- 
+the name of the class, 
+whereas an abstract class or interface does not.
+Some structural types also give rise to tags, 
+e.g., tuples and sums (tagged unions).
 
-While subtyping is utilized for dispatch by dynamically typed languages,
-semantic subtyping is not applicable in this context
-because the semantic definition refers to a static typing relation.
-In the paper, we are bridging this gap 
-by proposing \emph{tag-based semantic} subtyping.
-Under this definition, a type is interpreted as a set of type tags 
-(instead of values)
-assuming that each value is associated with a tag.
+While dynamically typed languages do use subtyping,
+semantic subtyping is not applicable in this case,
+for the semantic definition refers to a static typing relation.
+To enable semantic reasoning in the context of dynamic languages,
+we propose \emph{tag-based semantic} subtyping,
+which interprets a type as a set of run-time type tags 
+instead of values. % but is otherwise similar to semantic subtyping.
 
-We base our work on a fragment of Julia that includes
-nominal types, tuples, and unions;
-nominal types are essential for systems with dynamic dispatch,
-tuples can be used to implement symmetric multiple 
-dispatch~\cite{bib:Leavens:1998:mddtuples},
-and union types are an integral part of traditional semantic subtyping systems.
-We find this fragment expressive enough but not overwhelming.
-%it allows us to explore the viability of the approach 
-%and also demonstrate challenges.
-To the best of our knowledge, 
-the interaction of nominal types and unions 
-has not been studied before in the context of semantic subtyping.
+We define tag-based semantic subtyping for a fragment of the Julia language 
+that includes nominal types, tuples, and unions.
+Tuples and unions are rather typical for semantic subtyping systems;
+they have clear set-theoretic interpretation 
+and make up an expressive subtyping relation
+where tuples distributes over unions.
+However, to the best of our knowledge,
+the interaction of unions with \emph{nominal} types has not been studied before
+in the context of semantic subtyping.
+This interaction introduces
+an unusual subtyping rule between abstract nominal types and unions,
+with an implication for multiple dispatch.
+Note that the combination of unions and nominal types is not unique to Julia;
+for instance, it also appears in the statically typed language Ceylon.
 
 Our contributions are as follows:
 \begin{enumerate}
