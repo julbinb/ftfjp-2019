@@ -1,7 +1,7 @@
-We base this work on a small language of types \BetaJulia,
+We base our work on a small language of types \BetaJulia,
 presented in~\figref{fig:bjsem-types}.
 Types, denoted by $\ty \in \Type$, include pairs, unions, 
-and nominal types: \cname denotes \emph{concrete} nominal types
+and nominal types; \cname denotes \emph{concrete} nominal types
 that can be instantiated,
 and \aname denotes \emph{abstract} nominal types.
 
@@ -34,13 +34,13 @@ and \aname denotes \emph{abstract} nominal types.
 	\label{fig:bjsem-types}
 \end{figure}
 
-To simplify the development, we work with a particular hierarchy
-of nominal types (presented in~\figref{fig:bjsem-types} as a tree)
-instead of a generic class table.
-There are four concrete, leaf types (depicted in rectangles)
+We work with a particular hierarchy of nominal types 
+(presented in~\figref{fig:bjsem-types} as a tree)
+instead of a generic class table to simplify the development.
+There are four concrete leaf types (depicted in rectangles)
 and two abstract types in the hierarchy. 
 Formally, the hierarchy can be represented with a list of declarations
-$\bjdeclsub{n_1}{n_2}$ read as ``$n_1$ is a declared subtype of $n_2$''
+$\bjdeclsub{n_1}{n_2}$ read as ``$n_1$ extends $n_2$''
 where $n$ is either $\cname$ or $\aname$.
 In the case of \BetaJulia, the hierarchy is defined as follows:
 \[
@@ -55,17 +55,17 @@ and each type can have only one parent.
 %(i.e. concrete types are leaves).
 
 \paragraph{Value Types}
-Only types that can be instantiated induce type tags,
-and we call these types \defemph{value types}. 
+Only instantiatable types induce type tags,
+which we call \defemph{value types}. 
 Their formal definition is given in~\figref{fig:bjsem-value-types}:
 value type $\vty \in \VType$ is either a concrete nominal type 
 or a pair of value types. 
 For example, \tyflt, \typair{\tyint}{\tyint},
 and \typair{\tystr}{(\typair{\tyint}{\tyint})} are all value types.
-Union types, just as abstract nominal types, are not value types.
-Even the type \tyunion{\tyint}{\tyint} is not a value type, 
-though it describes the same set of values as the value type \tyint.
-Note that each value type is a type. %$\VType \subset \Type$, i.e. 
+Union types, like abstract nominal types, are not value types.
+Therefore, a type such as \tyunion{\tyint}{\tyint} is not a value type 
+despite it describing the same set of values as the value type \tyint.
+%Note that each value type is a type. %$\VType \subset \Type$, i.e. 
 
 \begin{figure}
 	\[
@@ -110,7 +110,7 @@ as presented in~\figref{fig:bjsem-interpretation}.
 	\label{fig:bjsem-interpretation}
 \end{figure}
 
-The interpretation of a type states what values constitute the type:
+A type's interpretation states what values constitute the type:
 $\vty \in \interpty{\ty}$ means that values $\nu$ tagged with \vty
 (i.e. instances of \vty) belong to $\ty$.
 Thus, in \BetaJulia, a \emph{concrete nominal} type \cname is comprised 
@@ -129,7 +129,7 @@ can be given as follows: %in the following way:
 \interpty{\aname} = \{\cname\ \Alt \bjnomsub{\cname}{\aname} \},
 \]
 where the relation $\bjnomsub{n_1}{n_2}$ means that 
-$n_1$ is transitively a declared subtype of~$n_2$:
+nominal type $n_1$ transitively extends~$n_2$:
 %or, in other words, it is a transitive closure of $\bjdeclsub{n_1}{n_2}$:
 \begin{mathpar}
 	\inferrule*[right=]
@@ -140,11 +140,11 @@ $n_1$ is transitively a declared subtype of~$n_2$:
 	{ \bjnomsub{n_1}{n_2} \\ \bjnomsub{n_2}{n_3} }
 	{ \bjnomsub{n_1}{n_3} }.
 \end{mathpar}
-Finally, \emph{pairs} and \emph{unions} are interpreted
-set-theoretically.
+Finally, \emph{pairs} and \emph{unions} are interpreted set-theoretically,
+like in standard semantic subtyping.
 
 Once we have the tag interpretation of types, we define 
-\defemph{tag-based semantic subtyping} in a usual manner, 
+\defemph{tag-based semantic subtyping} in usual manner, 
 as the subset relation:
 \begin{equation}\label{eq:truesemsub-def}
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad

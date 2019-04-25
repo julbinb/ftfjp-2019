@@ -1,28 +1,26 @@
-While the semantic approach does enable intuitive %set-theo\-re\-tic 
+While the semantic approach does enable intuitive set-theo\-re\-tical 
 reasoning about subtyping,
-we also need to be able to build the subtyping algorithm 
-to compute subtypes.
-However, the semantic definition of subtyping~\eqref{eq:truesemsub-def}
+a subtyping relation also needs to be computable.
+However, the semantic definition~\eqref{eq:truesemsub-def}
 %,\eqref{eq:semsub-def} 
-cannot be directly computed because of the quantification $\forall \vty$.
-Therefore, we provide a \emph{syntactic} definition, 
-equivalent to the semantic one, which is straightforward to implement.
+cannot be directly computed in general case.
+Therefore, we provide an equivalent 
+\emph{syntactic} definition of subtyping, which is straightforward to implement.
 
 We do this in two steps. 
-First, we give an inductive definition, called \emph{declarative}, 
-that is handy to reason about; 
-we prove it equivalent to the semantic definition.
-Second, we provide a \emph{reductive}, syntax-directed definition of subtyping
+First, we give an inductive \emph{declarative} definition
+that is handy to reason about 
+and prove it equivalent to the semantic definition.
+Second, we provide a \emph{reductive} syntax-directed definition of subtyping
 and prove it equivalent to the declarative one 
 (and, hence, the semantic definition as well).
 We prove that the reductive subtyping is decidable, 
 i.e. for any two types $\ty_1$ and $\ty_2$,
-it is possible to prove that either $\ty_1$ is a subtype of $\ty_2$, 
+it is possible to prove that either $\ty_1$ is a subtype of $\ty_2$ 
 or it is not.
 The proofs are mechanized in Coq, and since Coq logic is constructive,
-the decidability proof essentially gives a subtyping algorithm.
-However, it is also possible to devise an algorithm
-as a straightforward recursive function.
+the decidability proof is also a subtyping algorithm.
+The algorithm can also be implemented as a straightforward recursive function.
 
 \subsection{Declarative Subtyping}\label{sec:declsub}
 %% -----------------------------------------------------------------------------
@@ -39,7 +37,7 @@ to a part of the right-hand side type),
 transitivity allows us to derive judgments such as
 $\bjsub{\tyint}{(\tyunion{\tystr}{\tyreal})}$ via
 $\bjsub{\tyint}{\tyreal}$ and $\bjsub{\tyreal}{\tyunion{\tystr}{\tyreal}}$.
-Note that we do need the syntactic definition of subtyping
+Note that the syntactic definition of subtyping needs
 to be \emph{reflexive} and \emph{transitive} because so is the subset relation,
 which is used to define semantic subtyping.
 
@@ -87,7 +85,7 @@ that $\bjdeclsub{\tyreal}{\tynum} \in \NomH$.
 %can be derived by transitivity.
 But the rules \RD{RealUnion} and \RD{NumUnion}
 (\colorbox{light-gray}{highlighted} in~\figref{fig:bjsem-decl-sub})
-are new~--- they are dictated by semantic subtyping.
+are new~--- dictated by semantic subtyping.
 Thus, \RD{RealUnion} allows us to prove the equivalence
 of types \tyunion{\tyint}{\tyflt} and \tyreal, 
 which are both interpreted as $\{\tyint, \tyflt\}$.

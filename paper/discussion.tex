@@ -2,7 +2,7 @@ In this section, we describe in more detail how subtyping
 can be used to implement multiple dynamic dispatch,
 and also discuss implications of using \emph{semantic} subtyping.
 
-As an example, consider the following methods\footnote{In the context of MDD, 
+As an example, consider the following methods\footnote{In the context of MD, 
 	different implementations of 
 	the same function are usually called \emph{methods},
 	and the set of all methods a \emph{generic function}.}
@@ -30,7 +30,7 @@ as the following types (from top to bottom):\\
 and the call as having type \jlcode{cII $\equiv$ Int $\times$ Int}.
 To resolve the call, the language run-time ought to perform two steps.
 \begin{enumerate}
-  \item Find applicable methods (if any). For this, we check subtyping between
+  \item Find the applicable methods (if any). For this, we check subtyping between
     the type of the call, \jlcode{cII}, and the method signatures.
     Since \jlcode{cII $<:$ mII} and \jlcode{cII $<:$ mUU} but
     \jlcode{cII $\not{<:}$ mFF}, only two methods are applicable,
@@ -65,7 +65,7 @@ to \jltype{Int$\cup$Flt} in \BetaJulia.
 Therefore, implementation of \jlcode{mRR} will replace \jlcode{mUU}, 
 and the call \jlcode{3.14 + 5} will be dispatched to \jlcode{mRR}.
 
-There is a problem with using semantic subtyping for MDD:
+There is a problem with using semantic subtyping for MD:
 the semantics of the program above is not stable.
 If the programmer adds a new type into the nominal hierarchy,
 e.g. \jlcode{Int8 $<:$ Real}, type \jlcode{Real} is not
@@ -89,7 +89,7 @@ It needs to be understood whether such an interpretation provides us with
 a useful intuition about subtyping.
 
 
-%MDD allows to have several implementations of the same function,
+%MD allows to have several implementations of the same function,
 %with the best implementation for a particular call being picked 
 %at run-time based on the types of the arguments.
 %As an example, consider two implementations of shape intersection
