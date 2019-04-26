@@ -47,18 +47,18 @@
 	\label{fig:bjsem-match}
 \end{figure}
 
-In order to show that the declarative definition of subtyping 
-is equivalent to the semantic definition,
-we need to prove that the former is sound and complete with respect
-to the latter, that is:
+We need to prove that the declarative definition of subtyping 
+is sound and complete with respect to the semantic definition
+in order to show correctness of declarative subtyping.
+Formally, we write this as:
 \begin{equation}\label{eq:declsub-correct-truesemsub}
 \forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff \bjtruesemsub{\ty_1}{\ty_2}).
 \end{equation}
 
-We find that instead of directly proving~\eqref{eq:declsub-correct-truesemsub},
-it is more convenient to show that declarative subtyping
-is equivalent to the following relation,
-referred to as \defemph{matching-based semantic subtyping}:
+Instead of directly proving~\eqref{eq:declsub-correct-truesemsub},
+it is more convenient to prove the equivalence of declarative subtyping
+to the following relation
+(referred to as \defemph{matching-based semantic subtyping}):
 \begin{equation}\label{eq:semsub-def}
 \bjsemsub{\ty_1}{\ty_2} \quad \defsign \quad
 \forall \vty.\ (\bjmtch{\vty}{\ty_1} \implies\ \bjmtch{\vty}{\ty_2}).
@@ -94,8 +94,8 @@ and~\eqref{eq:truesemsub-def-new} are also equivalent.
 
 Since $\bjtruesemsub{\ty_1}{\ty_2}$ is equivalent to $\bjsemsub{\ty_1}{\ty_2}$
 and the equivalence relation $\iff$ is transitive,
-to show~\eqref{eq:declsub-correct-truesemsub},
-it suffices to prove the following theorem.
+it suffices to prove the following theorem
+to show~\eqref{eq:declsub-correct-truesemsub}.
 
 \begin{theorem}[Correctness of Declarative Subtyping]\label{thm:declsub-correct}
 	\[
@@ -105,8 +105,8 @@ it suffices to prove the following theorem.
 
 The full proof of~\thmref{thm:declsub-correct} is 
 Coq-mechanized~\cite{bib:MiniJlCoq},
-so here, we only discuss some key aspects.
-First of all, subtyping a value type coincides with matching the value type:
+so we only discuss some key aspects and leave details to the proof.
+First, subtyping a value type coincides with matching:
 \begin{equation}\label{eq:mtch-eq-declsub}
 \forall \vty, \ty.\ (\bjsub{\vty}{\ty} \iff\ \bjmtch{\vty}{\ty}).
 \end{equation}
@@ -152,7 +152,8 @@ From the latter, it is easy to show that
 $\bjsub{(\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n)}{\ty_2}$ because,
 according to the \RD{UnionL} rule,
 subtyping of the left-hand side union amounts to subtyping its components.
-In addition to~\eqref{eq:nf-declsub-complete}, we need several more facts.
+To show~\eqref{eq:declsub-complete}, we need several more facts
+in addition to~\eqref{eq:nf-declsub-complete}.
 \begin{itemize}
   \item Function $\NF$ produces a type in normal form:
 	\begin{equation}\label{eq:nf-innf}
@@ -182,7 +183,7 @@ gives $\bjsub{\ty_1}{\ty_2}$. \qed
 
 Since we have already shown that declarative subtyping is
 equivalent to semantic subtyping, it suffices to show that
-reductive subtyping is equivalent to declarative one:
+reductive subtyping is equivalent to declarative subtyping:
 
 \begin{theorem}[Correctness of Reductive Subtyping]\label{thm:redsub-correct}
 \[
@@ -192,7 +193,7 @@ reductive subtyping is equivalent to declarative one:
 
 The proof is split into two parts: soundness and completeness.
 For soundness (completeness), 
-by induction on $\bjsubr{\ty_1}{\ty_2}$ ($\bjsub{\ty_1}{\ty_2}$),
+%by induction on $\bjsubr{\ty_1}{\ty_2}$ ($\bjsub{\ty_1}{\ty_2}$),
 we show that for each \RR{}\!rule (\RD{}\!rule) it is possible to build
 a corresponding declarative (reductive) derivation 
 using \RD{}\!rules (\RR{}\!rules).
