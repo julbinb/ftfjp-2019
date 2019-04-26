@@ -3,13 +3,13 @@
 
 The declarative definition is not syntax-directed.
 For one, it involves the \RD{Trans} rule, 
-which requires ``coming up'' with a middle type $\ty_2$.
+which requires ``coming up'' with an intermediate type $\ty_2$.
 For instance, in order to show
 \[\bjsub{\typair{\tystr}{\tyreal}}
 {(\typair{\tystr}{\tyint}) \cup (\typair{\tystr}{\tystr}) 
 	\cup (\typair{\tystr}{\tyflt})},\]
 we need to apply transitivity several times, in particular, 
-with the middle type $\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}$.
+with the intermediate type $\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}$.
 
 \begin{figure}
 	\begin{mathpar}
@@ -88,14 +88,15 @@ The syntax-directed reductive definition\footnote{The definition
 	either by immediately applying \RR{Pair}, 
 	or by first normalizing the left-hand side with \RR{NF}.} of subtyping
 is presented in~\figref{fig:bjsem-red-sub}.
-Some of the inductive rules are similar to their declarative counterparts,
-e.g. subtyping of pairs (\RR{Pair}) and a union on the left (\RR{UnionL}).
+Some of the inductive rules have the exact declarative counterparts,
+such as the rule for subtyping of pairs (\RR{Pair}) 
+or the rule for a union on the left (\RR{UnionL}).
 The differing rules are \colorbox{light-gray}{highlighted}.
-The explicit reflexivity rule \RR{BaseRefl} now works only with 
+The explicit reflexivity rule \RR{BaseRefl} now only works with 
 concrete nominal types, which is enough for the definition to be reflexive.
 General transitivity is gone as well; instead, it gets incorporated into
-subtyping of nominal types (\RR{IntNum}, \RR{FltNum})
-and a union on the right (\RR{UnionR1}, \RR{UnionR2}).
+other rules, such as subtyping of nominal types (\RR{IntNum}, \RR{FltNum})
+or subtyping of a union on the right (\RR{UnionR1}, \RR{UnionR2}).
 
 The last rule of the definition, \RR{NF}, is the most important.
 It rewrites type \ty into its \defemph{normal form} $\NF(\ty)$
@@ -108,10 +109,10 @@ i.e. a union of value types
 The normalization function $\NF$ is presented in~\figref{fig:bjsem-calc-nf}
 (the auxiliary function $\unprs$ 
 can be found in~\figref{fig:bjsem-calc-nf-full}, \appref{app:nf}).
-It essentially produces a type in \emph{disjunctive normal form}
+It produces a type in \emph{disjunctive normal form}
 by replacing an abstract nominal type 
 with the union of all its concrete subtypes, 
-and a pair of unions with the union of pairs of value types
+a pair of unions with the union of pairs of value types
 (each of this pairs is a value type),
 for instance:
 \[
@@ -119,8 +120,8 @@ for instance:
 \tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}.
 \]
 As we show in~\secref{sec:declsub-correct}, a type and its normal form are
-equivalent in the declarative definition, which is essential
-for reductive subtyping being equivalent to declarative subtyping.
+equivalent in the declarative definition, an essential property
+for reductive subtyping being equivalent to declarative one.
 
 \begin{figure}
   \[

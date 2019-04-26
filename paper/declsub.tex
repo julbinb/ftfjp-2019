@@ -2,10 +2,11 @@ While the semantic approach does enable intuitive set-theo\-re\-tical
 reasoning about subtyping,
 a subtyping relation also needs to be computable.
 However, the semantic definition~\eqref{eq:truesemsub-def}
+is not suitable for this purpose.
 %,\eqref{eq:semsub-def} 
-cannot be directly computed in general case.
+%cannot be directly computed in the general case.
 Therefore, we provide an equivalent 
-\emph{syntactic} definition of subtyping, which is straightforward to implement.
+\emph{syntactic} definition of subtyping that is straightforward to implement.
 
 We do this in two steps. 
 First, we give an inductive \emph{declarative} definition
@@ -14,7 +15,7 @@ and prove it equivalent to the semantic definition.
 Second, we provide a \emph{reductive} syntax-directed definition of subtyping
 and prove it equivalent to the declarative one 
 (and, hence, the semantic definition as well).
-We prove that the reductive subtyping is decidable, 
+We prove that the reductive subtyping relation is decidable, 
 i.e. for any two types $\ty_1$ and $\ty_2$,
 it is possible to prove that either $\ty_1$ is a subtype of $\ty_2$ 
 or it is not.
@@ -25,10 +26,10 @@ The algorithm can also be implemented as a straightforward recursive function.
 \subsection{Declarative Subtyping}\label{sec:declsub}
 %% -----------------------------------------------------------------------------
 
-The declarative definition of subtyping is provided in~\figref{fig:bjsem-decl-sub}.
-The definition is mostly comprised of the standard rules
+The declarative syntactic definition of subtyping is provided in~\figref{fig:bjsem-decl-sub}.
+It is mostly comprised of the standard rules
 of syntactic subtyping for unions and pairs:
-namely, reflexivity and transitivity (\RD{Refl} and \RD{Trans}), 
+reflexivity and transitivity (\RD{Refl} and \RD{Trans}), 
 subtyping of pairs (\RD{Pairs}),
 and subtyping of unions (\RD{UnionL}, \RD{UnionR1}, \RD{UnionR2}).
 Though \RD{UnionR*} rules are seemingly very strict 
@@ -37,15 +38,17 @@ to a part of the right-hand side type),
 transitivity allows us to derive judgments such as
 $\bjsub{\tyint}{(\tyunion{\tystr}{\tyreal})}$ via
 $\bjsub{\tyint}{\tyreal}$ and $\bjsub{\tyreal}{\tyunion{\tystr}{\tyreal}}$.
-Note that the syntactic definition of subtyping needs
-to be \emph{reflexive} and \emph{transitive} because so is the subset relation,
-which is used to define semantic subtyping.
 
+Note that all rules from~\figref{fig:bjsem-decl-sub} \emph{are essential} 
+for the definition to be equivalent to semantic subtyping.
+Thus, for example, the syntactic definition needs to be
+{reflexive} and {transitive} because so is the subset relation,
+which is used to define semantic subtyping.
 Semantic subtyping also forces us to add rules 
 for distributing pairs over unions, \RD{Distr1} and \RD{Distr2}. 
-For example, consider two types,
-\tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}
-and \typair{\tystr}{(\tyunion{\tyint}{\tyflt})}.
+For instance, consider two types,
+\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}
+and \tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}.
 They have the same semantic interpretation~---
 $\{\typair{\tystr}{\tyint}, \typair{\tystr}{\tyflt}\}$~---
 so they are equivalent.

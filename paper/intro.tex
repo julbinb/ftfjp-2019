@@ -1,10 +1,10 @@
 %Subtyping is utilized by many static type systems.
 %Informally, a subtyping relation \jltype{T $<:$ S} states that
 %a value of type~\jltype{T} can be safely used
-%in the context that expects a value of type~\jltype{S}.
+%in a context that expects a value of type~\jltype{S}.
 %For example, if class \jltype{Rectangle} is a subtype of class \jltype{Shape},
 %then a function with an argument of type \jltype{Shape}
-%can be called with an instance of \jltype{Rectangle}. 
+%can be safely called with an instance of \jltype{Rectangle}. 
 
 In static type systems, subtyping is used to determine
 when a value of one type can be safely used at another type.
@@ -55,36 +55,36 @@ While dynamically typed languages do use subtyping,
 semantic subtyping is not applicable in this case,
 for the semantic definition refers to a static typing relation.
 To enable semantic reasoning in the context of dynamic languages,
-we propose \emph{tag-based semantic} subtyping,
-which interprets a type as a set of run-time type tags 
+we propose \emph{tag-based semantic} subtyping
+where a type is interpreted as a set of run-time type tags 
 instead of values. % but is otherwise similar to semantic subtyping.
 
 We define tag-based semantic subtyping for a fragment of the Julia language 
 that includes nominal types, tuples, and unions.
 Tuples and unions are rather typical for semantic subtyping systems;
-they have clear set-theoretic interpretation 
+they have a clear set-theoretical interpretation 
 and make up an expressive subtyping relation
 where tuples distributes over unions.
-However, to the best of our knowledge,
+At the same time, to the best of our knowledge,
 the interaction of unions with \emph{nominal} types has not been studied before
 in the context of semantic subtyping.
 This interaction introduces
 an unusual subtyping rule between abstract nominal types and unions,
-with an implication for multiple dispatch.
+with implications for multiple dispatch.
 Note that the combination of unions and nominal types is not unique to Julia;
 for instance, it also appears in the statically typed language Ceylon.
 
 Our contributions are as follows:
 \begin{enumerate}
-  \item Tag-based semantic interpretation of types for a language
-    with nominal types, tuples, and unions (\secref{sec:semsub}).
+  \item A definition of tag-based semantic subtyping for 
+    nominal types, tuples, and unions (\secref{sec:semsub}).
   \item Two syntactic definitions of subtyping, 
     declarative (\secref{sec:declsub}) and reductive (\secref{sec:redsub}),
-    along with Coq-mechanized proofs that the definitions are equivalent
-    and coincide with the semantic interpretation (\secref{sec:proofs}). 	
+    along with Coq-mechanized proofs that these definitions are equivalent
+    and coincide with the semantic definition (\secref{sec:proofs}). 	
   \item Proof of decidability of reductive subtyping (\appref{app:proofs}).
   \item Discussion of the implications of using semantic subtyping
-    for multiple dynamic dispatch (\secref{sec:discussion}).
+    for multiple dispatch (\secref{sec:discussion}).
 \end{enumerate}
 
 
