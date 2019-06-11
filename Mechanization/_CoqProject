@@ -25,6 +25,15 @@
 ./AtomicJl/RedSubProps.v
 ./AtomicJl/Props.v
 
+./FullAtomicJl/BaseDefs.v
+./FullAtomicJl/BaseProps.v
+./FullAtomicJl/MatchProps.v
+./FullAtomicJl/SemSubProps.v
+./FullAtomicJl/DeclSubProps.v
+./FullAtomicJl/RedSubProps.v
+./FullAtomicJl/Props.v
+
+
 # VS := *.v
 
 # .PHONY: coq clean
