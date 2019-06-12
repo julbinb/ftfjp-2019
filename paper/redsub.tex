@@ -1,9 +1,11 @@
 \subsection{Reductive Subtyping}\label{sec:redsub}
 %% -----------------------------------------------------------------------------
 
-The declarative definition is not syntax-directed.
-For one, it involves the \RD{Trans} rule, 
-which requires ``coming up'' with an intermediate type $\ty_2$.
+The declarative definition is not syntax-directed
+and cannot be directly turned into a subtyping algorithm.
+For one, declarative subtyping involves the \RD{Trans} rule, 
+which requires ``coming up'' with an intermediate type $\ty_2$
+to conclude $\bjsub{\ty_1}{\ty_3}$.
 For instance, in order to show
 \[\bjsub{\typair{\tystr}{\tyreal}}
 {(\typair{\tystr}{\tyint}) \cup (\typair{\tystr}{\tystr}) 

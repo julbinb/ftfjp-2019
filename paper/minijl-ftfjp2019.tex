@@ -1,5 +1,5 @@
 %% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
-\documentclass[sigplan,review]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+%\documentclass[sigplan,review]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 %% For double-blind review submission, w/ CCS and ACM Reference
 %\documentclass[sigplan,review,anonymous]{acmart}\settopmatter{printfolios=true}
 %% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
@@ -7,13 +7,13 @@
 %% For single-blind review submission, w/ CCS and ACM Reference
 %\documentclass[sigplan,review]{acmart}\settopmatter{printfolios=true}
 %% For final camera-ready submission, w/ required CCS and ACM Reference
-%\documentclass[sigplan]{acmart}\settopmatter{}
+\documentclass[sigplan]{acmart}\settopmatter{}
 
 
 %% Conference information
 %% Supplied to authors by publisher for camera-ready submission;
 %% use defaults for review submission.
-%\acmConference[FTfJP'19]{Workshop on on Formal Techniques for Java-like Programs}{July 15--19, 2019}{London, United Kingdom}
+\acmConference[FTfJP'19]{Workshop on on Formal Techniques for Java-like Programs}{July 15--19, 2019}{London, United Kingdom}
 \acmConference[]{}{}{}
 \acmYear{2019}
 \acmISBN{} % \acmISBN{978-x-xxxx-xxxx-x/YY/MM}
@@ -24,11 +24,11 @@
 %% Supplied to authors (based on authors' rights management selection;
 %% see authors.acm.org) by publisher for camera-ready submission;
 %% use 'none' for review submission.
-\setcopyright{none}
-%\setcopyright{acmcopyright}
+%\setcopyright{none}
+\setcopyright{acmcopyright}
 %\setcopyright{acmlicensed}
 %\setcopyright{rightsretained}
-%\copyrightyear{2018}           %% If different from \acmYear
+\copyrightyear{2018}           %% If different from \acmYear
 
 %% Bibliography style
 \bibliographystyle{ACM-Reference-Format}
@@ -260,13 +260,13 @@ are also discussed.
 \input{conclusion}
 
 
-%% Acknowledgments
-%\begin{acks}                            %% acks environment is optional
-                                        %% contents suppressed with 'anonymous'
-  %% Commands \grantsponsor{<sponsorID>}{<name>}{<url>} and
-  %% \grantnum[<url>]{<sponsorID>}{<number>} should be used to
-  %% acknowledge financial support and will be used by metadata
-  %% extraction tools.
+% Acknowledgments
+\begin{acks}                            %% acks environment is optional
+                                        % contents suppressed with 'anonymous'
+  % Commands \grantsponsor{<sponsorID>}{<name>}{<url>} and
+  % \grantnum[<url>]{<sponsorID>}{<number>} should be used to
+  % acknowledge financial support and will be used by metadata
+  % extraction tools.
 %  This material is based upon work supported by the
 %  \grantsponsor{GS100000001}{National Science
 %    Foundation}{http://dx.doi.org/10.13039/100000001} under Grant
@@ -275,7 +275,13 @@ are also discussed.
 %  conclusions or recommendations expressed in this material are those
 %  of the author and do not necessarily reflect the views of the
 %  National Science Foundation.
-%\end{acks}
+   
+   We are grateful to Ryan Culpepper, Artem Pelenitsyn, and Mitchell Wand 
+   for insightful conversations.
+   We thank Ellen Arteca, Benjamin Chung, Jane Kokernak, Artem Pelenitsyn, 
+   Alexi Turcotte, Jan Vitek, and anonymous reviewers 
+   for feedback on earlier drafts of the paper.
+\end{acks}
 
 \newpage
 

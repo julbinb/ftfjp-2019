@@ -1,0 +1,74 @@
+----------------------- REVIEW 1 ---------------------
+SUBMISSION: 2
+TITLE: Decidable, Tag-Based Semantic Subtyping for Nominal Types, Tuples, and Unions
+AUTHORS: Julia Belyakova
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+Summary:
+
+The paper proposes an interpretation of types with inheritance and unions as sets of tags (type names),
+instead of the typical interpretation of types as sets.
+Several different characterizations of the subtyping relation are given
+(declarative, reduction-based, and an algorithmic one), which are proved to be equivalent (in Coq).
+The paper discusses how to use this semantics for tag-based dynamic multiple dispatch.
+
+Evaluation:
+
+My first impression was that the paper is very well written and polished and I enjoyed reading it a lot.
+Problems and solutions are described clearly, and all technical details are discussed throgoughly.
+
+The technical content is also nice, with the advantage of coming with a machine checked proof.
+The paper is a bit vague, though, in Sec 5 on how exactly dispatch is realized, i.e., how ambiguity is resolved.
+For instance, sets of tags might be computed dynamically at runtime,
+making dispatch potentially expensive for large class hieraarchies.
+The paper does also discuss the difficulty of open type hierarchies (i.e., when not all subtypes are known),
+which could be mentioned a bit earlier. A resolution is left for future work.
+
+I would have appreciated a more extensive discussion with respect to similar efforts, e.g. for Javascript,
+and with repsect to actual implementations inside dynamic programming languages (including Julia).
+
+Overall, I appreciate the contribution and the presentation and propose to accept the paper.
+
+Minor Comments:
+
+Sec 3, line 206 "semantic definition (1) is not suitable for this purpose"
+Why is this? A brief sentence of explanation would be nice.
+
+
+
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 2
+TITLE: Decidable, Tag-Based Semantic Subtyping for Nominal Types, Tuples, and Unions
+AUTHORS: Julia Belyakova
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+This paper presents a subtyping relation for a subset of the type hierarchy of the dynamically typed language Julia. The type hierarchy includes concrete and abstract types, which are treated nominally, and tuple and union types, which are treated structurally.
+
+The paper first shows the semantics of the subtyping relation via a denotational interpretation of types as sets of tags. Abstract types are given the set of tags of all concrete subtypes, as these are the possible tags that any real, concrete value may have at runtime. This denotational semantics of subtyping does not directly specify an algorithm for deciding subtyping, so the denotational semantics is translated to a declarative inductive relation. However, this inductive relation includes a transitivity rule, which requires synthesising intermediate types to apply the rule. This inductive relation is further translated to a more computation-friendly form without the transitivity rule. The trick here, as I understand it, is to statically compute the transitive closure of the subtyping relation, and include a rule for each possible application of the transitivity rule between a concrete type and an abstract type. This seems reasonable for shallow type hierarchies; is it po!
+ ssible that deep hierarchies would introduce a lot more rules? All relations are proved to be equivalent, and mechanised in Coq.
+
+The paper is very well written, and I did not notice any spelling mistakes or grammatical errors. In section 3.2, I felt I was lacking the insight of how to get from the rules in Figure 4 to Figure 5. The differences are explained, but I don't feel confident that I could take this technique and apply it elsewhere.
+
+On a minor note, still in section 3.2, I wouldn't say that Figure 5 is syntax-directed, as rules SR-UnionR1 both SR-UnionR2 overlap with each other, and SR-NF overlaps with all the other rules. I would rather say that Figure 5 does not involve any existential schematic variables.
+
+I wondered about normalisation: would it be possible to normalise the rules, and pre-normalise the types before using the judgment form in Figure 5? This would allow you to remove the SR-NF rule, removing one source of non-determinism from the judgment. Would this cause the type to get much larger? In the implementation of the decidable algorithm, when do you need to apply the NF rule; can this be characterised syntactically?
+
+
+
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 2
+TITLE: Decidable, Tag-Based Semantic Subtyping for Nominal Types, Tuples, and Unions
+AUTHORS: Julia Belyakova
+
+----------- Overall evaluation -----------
+SCORE: 2 (accept)
+----- TEXT:
+The paper presents an approach for semantic sub-typing for dynamically based languages. The approach uses bags of tags which makes it possible to express sub-typing relations as set operations and hence decidable.
+
+The authors acknowledge that the approach can be unstable under certain conditions and give an example that exposes the limitation of the presented approach.
+This should leave some room for interesting discussion during the workshop. The paper is overall well presented, and having an open problem in the presentation is a good thing for a workshop.
+

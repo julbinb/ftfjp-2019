@@ -2,11 +2,17 @@ While the semantic approach does enable intuitive set-theo\-re\-tic
 reasoning about subtyping,
 a subtyping relation also needs to be computable.
 However, the semantic definition~\eqref{eq:truesemsub-def}
-is not suitable for this purpose.
+is not suitable for this,
+as it operates on interpretations.
+In the general case, the interpretation of a type 
+can be an infinite set and as such, it cannot be computed.
+In the finite case, directly manipulating interpretations
+and checking the subset relation on them would be extremely inefficient.
 %,\eqref{eq:semsub-def} 
 %cannot be directly computed in the general case.
-Therefore, we provide an equivalent 
-\emph{syntactic} definition of subtyping that is straightforward to implement.
+Therefore, we provide an alternative, \emph{syntactic} definition of subtyping 
+that is equivalent to~\eqref{eq:truesemsub-def}
+and also straightforward to implement.
 
 We do this in two steps. 
 First, we give an inductive \emph{declarative} definition
