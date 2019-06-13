@@ -3,15 +3,22 @@
 
 The declarative definition is not syntax-directed
 and cannot be directly turned into a subtyping algorithm.
-For one, declarative subtyping involves the \RD{Trans} rule, 
-which requires ``coming up'' with an intermediate type $\ty_2$
+For one, the transitivity rule \RD{Trans} 
+overlaps with any other rule in the system
+and also requires ``coming up'' with an intermediate type $\ty_2$
 to conclude $\bjsub{\ty_1}{\ty_3}$.
-For instance, in order to show
+For instance, to derive %in order
 \[\bjsub{\typair{\tystr}{\tyreal}}
 {(\typair{\tystr}{\tyint}) \cup (\typair{\tystr}{\tystr}) 
 	\cup (\typair{\tystr}{\tyflt})},\]
 we need to apply transitivity several times, in particular, 
 with the intermediate type $\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}$.
+Another source of overlap is the reflexivity and distributivity rules.
+%Another issue is that the rules \RD{Refl}, \RD{UnionR*}, and \RD{Distr*}
+%require deep structural comparison of the left- and right-hand side types.
+%For example, in order for \RD{UnionR1} to be applicable to some 
+%$\bjsub{\ty_a}{\ty_b}$, not only $\ty_b$ must be a union, 
+%but also its left component should be equal to $\ty_a$.
 
 \begin{figure}
 	\begin{mathpar}
@@ -81,30 +88,43 @@ with the intermediate type $\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}$.
 	\label{fig:bjsem-red-sub}
 \end{figure}
 
-The syntax-directed reductive definition\footnote{The definition
-	%the rules can be easily turned 
-	%into a subtyping algorithm.
-	is not deterministic, though.	For example, there are two ways to derive 
-	$\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
-	{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}$: 
-	either by immediately applying \RR{Pair}, 
-	or by first normalizing the left-hand side with \RR{NF}.} of subtyping
-is presented in~\figref{fig:bjsem-red-sub}.
+%The syntax-directed reductive definition\footnote{The definition
+%	%the rules can be easily turned 
+%	%into a subtyping algorithm.
+%	is not deterministic, though.	For example, there are two ways to derive 
+%	$\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
+%	{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}$: 
+%	either by immediately applying \RR{Pair}, 
+%	or by first normalizing the left-hand side with \RR{NF}.} of subtyping
+%is presented in~\figref{fig:bjsem-red-sub}.
+By contrast, the rules of reductive subtyping enable
+straightforward bottom-to-top reasoning;
+the rules are presented in~\figref{fig:bjsem-red-sub}.
+The reductive definition lacks the most problematic rules
+of declarative subtyping, 
+i.e. general reflexivity, transitivity, and distributivity.
 Some of the inductive rules have the exact declarative counterparts,
-such as the rule for subtyping of pairs (\RR{Pair}) 
-or the rule for a union on the left (\RR{UnionL}).
+e.g. subtyping of pairs (\RR{Pair}) or
+subtyping of a union on the left (\RR{UnionL}).
+%for instance, the rule for subtyping of pairs (\RR{Pair}) 
+%or the rule for a union on the left (\RR{UnionL}).
+
 The differing rules are \colorbox{light-gray}{highlighted}.
 The explicit reflexivity rule \RR{BaseRefl} now only works with 
-concrete nominal types, which is enough for the definition to be reflexive.
-General transitivity is gone as well; instead, it gets incorporated into
+concrete nominal types, which is enough 
+for the reductive definition to be reflexive.
+The definition also has to be transitive,
+so the effects of using transitivity get incorporated into
 other rules, such as subtyping of nominal types (\RR{IntNum}, \RR{FltNum})
 or subtyping of a union on the right (\RR{UnionR1}, \RR{UnionR2}).
 
-The last rule of the definition, \RR{NF}, is the most important.
-It rewrites type \ty into its \defemph{normal form} $\NF(\ty)$
-before applying other subtyping rules.
-This covers all useful applications of transitivity and distributivity 
+The last rule of the definition, \RR{NF}, is the most important,
+as it covers all useful interactions of transitivity and distributivity 
 that are possible in the declarative definition.
+The rule rewrites type \ty into its \defemph{normal form} $\NF(\ty)$
+before applying other subtyping rules.
+%This covers all useful applications of transitivity and distributivity 
+%that are possible in the declarative definition.
 The normalized type has the form $\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$,
 i.e. a union of value types
 (we omit parenthesis because union is associative).
@@ -114,16 +134,19 @@ can be found in~\figref{fig:bjsem-calc-nf-full}, \appref{app:nf}).
 It produces a type in \emph{disjunctive normal form}
 by replacing an abstract nominal type 
 with the union of all its concrete subtypes, 
-a pair of unions with the union of pairs of value types
-(each of this pairs is a value type),
+and a pair of unions with the union of pairs of value types
+(each of this pairs is itself a value type),
 for instance:
 \[
 \NF(\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}) =
 \tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}.
 \]
 As we show in~\secref{sec:declsub-correct}, a type and its normal form are
-equivalent in the declarative definition, an essential property
-for reductive subtyping being equivalent to declarative one.
+equivalent in the declarative definition.
+This property is essential for reductive subtyping 
+being equivalent to declarative one.
+%an essential property
+%for reductive subtyping being equivalent to declarative one.
 
 \begin{figure}
   \[
@@ -141,6 +164,36 @@ for reductive subtyping being equivalent to declarative one.
 	\caption{Computing normal form of \BetaJulia types}
 	\label{fig:bjsem-calc-nf}
 \end{figure}
+
+\paragraph{Subtyping Algorithm.}
+Though the reductive rules are not syntax-directed per se,
+if a derivation of $\bjsub{\ty}{\ty'}$ exists,
+it can always be found by the following algorithm:
+(1) apply the normalization rule \RR{NF} once, i.e. normalize $\ty$;
+(2) use all the other (syntax-directed) rules to build the derivation of
+$\bjsub{\NF(\ty)}{\ty'}$ in the usual manner, bottom to top.
+
+However, this algorithm does not always produce the shortest derivation.
+For instance, for
+$\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
+	    {\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}$,
+it produces a derivation with ten applications of the rules, 
+whereas the shortest derivation needs only seven applications.
+It is possible that in practice, an algorithm that tries the short path first 
+and only then resorts to normalization would work better.
+
+Note that the rules for subtyping of nominal types do not have to be built-in.
+Instead of five separate rules, as presented in~\figref{fig:bjsem-red-sub},
+we can use a single rule that relies on the relation 
+$\bjnomsub{n_1}{n_2}$ ($n_1$ transitively extends $n_2$)
+from~\secref{subsec:interp}:
+\begin{mathpar}
+	\inferrule*[right=SR-Nom]
+	{ \bjnomsub{n_1}{n_2} }
+	{ \bjsub{n_1}{n_2} }.
+\end{mathpar}
+Then, for any $n_1$ and $n_2$, the relation $\bjnomsub{n_1}{n_2}$ 
+can be checked algorithmically, using the nominal hierarchy $\NomH$.
 
 
 % for using the normal form (\RR{NF}).
