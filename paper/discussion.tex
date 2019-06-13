@@ -1,9 +1,11 @@
 We set out to define semantic subtyping that can be useful in the context
-of dynamic languages, however, it appears that
+of dynamic languages, however, 
 the semantic definition we presented
-has an undesired implication for dynamic dispatch.
-In this section, we discuss the implication and suggest a solution,
-using multiple dispatch as a running example.
+appears to have an undesired implication for dynamic dispatch.
+%it appears that the semantic definition we presented
+%has an undesired implication for dynamic dispatch.
+In this section, using multiple dispatch as a running example,
+we discuss the implication and suggest a solution.
 %In this section, we describe in more detail how subtyping
 %can be used to implement multiple dynamic dispatch,
 %and also discuss implications of using \emph{semantic} subtyping.
@@ -12,7 +14,7 @@ Consider the following methods\footnote{In the context of MD,
 	different implementations of 
 	the same function are usually called \emph{methods},
 	and the set of all methods a \emph{generic function}.}
-of the addition function defined in a Julia syntax
+of the addition function defined in the Julia syntax
 (we assume that function \jlcode{flt} converts its argument to a float):
 \begin{lstminijl}
 +(x::Int, y::Int) = prim_add_int(x, y) 
@@ -36,14 +38,15 @@ as the following types (from top to bottom):\\
 and the call as having type \jlcode{cII $\equiv$ Int $\times$ Int}.
 To resolve the call, the language run-time ought to perform two steps.
 \begin{enumerate}
-  \item Find the applicable methods (if any). For this, we check subtyping between
+  \item Find the applicable methods (or raise an error if there are none). 
+    For this, subtyping is checked between
     the type of the call, \jlcode{cII}, and the method signatures.
     Since \jlcode{cII $<:$ mII} and \jlcode{cII $<:$ mUU} but
     \jlcode{cII $\not{<:}$ mFF}, only two methods are applicable,
     \jlcode{mII} for integers and \jlcode{mUU} for mixed-type numbers.
   \item Pick the most specific of the applicable methods
-    (if one exists).
-    For this, we check subtyping relations between all applicable methods.
+    (or raise an error if there is an ambiguity).
+    For this, all the applicable methods are compared pairwise using subtyping.
     In this example, naturally, we would like \jlcode{mII} to be called
     for the addition of integers. And indeed, since \jlcode{mII $<:$ mUU},
     the integer addition is considered the most specific.
@@ -69,21 +72,24 @@ print(3.14 + 5)
 \end{lstminijl}
 According to the semantic subtyping relation, type \jltype{Real} is equivalent
 to \jltype{Int$\cup$Flt} in \BetaJulia. 
-Therefore, implementation of \jlcode{mRR} will replace 
+Therefore, the implementation of \jlcode{mRR} will replace 
 \jlcode{mUU} defined earlier, 
 and the call \jlcode{3.14 + 5} will be dispatched to \jlcode{mRR}.
 
-There is a problem: due to the use of semantic subtyping, 
-the semantics of the program above can change
+There is a problem: %due to the use of semantic subtyping, 
+the semantics of the program above will change
 %There is a problem with using semantic subtyping for MD:
 %the semantics of the program above is not stable.
-if the programmer adds a new type into the nominal hierarchy.
-For instance, if they add \jlcode{Int8 $<:$ Real}, type \jlcode{Real} stops
-being equivalent to \jltype{Int$\cup$Flt}.
-Therefore, if the program is re-run, the types of \jlcode{mUU} and \jlcode{mRR}
-will be different and the implementation of \jlcode{mRR} 
-will not replace \jlcode{mUU}. 
-Since \jlcode{mUU $<:$ mRR}, the call \jlcode{3.14 + 5} 
+if the programmer adds a new subtype of \jltype{Real} 
+into the nominal hierarchy.
+For instance, if they add \jlcode{Int8 $<:$ Real}, type \jlcode{Real}
+becomes equivalent to \jltype{Int$\cup$Flt$\cup$Int8} 
+instead of \jltype{Int$\cup$Flt}.
+Therefore, if the program is re-run, the type of \jlcode{mUU} 
+will be a strict subtype of \jlcode{mRR},
+so the implementation of \jlcode{mRR} will not replace \jlcode{mUU}. 
+%Since \jlcode{mUU $<:$ mRR}, 
+Therefore, the call \jlcode{3.14 + 5} 
 will be dispatched to \jlcode{mUU}, not \jlcode{mRR}. %as before.
 
 We can gain stability by removing the rules that 
@@ -93,8 +99,22 @@ i.e. \RD{RealUnion} and \RD{NumUnion} in the declarative definition.\footnote{
     the \RR{NF} rule: replace normalization function $\NF$ with $\NFAt$ 
     (\figref{fig:bjnom-calc-nf-full}, \appref{app:nf}).}
 To fix the discrepancy between this definition and the semantic interpretation,
-we can change the latter by accounting for ``future nominal types'',
-e.g. $\interpty{\tyreal} = \{\tyint, \tyflt, X\}$.
+we can change the latter by accounting for potential extension
+of the nominal hierarchy, %``future nominal types'':
+%e.g. $\interpty{\tyreal} = \{\tyint, \tyflt, X\}$.
+\[
+\begin{array}{rcl}
+\interpty{\tyreal} & = & \{ \tyint, \tyflt, E_{\tyreal} \} \\
+\interpty{\tynum} & = & \{ \tyint, \tyflt, \tycmplx,
+                           E_{\tyreal}, E_{\tynum} \},
+\end{array}
+\]
+where $E_\aname$ denotes some concrete nominal type extending \aname.
+This alternative interpretation captures the intuition
+that a method with an argument of type \aname should behave
+regardless of what subtypes of \aname are present in the nominal hierarchy.
+When a programmer defines such a method, they anticipates 
+that the hierarchy can be extended.
 %It needs to be understood whether such an interpretation provides us with
 %a useful intuition about subtyping.
 

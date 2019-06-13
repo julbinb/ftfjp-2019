@@ -176,11 +176,19 @@ $\bjsub{\NF(\ty)}{\ty'}$ in the usual manner, bottom to top.
 However, this algorithm does not always produce the shortest derivation.
 For instance, for
 $\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
-	    {\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}$,
-it produces a derivation with ten applications of the rules, 
-whereas the shortest derivation needs only seven applications.
+	    {\typair{\tystr}{\tyreal}}$,
+it produces a derivation with eight applications of the rules, 
+whereas the shortest derivation needs only five applications
+(see~\appref{app:example-deriv}).
 It is possible that in practice, an algorithm that tries the short path first 
 and only then resorts to normalization would work better.
+
+The actual Julia implementation uses a clever algorithm 
+to check subtyping of tuples and unions 
+without having to normalize types~\cite{bib:Chung19}.
+The algorithm is equivalent to the normalization based one discussed above,
+but instead of computing the whole normal form, 
+it computes only the components of the normalized type, one at a time.
 
 Note that the rules for subtyping of nominal types do not have to be built-in.
 Instead of five separate rules, as presented in~\figref{fig:bjsem-red-sub},

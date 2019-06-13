@@ -83,6 +83,55 @@ function, which computes the normal form of a type.
 ``atomic normal form'', which can be used to define reductive subtyping
 that disables derivations such as $\bjsub{\tyreal}{\tyunion{\tyint}{\tyflt}}$.
 
+\section{Non-unique Derivations}\label{app:example-deriv}
+%% -----------------------------------------------------------------------------
+
+There are two derivations of
+\[\bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
+         {\typair{\tystr}{\tyreal}}.\]
+The shortest derivation:
+\begin{mathpar}
+\footnotesize
+\inferrule*[right=\footnotesize{Pair}]
+{ \inferrule[\footnotesize{BaseRefl}]
+  { }
+  { \bjsubr{\tystr}{\tystr} } \\
+  \inferrule*[right=\footnotesize{UnionL}]
+  { \inferrule[\footnotesize{IntReal}]
+  	{ }{ \bjsubr{\tyint}{\tyreal} } \\
+    \inferrule[\footnotesize{FltReal}]
+    { }{ \bjsubr{\tyflt}{\tyreal} } }
+  { \bjsubr{\tyunion{\tyint}{\tyflt}}{\tyreal} } }
+{ \bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
+	{\typair{\tystr}{\tyreal}} }
+\end{mathpar}
+The normalization based derivation:
+\begin{mathpar}
+\footnotesize
+\inferrule*[right=\scriptsize{NF}]
+{ \inferrule*[right=\scriptsize{UnionL}]
+  { \scriptsize
+  	\inferrule
+  	{ \inferrule
+      { }{ \bjsubr{\tystr}{\tystr} } \\
+      \inferrule
+      { }{ \bjsubr{\tyint}{\tyreal} } }
+  	{ \bjsubr{\typair{\tystr}{\tyint}}{\typair{\tystr}{\tyreal}} } \\
+    \scriptsize
+    \inferrule
+    { \inferrule{ }{\bjsubr{\tystr}{..} } \\
+      \inferrule{ }{\bjsubr{\tyflt}{..} } }
+    { \bjsubr{\typair{\tystr}{\tyflt}}{\typair{\tystr}{\tyreal}} } }
+  { \bjsubr{\tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}}
+  	  {\typair{\tystr}{\tyreal}} } }
+{ \bjsubr{\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}}
+	{\typair{\tystr}{\tyreal}} }
+\end{mathpar}
+%    \inferrule
+%	{ \inferrule
+%	  { }{ \bjsubr{\tystr}{\tystr} } \\
+%	  \inferrule
+%	  { }{ \bjsubr{\tyflt}{\tyreal} } }
 
 \section{Overview of Coq Proofs}\label{app:proofs}
 %% -----------------------------------------------------------------------------
