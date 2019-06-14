@@ -9,28 +9,31 @@ and provide a decidable syntactic subtyping relation %that is
 equivalent to the subset relation of the interpretations
 (aka tag-based semantic subtyping).
 
-We found that the proposed subtyping relation, 
+We found that the initially proposed subtyping relation, 
 if used for dynamic dispatch, 
 would make the semantics of dynamically typed programs unstable
 due to an interaction of abstract nominal types and unions.
-We expect that a different semantic interpretation of nominal types 
-can fix the issue, and would like to further explore the alternative.
+A slightly different semantic interpretation of nominal types 
+appeared to fix the issue, 
+and we would like to further explore this alternative.
 
 In future work, we plan to extend tag-based semantic subtyping 
 to top and bottom types, 
-and also invariant type constructors, e.g. $\tyref[\ty]$. %\jltype{Ref}:
-%\[
-%\begin{array}{rcl}
-%\ty \in \Type   &::=& \ldots \Alt \tyref[\ty]\\
-%\vty \in \VType &::=& \ldots \Alt \tyref[\ty]
-%\end{array}
-%\]
+and also invariant type constructors such as 
+parametric references $\tyref[\ty]$: % e.g. $\tyref[\ty]$. %\jltype{Ref}:
+\[
+\begin{array}{rcl}
+\ty \in \Type   &::=& \ldots \Alt \tyref[\ty]\\
+\vty \in \VType &::=& \ldots \Alt \tyref[\ty]
+\end{array}
+\]
 As usual for invariant constructors, 
-we would like to consider types such as $\tyref[\tyint]$
+we would like types such as $\tyref[\tyint]$
 and $\tyref[\tyunion{\tyint}{\tyint}]$ to be equivalent.
 %because $\tyint$ and $\tyunion{\tyint}{\tyint}$ are equivalent.
 However, a naive interpretation of invariant types below
-is not well defined:
+is not well defined because to find $\ty'$, 
+we need to already know all the interpretations:
 \[
 \interpty{\tyref[\ty]} = 
 \{ \tyref[\ty'] \Alt \vty \in \interpty{\ty} \iff \vty \in \interpty{\ty'} \}.
@@ -45,6 +48,3 @@ and define semantic subtyping as:
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad
 \forall k.\ (\interpty{\ty_1}_k \subseteq \interpty{\ty_2}_k).
 \]
-
-%where abstract nominal types are interpreted via type tags corresponding 
-%to their declared concrete subtypes.

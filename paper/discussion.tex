@@ -46,12 +46,12 @@ To resolve the call, the language run-time ought to perform two steps.
     \jlcode{mII} for integers and \jlcode{mUU} for mixed-type numbers.
   \item Pick the most specific of the applicable methods
     (or raise an error if there is an ambiguity).
-    For this, all the applicable methods are compared pairwise using subtyping.
+    For this, subtyping is checked pairwise between all the applicable methods.
     In this example, naturally, we would like \jlcode{mII} to be called
-    for the addition of integers. And indeed, since \jlcode{mII $<:$ mUU},
-    the integer addition is considered the most specific.
+    for \jlcode{3 + 5}. And indeed, since \jlcode{mII $<:$ mUU},
+    the integer addition is picked as the most specific.
 \end{enumerate}
-Additionally, consider the call \jlcode{3.14 + 5}. Its type is
+As another example, consider the call \jlcode{3.14 + 5}. Its type is
 \jlcode{Flt $\times$ Int}, and there is only one applicable method \jlcode{mUU}
 that is a supertype of the call type, so it should be called.
 
@@ -74,33 +74,39 @@ According to the semantic subtyping relation, type \jltype{Real} is equivalent
 to \jltype{Int$\cup$Flt} in \BetaJulia. 
 Therefore, the implementation of \jlcode{mRR} will replace 
 \jlcode{mUU} defined earlier, 
-and the call \jlcode{3.14 + 5} will be dispatched to \jlcode{mRR}.
+and the mixed-type call \jlcode{3.14 + 5} will be dispatched to \jlcode{mRR}.
 
-There is a problem: %due to the use of semantic subtyping, 
+But there is a problem: %due to the use of semantic subtyping, 
 the semantics of the program above will change
 %There is a problem with using semantic subtyping for MD:
 %the semantics of the program above is not stable.
 if the programmer adds a new subtype of \jltype{Real} 
-into the nominal hierarchy.
-For instance, if they add \jlcode{Int8 $<:$ Real}, type \jlcode{Real}
-becomes equivalent to \jltype{Int$\cup$Flt$\cup$Int8} 
-instead of \jltype{Int$\cup$Flt}.
-Therefore, if the program is re-run, the type of \jlcode{mUU} 
+into the nominal hierarchy, e.g. \jlcode{Int8 $<:$ Real}.
+In this case, type \jlcode{Real}
+stops being equivalent to \jltype{Int$\cup$Flt}
+and becomes equivalent to \jltype{Int$\cup$Flt$\cup$Int8}.
+Thus, if the program is re-run, the type \jlcode{mUU} 
 will be a strict subtype of \jlcode{mRR},
 so the implementation of \jlcode{mRR} will not replace \jlcode{mUU}. 
 %Since \jlcode{mUU $<:$ mRR}, 
-Therefore, the call \jlcode{3.14 + 5} 
-will be dispatched to \jlcode{mUU}, not \jlcode{mRR}. %as before.
+Therefore, this time, the call \jlcode{3.14 + 5} 
+will be dispatched to \jlcode{mUU}, not \jlcode{mRR} as before.
 
-We can gain stability by removing the rules that 
-equate abstract nominal types with the union of their subtypes,
-i.e. \RD{RealUnion} and \RD{NumUnion} in the declarative definition.\footnote{
-    To get an equivalent reductive subtyping, we need to change 
-    the \RR{NF} rule: replace normalization function $\NF$ with $\NFAt$ 
+We can gain stability by removing subtyping rules that 
+equate abstract nominal types with the union of their subtypes
+(i.e. \RD{RealUnion} and \RD{NumUnion} 
+in the declarative definition\footnote{To get 
+	equivalent reductive subtyping, we need to change 
+    the \RR{NF} rule by replacing normalization function $\NF$ with $\NFAt$ 
     (\figref{fig:bjnom-calc-nf-full}, \appref{app:nf}).}
-To fix the discrepancy between this definition and the semantic interpretation,
-we can change the latter by accounting for potential extension
-of the nominal hierarchy, %``future nominal types'':
+from~\figref{fig:bjsem-decl-sub}).
+Then, to fix the discrepancy between the new definition 
+and semantic subtyping, the latter should be modified. 
+To account for potential extension of the nominal hierarchy,
+abstract nominal type \aname can be interpreted 
+as containing an extra element $E_\aname$~--- ``future subtype of \aname''.
+In the case of \BetaJulia, the new interpretation is as follows:
+%``future nominal types'':
 %e.g. $\interpty{\tyreal} = \{\tyint, \tyflt, X\}$.
 \[
 \begin{array}{rcl}
@@ -109,46 +115,9 @@ of the nominal hierarchy, %``future nominal types'':
                            E_{\tyreal}, E_{\tynum} \},
 \end{array}
 \]
-where $E_\aname$ denotes some concrete nominal type extending \aname.
-This alternative interpretation captures the intuition
-that a method with an argument of type \aname should behave
-regardless of what subtypes of \aname are present in the nominal hierarchy.
-When a programmer defines such a method, they anticipates 
-that the hierarchy can be extended.
-%It needs to be understood whether such an interpretation provides us with
-%a useful intuition about subtyping.
-
-
-%MD allows to have several implementations of the same function,
-%with the best implementation for a particular call being picked 
-%at run-time based on the types of the arguments.
-%As an example, consider two implementations of shape intersection
-%(implementations are usually called \emph{methods}):
-%\begin{verbatim}
-%intersect(r1::Rectangle, r2::Rectangle) = ...
-%intersect(s1::Shape, s2::Shape) = ...
-%\end{verbatim}
-%and two function calls, \jlcode{intersect(Circle(..), Circle(..))}
-%and \jlcode{intersect(Rectangle(..), Rectangle(..))},
-%assuming that \jltype{Circle} is a subtype of \jltype{Shape}.
-%The method signatures can be interpreted as tuple types
-%\jltype{mRR $\equiv$ Rectangle $\times$ Rectangle} 
-%and \jltype{mSS $\equiv$ Shape $\times$ Shape},
-%and the function calls~--- as tuple types 
-%\jltype{CC $\equiv$ Circle $\times$ Circle} 
-%and \jltype{RR $\equiv$ Rectangle $\times$ Rectangle}.
-%To resolve the calls, language run-time needs to perform two steps.
-%(1) Determine which methods are applicable to the given arguments (if any)
-%by checking subtyping between the call and the signatures.
-%Since \jlcode{CC} is a subtype of \jlcode{mSS} but not of  \jlcode{mRR}, 
-%only shape intersection
-%is applicable to the circle call, so it should be called.
-%Since \jlcode{RR} is a subtype of  \jlcode{mSS} and  \jlcode{mRR}, 
-%both intersection methods 
-%are applicable to the rectangle call, so we go to the next step.
-%(2) Pick the best of all the applicable methods (if there is one) 
-%by checking subtyping between their signatures.
-%Since  \jlcode{mRR} is a subtype of  \jlcode{mSS} but not vice versa, 
-%it is considered to be
-%the most specific method applicable to  \jlcode{RR}, 
-%and so the rectangle call is dispatched to the rectangle intersection.
+%If $E_\aname$ is considered a value type, 
+It can be shown that
+the modified declarative definition of subtyping
+is equivalent to semantic subtyping 
+based on the new interpretation.\footnote{The proof can be found 
+	in \texttt{FullAtomicJl} folder of~\cite{bib:MiniJlCoq}.}
