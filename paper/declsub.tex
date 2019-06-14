@@ -106,6 +106,8 @@ which are both interpreted as $\{\tyint, \tyflt\}$.
 
 \begin{figure}
 	\begin{mathpar}
+		\fbox{$\bjsub{\ty}{\ty'}$}\\
+		
 		\inferrule*[right=SD-Refl]
 		{ }
 		{ \bjsub{\ty}{\ty} }
@@ -151,10 +153,9 @@ which are both interpreted as $\{\tyint, \tyflt\}$.
 		{ \bjsub{\typair{\ty_1}{\ty_2}}{\typair{\ty'_1}{\ty'_2}} }
 		\\
 		
-		\inferrule*[right=SD-UnionL]
+		\inferrule[SD-UnionL]
 		{ \bjsub{\ty_1}{\ty'} \\ \bjsub{\ty_2}{\ty'} }
 		{ \bjsub{\tyunion{\ty_1}{\ty_2}}{\ty'} }
-		\\
 		
 		\inferrule[{SD-UnionR1}]
 		{ }
