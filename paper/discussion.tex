@@ -40,20 +40,21 @@ To resolve the call, the language run-time ought to perform two steps.
 \begin{enumerate}
   \item Find the applicable methods (or raise an error if there are none). 
     For this, subtyping is checked between
-    the type of the call, \jlcode{cII}, and the method signatures.
+    the type of the call \jlcode{cII} and the method signatures.
     Since \jlcode{cII $<:$ mII} and \jlcode{cII $<:$ mUU} but
-    \jlcode{cII $\not{<:}$ mFF}, only two methods are applicable,
+    \jlcode{cII $\not{<:}$ mFF}, only two methods are applicable~---
     \jlcode{mII} for integers and \jlcode{mUU} for mixed-type numbers.
   \item Pick the most specific of the applicable methods
     (or raise an error if there is an ambiguity).
     For this, subtyping is checked pairwise between all the applicable methods.
     In this example, naturally, we would like \jlcode{mII} to be called
-    for \jlcode{3 + 5}. And indeed, since \jlcode{mII $<:$ mUU},
+    for \jlcode{3 + 5}. And indeed, since \jlcode{mII $<:$ mUU}
+    and \jlcode{mUU $\not{<:}$ mII},
     the integer addition is picked as the most specific.
 \end{enumerate}
-As another example, consider the call \jlcode{3.14 + 5}. Its type is
-\jlcode{Flt $\times$ Int}, and there is only one applicable method \jlcode{mUU}
-that is a supertype of the call type, so it should be called.
+As another example, consider the call \jlcode{3.14 + 5}, which type is
+\jlcode{Flt $\times$ Int}. There is only one applicable method \jlcode{mUU}
+that is a supertype of the call type, so it should be picked.
 
 %It is important to understand 
 What happens if the programmer defines
@@ -85,9 +86,9 @@ into the nominal hierarchy, e.g. \jlcode{Int8 $<:$ Real}.
 In this case, type \jlcode{Real}
 stops being equivalent to \jltype{Int$\cup$Flt}
 and becomes equivalent to \jltype{Int$\cup$Flt$\cup$Int8}.
-Thus, if the program is re-run, the type \jlcode{mUU} 
+Thus, when the program is re-run, type \jlcode{mUU} 
 will be a strict subtype of \jlcode{mRR},
-so the implementation of \jlcode{mRR} will not replace \jlcode{mUU}. 
+so the implementation of \jlcode{mRR} will \emph{not} replace \jlcode{mUU}. 
 %Since \jlcode{mUU $<:$ mRR}, 
 Therefore, this time, the call \jlcode{3.14 + 5} 
 will be dispatched to \jlcode{mUU}, not \jlcode{mRR} as before.
@@ -119,5 +120,5 @@ In the case of \BetaJulia, the new interpretation is as follows:
 It can be shown that
 the modified declarative definition of subtyping
 is equivalent to semantic subtyping 
-based on the new interpretation.\footnote{The proof can be found 
+based upon the new interpretation.\footnote{The proof can be found 
 	in \texttt{FullAtomicJl} folder of~\cite{bib:MiniJlCoq}.}

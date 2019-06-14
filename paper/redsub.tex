@@ -114,9 +114,11 @@ The explicit reflexivity rule \RR{BaseRefl} now only works with
 concrete nominal types, which is enough 
 for the reductive definition to be reflexive.
 The definition also has to be transitive,
-so the effects of using transitivity get incorporated into
-other rules, such as subtyping of nominal types (\RR{IntNum}, \RR{FltNum})
-or subtyping of a union on the right (\RR{UnionR1}, \RR{UnionR2}).
+so several rules are added or modified to enable derivations
+that used to rely on transitivity in the declarative definition.
+These include subtyping of nominal types (\RR{IntNum}, \RR{FltNum}),
+subtyping of a union on the right (\RR{UnionR1}, \RR{UnionR2}),
+and normalization (\RR{NF}).
 
 The last rule of the definition, \RR{NF}, is the most important,
 as it covers all useful interactions of transitivity and distributivity 
@@ -125,7 +127,7 @@ The rule rewrites type \ty into its \defemph{normal form} $\NF(\ty)$
 before applying other subtyping rules.
 %This covers all useful applications of transitivity and distributivity 
 %that are possible in the declarative definition.
-The normalized type has the form $\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$,
+Any normalized type has the form $\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n$,
 i.e. a union of value types
 (we omit parenthesis because union is associative).
 The normalization function $\NF$ is presented in~\figref{fig:bjsem-calc-nf}
@@ -169,9 +171,16 @@ being equivalent to declarative one.
 Though the reductive rules are not syntax-directed per se,
 if a derivation of $\bjsub{\ty}{\ty'}$ exists,
 it can always be found by the following algorithm:
-(1) apply the normalization rule \RR{NF} once, i.e. normalize $\ty$;
-(2) use all the other (syntax-directed) rules to build the derivation of
-$\bjsub{\NF(\ty)}{\ty'}$ in the usual manner, bottom to top.
+\begin{enumerate}
+  \item use the normalization rule \RR{NF} once (normalize $\ty$);
+  \item use all the other rules to derive 
+    $\bjsub{\NF(\ty)}{\ty'}$ in the standard manner, bottom to top;
+    except for an overlap between \RR{UnionR1} and \RR{UnionR2},
+    these rules are syntax-directed.
+\end{enumerate}
+%(1) apply the normalization rule \RR{NF} once, i.e. normalize $\ty$;
+%(2) use all the other (syntax-directed) rules to build the derivation of
+%$\bjsub{\NF(\ty)}{\ty'}$ in the usual manner, bottom to top.
 
 However, this algorithm does not always produce the shortest derivation.
 For instance, for

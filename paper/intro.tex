@@ -59,12 +59,13 @@ we propose \emph{tag-based semantic} subtyping
 where a type is interpreted as a set of run-time type tags 
 instead of values. % but is otherwise similar to semantic subtyping.
 
-We define tag-based semantic subtyping for a fragment of the Julia language 
+We define tag-based semantic subtyping for a fragment 
+of the Julia language~\cite{bezanson2017julia}
 that includes nominal types, tuples, and unions.
 Tuples and unions are rather typical for semantic subtyping systems;
 they have a clear set-theoretic interpretation 
 and make up an expressive subtyping relation
-where tuples distributes over unions.
+where tuples distribute over unions.
 At the same time, to the best of our knowledge,
 the interaction of unions with \emph{nominal} types has not been studied before
 in the context of semantic subtyping.
@@ -72,7 +73,8 @@ This interaction introduces
 an unusual subtyping rule between abstract nominal types and unions,
 with implications for multiple dispatch.
 Note that the combination of unions and nominal types is not unique to Julia;
-for instance, it also appears in the statically typed language Ceylon.
+for instance, it also appears in the statically typed language 
+Ceylon~\cite{bib:CeylonSpec:1:3}.
 
 Our contributions are as follows:
 \begin{enumerate}
@@ -84,7 +86,8 @@ Our contributions are as follows:
     and coincide with the semantic definition (\secref{sec:proofs}). 	
   \item Proof of decidability of reductive subtyping (\appref{app:proofs}).
   \item Discussion of the implications of using semantic subtyping
-    for multiple dispatch (\secref{sec:discussion}).
+    for multiple dispatch, as well as an alternative semantic interpretation
+    of nominal types (\secref{sec:discussion}).
 \end{enumerate}
 
 

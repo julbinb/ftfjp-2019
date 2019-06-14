@@ -32,16 +32,17 @@ we would like types such as $\tyref[\tyint]$
 and $\tyref[\tyunion{\tyint}{\tyint}]$ to be equivalent.
 %because $\tyint$ and $\tyunion{\tyint}{\tyint}$ are equivalent.
 However, a naive interpretation of invariant types below
-is not well defined because to find $\ty'$, 
+is not well defined because to find all $\ty'$ 
+s.t. $\interpty{\ty'} = \interpty{\ty}$, 
 we need to already know all the interpretations:
 \[
 \interpty{\tyref[\ty]} = 
 \{ \tyref[\ty'] \Alt \vty \in \interpty{\ty} \iff \vty \in \interpty{\ty'} \}.
 \]
-Our plan is to introduce an indexed interpretation,
+Our plan is to introduce an indexed interpretation
 \[
 \interpty{\tyref[\ty]}_{k+1} = \{ \tyref[\ty'] 
-    \Alt \vty \in \interpty{\ty}_k \iff \vty \in \interpty{\ty'}_k \},
+    \Alt \vty \in \interpty{\ty}_k \iff \vty \in \interpty{\ty'}_k \}
 \]
 and define semantic subtyping as:
 \[
