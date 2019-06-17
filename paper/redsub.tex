@@ -1,7 +1,7 @@
 \subsection{Reductive Subtyping}\label{sec:redsub}
 %% -----------------------------------------------------------------------------
 
-The declarative definition is not syntax-directed
+The declarative definition is not analytic
 and cannot be directly turned into a subtyping algorithm.
 For one, the transitivity rule \RD{Trans} 
 overlaps with any other rule in the system
@@ -171,8 +171,8 @@ being equivalent to declarative one.
 \end{figure}
 
 \paragraph{Subtyping Algorithm.}
-Though the reductive rules are not syntax-directed per se,
-if a derivation of $\bjsub{\ty}{\ty'}$ exists,
+The reductive rules are analytic,
+and if a derivation of $\bjsub{\ty}{\ty'}$ exists,
 it can always be found by the following algorithm:
 \begin{enumerate}[1)]
   \item use the normalization rule \RR{NF} once (normalize $\ty$);

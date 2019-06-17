@@ -16,7 +16,15 @@ We do this in two steps.
 First, we give an inductive \emph{declarative} definition
 that is handy to reason about 
 and prove it equivalent to the semantic definition.
-Second, we provide a \emph{reductive} syntax-directed definition of subtyping
+Second, we provide a \emph{reductive} analytic\footnote{Inference rules
+	are called \emph{analytic}~\cite{bib:Martin-Lof1994} 
+	if there is a finite number of rules applicable to a judgment,
+    and the premises of each rule are comprised of the subcomponents 
+	of its conclusion. Such rules give rise to a straightforward 
+	bottom-up algorithm.
+	If there is always only one rule applicable to a judgment,
+	analytic rules are called \emph{syntax-directed}.}
+definition of subtyping
 and prove it equivalent to the declarative one 
 (and, hence, the semantic definition as well).
 We prove that the reductive subtyping relation is decidable, 
