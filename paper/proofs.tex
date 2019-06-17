@@ -49,10 +49,10 @@
 	\label{fig:bjsem-match}
 \end{figure}
 
-We need to prove that the declarative definition of subtyping 
-is sound and complete with respect to the semantic definition
-in order to show correctness of declarative subtyping.
-Formally, we write this as:
+In order to show correctness of declarative subtyping,
+we need to prove that the declarative definition of subtyping 
+is sound and complete with respect to the semantic definition.
+Formally, we write this statement as:
 \begin{equation}\label{eq:declsub-correct-truesemsub}
 \forall \ty_1, \ty_2.\ (\bjsub{\ty_1}{\ty_2} \iff \bjtruesemsub{\ty_1}{\ty_2}).
 \end{equation}
@@ -78,7 +78,7 @@ are equivalent:
 (\bjsemsub{\ty_1}{\ty_2} \iff \bjtruesemsub{\ty_1}{\ty_2}).
 \]
 %\end{equation}
-To see why, recall that tag-based semantic subtyping~\eqref{eq:truesemsub-def} 
+To see why, let us recall that tag-based semantic subtyping~\eqref{eq:truesemsub-def} 
 is defined as $\interpty{\ty_1} \subseteq \interpty{\ty_2}$
 and the subset relation $X \subseteq Y$ as
 $\forall x.\ (x \in X \implies x \in Y)$.
@@ -149,7 +149,7 @@ In this case, in the definition~\eqref{eq:semsub-def}
 of $\bjsemsub{\ty_1}{\ty_2}$, the only
 value types $\vty$ that match $\ty_1$ and $\ty_2$ are $\vty_i$ of $\ty_1$. 
 By~\eqref{eq:mtch-eq-declsub}, we know that matching implies subtyping,
-so we have that all $\bjsub{\vty_i}{\ty_2}$.
+so we conclude that all $\bjsub{\vty_i}{\ty_2}$.
 From the latter, it is easy to show that 
 $\bjsub{(\vty_1 \cup \vty_2 \cup \ldots \cup \vty_n)}{\ty_2}$ because,
 according to the \RD{UnionL} rule,
@@ -165,7 +165,7 @@ in addition to~\eqref{eq:nf-declsub-complete}.
     \begin{equation}\label{eq:nf-declsub-eq}
     \forall \ty.\;\ \bjsub{\NF(\ty)}{\ty}\ \land\ \bjsub{\ty}{\NF(\ty)}.
     \end{equation}
-  \item Normalization preserves subtyping relation:
+  \item Normalization preserves the subtyping relation:
     \begin{equation}\label{eq:nf-semsub}
     \forall \ty_1, \ty_2.\ 
     (\bjsemsub{\ty_1}{\ty_2} \implies\ \bjsemsub{\NF(\ty_1)}{\ty_2}).
@@ -205,7 +205,8 @@ have an immediate \RD{}\!counterpart (or require one extra application
 of transitivity).
 In the case of \RR{NF}, the induction hypothesis of the proof,
 $\bjsub{\NF(\ty_1)}{\ty_2}$, 
-and the fact that $\bjsub{\ty_1}{\NF(\ty_1)}$~\eqref{eq:nf-declsub-eq}
+and the fact that $\bjsub{\ty_1}{\NF(\ty_1)}$ 
+according to~\eqref{eq:nf-declsub-eq},
 allow to conclude $\bjsub{\ty_1}{\ty_2}$.
 
 The challenging part of the proof is to show completeness,

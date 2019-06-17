@@ -67,7 +67,7 @@ Therefore, a type such as \tyunion{\tyint}{\tyint} is not a value type
 despite it describing the same set of values as the value type \tyint.
 %Note that each value type is a type. %$\VType \subset \Type$, i.e. 
 
-\begin{figure}
+\begin{figure} %[t!]
 	\[
 	\begin{array}{rcl@{\qquad}l}
 	\vty \in \VType & ::= & & \text{\emph{Value Types}}
@@ -91,7 +91,7 @@ $\interpty{\cdot}$ that maps a type $\ty \in \Type$
 into a set of value types $s \in \PVType$,
 as presented in~\figref{fig:bjsem-interpretation}.
 
-\begin{figure}
+\begin{figure} %[b!]
 	\[
 	\begin{array}{rcl}
 	\interpty{\cdot}: \Type &\rightarrow& \PVType \\
@@ -144,7 +144,7 @@ Finally, \emph{pairs} and \emph{unions} are interpreted set-theoretically
 like in standard semantic subtyping.
 
 Once we have the tag interpretation of types, we define 
-\defemph{tag-based semantic subtyping} in usual manner~--- 
+\defemph{tag-based semantic subtyping} in the usual manner~--- 
 as the subset relation:
 \begin{equation}\label{eq:truesemsub-def}
 \bjtruesemsub{\ty_1}{\ty_2} \quad \defsign \quad

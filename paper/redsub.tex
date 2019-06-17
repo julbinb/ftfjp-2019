@@ -149,7 +149,7 @@ for instance:
 As we show in~\secref{sec:declsub-correct}, a type and its normal form are
 equivalent in the declarative definition.
 This property is essential for reductive subtyping 
-being equivalent to declarative one.
+being equivalent to the declarative one.
 %an essential property
 %for reductive subtyping being equivalent to declarative one.
 
@@ -173,10 +173,10 @@ being equivalent to declarative one.
 \paragraph{Subtyping Algorithm.}
 The reductive rules are analytic,
 and if a derivation of $\bjsub{\ty}{\ty'}$ exists,
-it can always be found by the following algorithm:
-\begin{enumerate}[1)]
-  \item use the normalization rule \RR{NF} once (normalize $\ty$);
-  \item use all the other rules to derive 
+it can always be found by the following algorithm.
+\begin{enumerate}%[1)]
+  \item Use the normalization rule \RR{NF} once (normalize $\ty$);
+  \item Use all the other rules to derive 
     $\bjsub{\NF(\ty)}{\ty'}$ in the standard manner, bottom up;
     except for an overlap between \RR{UnionR1} and \RR{UnionR2},
     these rules are syntax-directed.
