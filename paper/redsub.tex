@@ -101,7 +101,7 @@ Another source of overlap is the reflexivity and distributivity rules.
 %	or by first normalizing the left-hand side with \RR{NF}.} of subtyping
 %is presented in~\figref{fig:bjsem-red-sub}.
 By contrast, the rules of reductive subtyping enable
-straightforward bottom-to-top reasoning;
+straightforward bottom up reasoning;
 the rules are presented in~\figref{fig:bjsem-red-sub}.
 The reductive definition lacks the most problematic rules
 of declarative subtyping, 
@@ -174,10 +174,10 @@ being equivalent to declarative one.
 Though the reductive rules are not syntax-directed per se,
 if a derivation of $\bjsub{\ty}{\ty'}$ exists,
 it can always be found by the following algorithm:
-\begin{enumerate}
+\begin{enumerate}[1)]
   \item use the normalization rule \RR{NF} once (normalize $\ty$);
   \item use all the other rules to derive 
-    $\bjsub{\NF(\ty)}{\ty'}$ in the standard manner, bottom to top;
+    $\bjsub{\NF(\ty)}{\ty'}$ in the standard manner, bottom up;
     except for an overlap between \RR{UnionR1} and \RR{UnionR2},
     these rules are syntax-directed.
 \end{enumerate}
@@ -198,7 +198,7 @@ and only then resorts to normalization would work better.
 The actual Julia implementation uses a clever algorithm 
 to check subtyping of tuples and unions 
 without having to normalize types~\cite{bib:Chung19}.
-The algorithm is equivalent to the normalization based one discussed above,
+The algorithm is equivalent to the normalization-based one discussed above,
 but instead of computing the whole normal form, 
 it computes only the components of the normalized type, one at a time.
 

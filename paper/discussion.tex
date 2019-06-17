@@ -22,9 +22,12 @@ of the addition function defined in the Julia syntax
 +(x::Int%*$\cup$*)Flt, y::Int%*$\cup$*)Flt) = prim_add_flt(flt(x), ..)
 \end{lstminijl}
 and the function call \jlcode{3 + 5}.
-How exactly does dispatch work?
+With multiple dynamic dispatch, the call is resolved at run-time,
+based on the types of all arguments. 
+But how exactly does method resolution work?
+%How exactly does dispatch work?
 
-One approach, adopted by some languages
+One approach to implementing multiple dispatch, adopted by some languages
 such as Julia~\cite{Bezanson2015AbstractionIT}, 
 is to use subtyping on tuple types~\cite{bib:Leavens:1998:mddtuples}.
 Namely, method signatures and function calls are interpreted as tuple types,
