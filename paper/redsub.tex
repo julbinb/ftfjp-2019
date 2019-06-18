@@ -1,7 +1,7 @@
 \subsection{Reductive Subtyping}\label{sec:redsub}
 %% -----------------------------------------------------------------------------
 
-The declarative definition is not analytic
+The declarative definition is neither syntax-directed nor analytic
 and cannot be directly turned into a subtyping algorithm.
 For one, the transitivity rule \RD{Trans} 
 overlaps with any other rule in the system
@@ -114,8 +114,9 @@ subtyping of a union on the left (\RR{UnionL}).
 
 The differing rules are \colorbox{light-gray}{highlighted}.
 The explicit reflexivity rule \RR{BaseRefl} now only works with 
-concrete nominal types, which is enough 
-for the reductive definition to be reflexive.
+concrete nominal types, 
+but this already makes the reductive definition reflexive.
+%for the reductive definition to be reflexive.
 The definition also has to be transitive,
 so several rules are added or modified to enable derivations
 that used to rely on transitivity in the declarative definition.
@@ -146,9 +147,9 @@ for instance:
 \NF(\typair{\tystr}{(\tyunion{\tyint}{\tyflt})}) =
 \tyunion{(\typair{\tystr}{\tyint})}{(\typair{\tystr}{\tyflt})}.
 \]
-As we show in~\secref{sec:declsub-correct}, a type and its normal form are
-equivalent in the declarative definition.
-This property is essential for reductive subtyping 
+As shown in~\secref{sec:declsub-correct}, a type and its normal form are
+equivalent according to the declarative definition.
+This property is essential for the reductive subtyping 
 being equivalent to the declarative one.
 %an essential property
 %for reductive subtyping being equivalent to declarative one.
