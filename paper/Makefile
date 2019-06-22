@@ -3,6 +3,14 @@
 paper: 
 	pdflatex minijl-ftfjp2019.tex
 
+force:
+	pdflatex minijl-ftfjp2019.tex
+	bibtex minijl-ftfjp2019
+	bibtex minijl-ftfjp2019
+	pdflatex minijl-ftfjp2019.tex
+	bibtex minijl-ftfjp2019
+	pdflatex minijl-ftfjp2019.tex
+
 # cleaning
 
 CLEAN_PDF_CMD=find . \( -name "*.pdf" -or -name "*.aux" -or -name "*.log" -or -name "*.out"\
